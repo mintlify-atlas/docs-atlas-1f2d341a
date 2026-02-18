@@ -1,0 +1,155 @@
+{
+  "projectType": "frontend",
+  "projectName": "Mintlify Components",
+  "projectDescription": "Open-source React UI components library built with Tailwind CSS for beautiful documentation sites",
+  "theme": "mint",
+  "primaryColor": "#0ea5e9",
+  "lightColor": "#38bdf8",
+  "darkColor": "#0284c7",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "setup"
+            ]
+          },
+          {
+            "group": "Core Concepts",
+            "pages": [
+              "concepts/theming",
+              "concepts/styling",
+              "concepts/accessibility"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/tailwind-integration",
+              "guides/dark-mode",
+              "guides/typescript"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Components",
+        "groups": [
+          {
+            "group": "Layout",
+            "pages": [
+              "components/accordion",
+              "components/card",
+              "components/columns",
+              "components/expandable",
+              "components/frame",
+              "components/panel",
+              "components/tabs",
+              "components/tile"
+            ]
+          },
+          {
+            "group": "Content",
+            "pages": [
+              "components/callout",
+              "components/steps",
+              "components/badge",
+              "components/icon",
+              "components/tooltip",
+              "components/update"
+            ]
+          },
+          {
+            "group": "Code",
+            "pages": [
+              "components/code-block",
+              "components/code-group"
+            ]
+          },
+          {
+            "group": "Data Display",
+            "pages": [
+              "components/property",
+              "components/tree"
+            ]
+          },
+          {
+            "group": "Visualization",
+            "pages": [
+              "components/mermaid",
+              "components/color"
+            ]
+          },
+          {
+            "group": "Utility",
+            "pages": [
+              "components/search",
+              "components/view"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Resources",
+        "groups": [
+          {
+            "group": "Contributing",
+            "pages": [
+              "contributing/overview",
+              "contributing/development",
+              "contributing/components"
+            ]
+          },
+          {
+            "group": "Community",
+            "pages": [
+              "changelog",
+              "faq"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "22 production-ready React components for documentation sites",
+    "Built with Tailwind CSS v3 and v4 support",
+    "Full TypeScript support with exported types",
+    "Dark mode support with theme-aware styling",
+    "Syntax highlighting with Shiki and copy-to-clipboard",
+    "Interactive diagrams with Mermaid integration",
+    "Accessible components with ARIA attributes and keyboard navigation",
+    "Customizable themes and color schemes",
+    "Storybook documentation and examples"
+  ],
+  "publicApiSurface": [
+    "Accordion - Expandable content sections with icon and URL state support",
+    "Badge - Status and label badges",
+    "Callout - Highlighted information boxes (info, warning, note, tip, check, danger)",
+    "Card - Content cards with optional images, icons, and CTAs",
+    "CodeBlock - Syntax-highlighted code blocks with Shiki",
+    "CodeGroup - Tabbed or dropdown code block container",
+    "Color - Color display components",
+    "Columns - Multi-column layout component",
+    "Expandable - Collapsible sections",
+    "Frame - Image and content frames",
+    "Icon - Icon rendering with multiple library support",
+    "Mermaid - Interactive diagram rendering with zoom/pan controls",
+    "Panel - Panel layout component",
+    "Property - API property documentation display",
+    "Search - Search component with modal and keyboard navigation",
+    "Steps - Step-by-step instruction component with anchor links",
+    "Tabs - Tabbed interface with keyboard navigation",
+    "Tile - Tile grid layout",
+    "Tooltip - Hover tooltips with positioning control",
+    "Tree - Hierarchical tree view component",
+    "Update - Changelog entry component",
+    "View - Conditional rendering utility",
+    "cn - Utility function for class name merging"
+  ]
+}
