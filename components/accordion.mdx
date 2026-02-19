@@ -1,0 +1,307 @@
+---
+title: 'Accordion'
+description: 'A collapsible component for organizing content into expandable sections'
+---
+
+The Accordion component provides an interactive way to show and hide content. It supports nested accordions, icons, URL state management, and can be grouped for a unified appearance.
+
+## Basic Usage
+
+<CodeGroup>
+
+```jsx Default
+<Accordion title="What is Mintlify?" defaultOpen={false}>
+  <p>
+    Mintlify is a platform for creating beautiful documentation for your
+    products.
+  </p>
+</Accordion>
+```
+
+```jsx Default Open
+<Accordion title="Getting Started" defaultOpen={true}>
+  <p>To get started with Mintlify, follow these steps:</p>
+  <ol>
+    <li>Install the CLI</li>
+    <li>Initialize your project</li>
+    <li>Start the dev server</li>
+  </ol>
+</Accordion>
+```
+
+</CodeGroup>
+
+## Props
+
+<ParamField path="title" type="ReactNode" required>
+  The title displayed in the accordion header. Prefer using a string value for better compatibility with URL state synchronization and tracking callbacks.
+</ParamField>
+
+<ParamField path="defaultOpen" type="boolean" required>
+  Whether the accordion should be open by default. Can also accept string `"true"` for string-based configurations.
+</ParamField>
+
+<ParamField path="description" type="string">
+  Optional description text displayed below the title in the accordion header.
+</ParamField>
+
+<ParamField path="icon" type="ReactNode | string">
+  Icon to display in the accordion header. Can be:
+  - A string icon name (e.g., `"code"`, `"rocket"`) from Font Awesome
+  - A custom React component/element
+</ParamField>
+
+<ParamField path="iconType" type="IconType">
+  Type of Font Awesome icon. Options: `"solid"`, `"regular"`, `"light"`, `"duotone"`, `"thin"`, `"sharp-solid"`, `"brands"`
+  
+  Only used when `icon` is a string.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply to the accordion container.
+</ParamField>
+
+<ParamField path="children" type="ReactNode">
+  The content to display inside the accordion when expanded.
+</ParamField>
+
+<ParamField path="trackOpen" type="(event: { title: string }) => void">
+  Callback fired when the accordion is opened. Receives an event object with the accordion title.
+</ParamField>
+
+<ParamField path="trackClose" type="(event: { title: string }) => void">
+  Callback fired when the accordion is closed. Receives an event object with the accordion title.
+</ParamField>
+
+<ParamField path="onMount" type="() => void">
+  Callback fired when the accordion component mounts.
+</ParamField>
+
+<ParamField path="topOffset" type="string">
+  CSS value for top offset positioning, useful for sticky headers.
+</ParamField>
+
+<ParamField path="getInitialOpenFromUrl" type="(id: string, parentIds: string[]) => boolean">
+  Function to determine initial open state from URL hash. Use the provided `getInitialOpenState()` utility function for URL synchronization.
+</ParamField>
+
+<ParamField path="onUrlStateChange" type="(isOpen: boolean, id: string | undefined, parentIds: string[]) => void">
+  Callback fired when the accordion state changes, for URL synchronization. Use the provided `updateAndCopyUrl()` utility function.
+</ParamField>
+
+## Examples
+
+### With Description
+
+```jsx
+<Accordion
+  title="Installation"
+  description="Learn how to install Mintlify"
+  defaultOpen={false}
+>
+  <p>Run the following command to install Mintlify:</p>
+  <pre>npm install -g mintlify</pre>
+</Accordion>
+```
+
+### With Icons
+
+<CodeGroup>
+
+```jsx Font Awesome Icon
+<Accordion
+  title="API Reference"
+  icon="code"
+  iconType="solid"
+  defaultOpen={false}
+>
+  <p>View the complete API reference for all available endpoints.</p>
+</Accordion>
+```
+
+```jsx Custom Icon
+<Accordion
+  title="Custom SVG Icon"
+  icon={
+    <svg
+      fill="currentColor"
+      viewBox="0 0 20 20"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        clipRule="evenodd"
+        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+        fillRule="evenodd"
+      />
+    </svg>
+  }
+  defaultOpen={false}
+>
+  <p>This accordion uses a custom SVG icon.</p>
+</Accordion>
+```
+
+</CodeGroup>
+
+### With Callbacks
+
+```jsx
+<Accordion
+  title="Accordion with Callbacks"
+  description="This accordion logs when opened or closed"
+  defaultOpen={false}
+  trackOpen={(event) => console.log("Accordion opened:", event)}
+  trackClose={(event) => console.log("Accordion closed:", event)}
+  onMount={() => console.log("Accordion mounted")}
+>
+  <p>Check the browser console to see the logs.</p>
+</Accordion>
+```
+
+### Nested Accordions
+
+```jsx
+<Accordion title="Parent Accordion" defaultOpen={true}>
+  <p className="mb-3">This is the parent accordion content.</p>
+  <div className="space-y-3">
+    <Accordion title="Nested Child 1" defaultOpen={false}>
+      <p>This is nested inside the parent accordion.</p>
+    </Accordion>
+    <Accordion title="Nested Child 2" defaultOpen={false}>
+      <p>You can nest accordions to create hierarchical content.</p>
+    </Accordion>
+  </div>
+</Accordion>
+```
+
+### URL State Management
+
+```jsx
+import { Accordion, getInitialOpenState, updateAndCopyUrl } from '@mintlify/components';
+
+function MyComponent() {
+  const getInitialOpen = getInitialOpenState();
+  const handleUrlChange = updateAndCopyUrl();
+
+  return (
+    <>
+      <Accordion
+        title="URL Synced Accordion 1"
+        description="This accordion state is reflected in the URL"
+        defaultOpen={false}
+        getInitialOpenFromUrl={getInitialOpen}
+        onUrlStateChange={handleUrlChange}
+      >
+        <p>When you open this accordion, the URL hash will update to include its ID.</p>
+        <p>Try refreshing the page - the accordion will maintain its state!</p>
+      </Accordion>
+      <Accordion
+        title="URL Synced Accordion 2"
+        description="This one also syncs with the URL"
+        defaultOpen={false}
+        getInitialOpenFromUrl={getInitialOpen}
+        onUrlStateChange={handleUrlChange}
+      >
+        <p>Each accordion has its own unique ID in the URL.</p>
+      </Accordion>
+    </>
+  );
+}
+```
+
+<Note>
+  The URL state management feature automatically copies the URL to the clipboard when an accordion is opened, making it easy to share direct links to specific sections.
+</Note>
+
+## Accordion Group
+
+Use `Accordion.Group` to visually group multiple accordions together without spacing between them.
+
+### Props
+
+<ParamField path="children" type="ReactNode" required>
+  Multiple `Accordion` components to group together.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply to the accordion group container.
+</ParamField>
+
+### Example
+
+```jsx
+<Accordion.Group>
+  <Accordion title="First Accordion" defaultOpen={true}>
+    <p>Content of the first accordion.</p>
+  </Accordion>
+  <Accordion title="Second Accordion" defaultOpen={false}>
+    <p>Content of the second accordion.</p>
+  </Accordion>
+  <Accordion title="Third Accordion" defaultOpen={false}>
+    <p>Content of the third accordion.</p>
+  </Accordion>
+</Accordion.Group>
+```
+
+### With Icons and Descriptions
+
+```jsx
+<Accordion.Group>
+  <Accordion
+    title="Getting Started"
+    description="Basic introduction and setup"
+    icon="rocket"
+    iconType="solid"
+    defaultOpen={false}
+  >
+    <p>Getting started content here.</p>
+    <ol>
+      <li>Install the package</li>
+      <li>Configure your project</li>
+      <li>Start building</li>
+    </ol>
+  </Accordion>
+  <Accordion
+    title="Advanced Features"
+    description="Detailed guide to advanced functionality"
+    icon="gear"
+    iconType="solid"
+    defaultOpen={false}
+  >
+    <p>Advanced features content here.</p>
+  </Accordion>
+  <Accordion
+    title="Troubleshooting"
+    description="Common issues and solutions"
+    icon="circle-question"
+    iconType="regular"
+    defaultOpen={false}
+  >
+    <p>Troubleshooting content here.</p>
+  </Accordion>
+</Accordion.Group>
+```
+
+## Styling
+
+The accordion component automatically adapts to light and dark themes. You can customize the appearance using the `className` prop:
+
+```jsx
+<Accordion
+  title="Custom Styled Accordion"
+  className="shadow-lg"
+  defaultOpen={false}
+>
+  <p>This accordion has a custom shadow applied.</p>
+</Accordion>
+```
+
+## Accessibility
+
+The Accordion component includes built-in accessibility features:
+
+- Uses the native HTML `<details>` and `<summary>` elements
+- Proper ARIA attributes (`aria-labelledby`, `role="region"`)
+- Keyboard navigation support
+- Focus management
+- Unique IDs for each accordion based on slugified titles

@@ -1,0 +1,287 @@
+---
+title: 'Steps'
+description: 'Display sequential instructions or processes with numbered steps'
+---
+
+## Overview
+
+The Steps component displays a vertical list of sequential steps with automatic numbering, connecting lines, and support for custom icons. It's ideal for tutorials, installation guides, and multi-step processes.
+
+## Basic Usage
+
+```jsx
+<Steps>
+  <Steps.Item title="Installation">
+    Install the required dependencies using npm or yarn.
+  </Steps.Item>
+  <Steps.Item title="Configuration">
+    Configure your settings in the config file.
+  </Steps.Item>
+  <Steps.Item title="Deployment">
+    Deploy your application to production.
+  </Steps.Item>
+</Steps>
+```
+
+## Props
+
+### Steps Container
+
+<ParamField path="children" type="React.ReactElement<StepsItemProps> | React.ReactElement<StepsItemProps>[]" required>
+  One or more `Steps.Item` components. Each item represents a step in the sequence.
+</ParamField>
+
+<ParamField path="titleSize" type="'p' | 'h2' | 'h3' | 'h4'" default="p">
+  Default title size for all steps. Can be overridden per step. Use `h2` or `h3` to enable anchor link functionality.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply to the steps container.
+</ParamField>
+
+### Steps.Item
+
+<ParamField path="title" type="string | ReactNode" required>
+  The title of the step. Can be a string or React element for custom styling.
+</ParamField>
+
+<ParamField path="children" type="string | ReactNode">
+  The content of the step. Supports any valid React content including text, code blocks, lists, and more.
+</ParamField>
+
+<ParamField path="stepNumber" type="number | `${number}`" default="auto-incremented">
+  Custom step number to display. By default, steps are numbered automatically starting from 1.
+</ParamField>
+
+<ParamField path="icon" type="ReactNode | string">
+  Custom icon to display instead of the step number. Can be:
+  - A string icon name from FontAwesome or Lucide (use with `iconType` and `iconLibrary`)
+  - A React component or element
+</ParamField>
+
+<ParamField path="iconType" type="'brands' | 'duotone' | 'light' | 'regular' | 'sharp-duotone-solid' | 'sharp-light' | 'sharp-regular' | 'sharp-solid' | 'sharp-thin' | 'solid' | 'thin'">
+  The FontAwesome icon style type when using a string icon.
+</ParamField>
+
+<ParamField path="iconLibrary" type="'fontawesome' | 'lucide'" default="fontawesome">
+  The icon library to use for string icons.
+</ParamField>
+
+<ParamField path="titleSize" type="'p' | 'h2' | 'h3' | 'h4'" default="p">
+  Size of the step title. Overrides the container's `titleSize`. When set to `h2` or `h3`, enables anchor link functionality.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply to the step item.
+</ParamField>
+
+<ParamField path="id" type="string">
+  Custom ID for the step, used for anchor links. Only functional when `titleSize` is `h2` or `h3`.
+</ParamField>
+
+<ParamField path="noAnchor" type="boolean" default="false">
+  Disable anchor link functionality even when `titleSize` is `h2` or `h3`.
+</ParamField>
+
+<ParamField path="isLast" type="boolean" default="false">
+  Automatically set by the parent container. Indicates if this is the last step in the sequence (affects the connecting line styling).
+</ParamField>
+
+## Examples
+
+### Basic Steps with Auto-numbering
+
+```jsx
+<Steps>
+  <Steps.Item title="First Step">
+    This is the first step in the sequence.
+  </Steps.Item>
+  <Steps.Item title="Second Step">
+    This is the second step in the sequence.
+  </Steps.Item>
+  <Steps.Item title="Third Step">
+    This is the final step in the sequence.
+  </Steps.Item>
+</Steps>
+```
+
+### Steps with Icons
+
+<CodeGroup>
+```jsx String Icons
+<Steps>
+  <Steps.Item icon="rocket" title="Getting Started">
+    Launch your project with this step.
+  </Steps.Item>
+  <Steps.Item icon="puzzle" title="Configuration">
+    Set up your preferences and configuration.
+  </Steps.Item>
+  <Steps.Item icon="circle-check" title="Complete">
+    You're all set! Your project is ready to go.
+  </Steps.Item>
+</Steps>
+```
+
+```jsx React Component Icons
+<Steps>
+  <Steps.Item 
+    icon={<Settings className="size-3" />} 
+    title="Configuration"
+  >
+    Configure your settings in this step.
+  </Steps.Item>
+</Steps>
+```
+</CodeGroup>
+
+### Custom Step Numbers
+
+```jsx
+<Steps>
+  <Steps.Item stepNumber={5} title="Step 5">
+    This step has a custom number.
+  </Steps.Item>
+  <Steps.Item stepNumber={6} title="Step 6">
+    This step continues the custom numbering.
+  </Steps.Item>
+  <Steps.Item stepNumber={7} title="Step 7">
+    This is the last step with custom numbering.
+  </Steps.Item>
+</Steps>
+```
+
+### Large Titles with Anchor Links
+
+```jsx
+<Steps titleSize="h2">
+  <Steps.Item id="installation" title="Installation">
+    Hover over the step number or title to see the link icon. 
+    Click to copy the anchor URL.
+  </Steps.Item>
+  <Steps.Item id="configuration" title="Configuration">
+    Each step can have a unique ID for deep linking.
+  </Steps.Item>
+  <Steps.Item id="deployment" title="Deployment" noAnchor>
+    This step has anchor disabled via noAnchor prop.
+  </Steps.Item>
+</Steps>
+```
+
+### Rich Content
+
+```jsx
+<Steps>
+  <Steps.Item title="Installation">
+    <div className="space-y-2">
+      <p>Install the required dependencies:</p>
+      <code className="block rounded bg-stone-100 p-2 dark:bg-stone-800">
+        npm install
+      </code>
+    </div>
+  </Steps.Item>
+  <Steps.Item title="Configuration">
+    <div className="space-y-2">
+      <p>Configure your settings:</p>
+      <ul className="list-disc pl-4">
+        <li>Set up your API keys</li>
+        <li>Configure your database</li>
+        <li>Set up environment variables</li>
+      </ul>
+    </div>
+  </Steps.Item>
+  <Steps.Item title="Deployment">
+    <div className="space-y-2">
+      <p>Deploy your application:</p>
+      <code className="block rounded bg-stone-100 p-2 dark:bg-stone-800">
+        npm run deploy
+      </code>
+    </div>
+  </Steps.Item>
+</Steps>
+```
+
+### Custom Icon Type and Library
+
+```jsx
+<Steps>
+  <Steps.Item 
+    icon="user-check" 
+    iconType="solid" 
+    title="Custom Icon Type"
+  >
+    This step uses a solid icon type from FontAwesome.
+  </Steps.Item>
+  <Steps.Item 
+    icon="rocket" 
+    iconLibrary="lucide" 
+    title="Lucide Icon"
+  >
+    This step uses an icon from the Lucide library.
+  </Steps.Item>
+</Steps>
+```
+
+### ReactNode Title
+
+```jsx
+<Steps>
+  <Steps.Item
+    title={
+      <span className="text-blue-600 dark:text-blue-400">
+        Custom Styled Title
+      </span>
+    }
+  >
+    This step has a custom styled title using ReactNode.
+  </Steps.Item>
+</Steps>
+```
+
+### Mixed Title Sizes
+
+```jsx
+<Steps>
+  <Steps.Item title="Normal Step">
+    This step has the default title size.
+  </Steps.Item>
+  <Steps.Item title="Important Step" titleSize="h2">
+    This step has a larger title size.
+  </Steps.Item>
+  <Steps.Item title="Another Normal Step">
+    Back to normal title size.
+  </Steps.Item>
+</Steps>
+```
+
+## Features
+
+### Automatic Numbering
+
+Steps are automatically numbered starting from 1. You can override this with the `stepNumber` prop.
+
+### Connecting Lines
+
+Vertical lines automatically connect steps. The line fades out on the last step for a polished look.
+
+### Anchor Links
+
+When using `titleSize="h2"` or `titleSize="h3"` with an `id` prop:
+- Hovering over the step number shows a link icon
+- Clicking copies the anchor URL to clipboard
+- Supports deep linking to specific steps
+
+### Dark Mode
+
+Full dark mode support with automatic color adjustments for:
+- Step numbers
+- Connecting lines
+- Title and content text
+- Background colors
+
+### Accessibility
+
+The Steps component includes:
+- Semantic `role="list"` and `role="listitem"` attributes
+- Proper aria-labels for anchor links
+- Keyboard navigation support for interactive elements
+- Focus visible states for accessibility

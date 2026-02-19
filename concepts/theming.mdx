@@ -1,0 +1,261 @@
+---
+title: Theming and Customization
+description: Learn how to customize the theme and styling of Mintlify Components using CSS variables and Tailwind CSS configuration
+---
+
+## Overview
+
+Mintlify Components uses a combination of CSS custom properties (variables) and Tailwind CSS configuration to provide a flexible theming system. You can customize colors, typography, and other design tokens to match your brand.
+
+## Theme Variables
+
+The library defines theme variables in the `@theme` directive within the main stylesheet. These variables can be overridden in your own CSS.
+
+### Default Theme Colors
+
+From `packages/components/src/styles.css:12-18`:
+
+```css
+@theme {
+  --color-primary: rgb(22, 101, 52);
+  --color-primary-light: rgb(240, 249, 244);
+  --color-primary-dark: rgb(45, 90, 61);
+  --color-tooltip-foreground: rgb(255, 255, 255);
+  --color-background-dark: rgb(14, 14, 15);
+}
+```
+
+<Note>
+These theme variables are used throughout the component library and automatically adapt to both light and dark modes.
+</Note>
+
+### Overriding Theme Variables
+
+To customize the theme, override these variables in your own stylesheet:
+
+```css
+@theme {
+  --color-primary: rgb(59, 130, 246);
+  --color-primary-light: rgb(219, 234, 254);
+  --color-primary-dark: rgb(29, 78, 216);
+}
+```
+
+<Tabs>
+  <Tabs.Item title="CSS">
+    ```css
+    /* Override in your global CSS */
+    @theme {
+      --color-primary: rgb(59, 130, 246);
+      --color-primary-light: rgb(219, 234, 254);
+      --color-primary-dark: rgb(29, 78, 216);
+    }
+    ```
+  </Tabs.Item>
+  <Tabs.Item title="Tailwind Config">
+    ```js
+    // tailwind.config.js
+    module.exports = {
+      theme: {
+        extend: {
+          colors: {
+            primary: 'rgb(59, 130, 246)',
+            'primary-light': 'rgb(219, 234, 254)',
+            'primary-dark': 'rgb(29, 78, 216)',
+          },
+        },
+      },
+    };
+    ```
+  </Tabs.Item>
+</Tabs>
+
+## Dark Mode
+
+Mintlify Components provides full dark mode support using a class-based approach. Dark mode is activated when the `dark` class is present on the `html` element.
+
+### Dark Mode Implementation
+
+From `packages/components/src/styles.css:10`:
+
+```css
+@custom-variant dark (&:is(.dark *));
+```
+
+This creates a custom variant that applies styles when an element is within a `.dark` ancestor.
+
+### Detecting Dark Mode
+
+The library provides a `useIsDarkTheme` hook to detect the current theme:
+
+```tsx
+import { useIsDarkTheme } from '@mintlify/components';
+
+function MyComponent() {
+  const { isDarkTheme } = useIsDarkTheme();
+  
+  return (
+    <div>
+      Current theme: {isDarkTheme ? 'dark' : 'light'}
+    </div>
+  );
+}
+```
+
+<Info>
+The `useIsDarkTheme` hook uses a `MutationObserver` to watch for changes to the `html` element's class list, ensuring your components stay in sync with the theme.
+</Info>
+
+## Custom Utilities
+
+Mintlify Components includes custom Tailwind utilities that you can use in your applications.
+
+### Border Standard
+
+A utility for consistent borders across light and dark modes:
+
+```css
+@utility border-standard {
+  border-width: 1px;
+  border-color: rgb(229 231 235 / 70%);
+
+  &:is(.dark *) {
+    border-color: rgb(255 255 255 / 10%);
+  }
+}
+```
+
+Usage:
+
+```tsx
+<div className="border-standard rounded-lg p-4">
+  Content with themed border
+</div>
+```
+
+### Overflow Wrap Anywhere
+
+For better text wrapping in tight spaces:
+
+```tsx
+<div className="overflow-wrap-anywhere">
+  LongTextWithoutSpacesThatNeedsToWrap
+</div>
+```
+
+## Custom Plugins
+
+The library includes two custom Tailwind plugins that extend the default functionality.
+
+### Background Grid Plugin
+
+Creates grid patterns for backgrounds using SVG data URIs:
+
+```tsx
+<div className="bg-grid-stone-200 dark:bg-grid-stone-800">
+  Content with grid background
+</div>
+```
+
+<Tip>
+The grid plugin accepts any color from your Tailwind color palette and automatically generates an SVG grid pattern.
+</Tip>
+
+### Scrollbar Plugin
+
+Provides styled scrollbars with theme-aware colors:
+
+```tsx
+<div className="scrollbar-common overflow-auto">
+  Scrollable content with custom scrollbar
+</div>
+
+<div className="scrollbar-code-system overflow-auto">
+  Code block with system theme scrollbar
+</div>
+
+<div className="scrollbar-code-dark overflow-auto">
+  Code block with dark theme scrollbar
+</div>
+```
+
+Scrollbar variants:
+- `scrollbar-common`: General purpose scrollbar that adapts to light/dark mode
+- `scrollbar-code-system`: System theme-aware scrollbar for code blocks
+- `scrollbar-code-dark`: Always dark scrollbar for code blocks
+
+## Component-Specific Theming
+
+Some components support custom theming through props.
+
+### Callout with Custom Colors
+
+From `packages/components/src/components/callout/callout.tsx:98-136`:
+
+```tsx
+<Callout variant="custom" color="#8b5cf6">
+  This callout uses a custom purple color theme
+</Callout>
+```
+
+The component automatically calculates appropriate border, background, and text colors based on the provided color.
+
+### Code Block Themes
+
+```tsx
+<CodeBlock codeBlockTheme="dark">
+  {`console.log('Hello, world!');`}
+</CodeBlock>
+
+<CodeBlock codeBlockTheme="system">
+  {`console.log('Adapts to theme');`}
+</CodeBlock>
+```
+
+Available themes:
+- `system`: Adapts to the current light/dark mode
+- `dark`: Always uses dark theme
+
+## Typography
+
+The library includes font feature settings for improved typography:
+
+```css
+html {
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+```
+
+These OpenType features enable:
+- `cv02`: Alternative glyph for lowercase 'a'
+- `cv03`: Alternative glyph for lowercase 'g'
+- `cv04`: Alternative glyph for lowercase 'i' and 'l'
+- `cv11`: Alternative glyph for numerals
+
+<Note>
+These font features only apply if your chosen font supports them.
+</Note>
+
+## Best Practices
+
+<Tabs>
+  <Tabs.Item title="Do's">
+    - Override theme variables in a single, centralized stylesheet
+    - Use the provided utility classes for consistent styling
+    - Test your custom theme in both light and dark modes
+    - Use semantic color names from the theme system
+    - Keep custom colors accessible with proper contrast ratios
+  </Tabs.Item>
+  <Tabs.Item title="Don'ts">
+    - Don't use arbitrary color values directly in components
+    - Don't override component-specific styles without understanding the implications
+    - Don't disable dark mode support if your app supports it
+    - Don't forget to test scrollbar styles on different browsers
+  </Tabs.Item>
+</Tabs>
+
+## Next Steps
+
+<Info>
+Learn more about styling components with Tailwind CSS in the [Styling Guide](/concepts/styling).
+</Info>

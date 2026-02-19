@@ -1,0 +1,342 @@
+---
+title: 'Search'
+description: 'A fully-featured search modal with keyboard navigation, recent searches, and customizable states'
+icon: 'magnifying-glass'
+---
+
+The Search component provides a modal dialog with search functionality, keyboard navigation, and support for recent searches.
+
+## Basic Usage
+
+```tsx
+import { useState } from 'react';
+import { Search, SearchButton, SearchResult } from '@mintlify/components';
+
+function MyComponent() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [results, setResults] = useState<SearchResult[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSearch = (query: string) => {
+    if (!query) {
+      setResults([]);
+      return;
+    }
+
+    setIsLoading(true);
+    fetch(`/api/search?q=${encodeURIComponent(query)}`)
+      .then(res => res.json())
+      .then(data => {
+        setResults(data.results);
+        setIsLoading(false);
+      });
+  };
+
+  return (
+    <>
+      <SearchButton onClick={() => setIsOpen(true)} />
+      <Search
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        onSearch={handleSearch}
+        results={results}
+        isLoading={isLoading}
+      />
+    </>
+  );
+}
+```
+
+## Search Component
+
+The main search modal component with input, results display, and keyboard navigation.
+
+### Props
+
+<ParamField path="onSearch" type="(query: string) => void" required>
+  Callback function called when the user types in the search input. Receives the current query string.
+</ParamField>
+
+<ParamField path="results" type="SearchResult[]" required>
+  Array of search results to display. Each result should match the `SearchResult` type.
+</ParamField>
+
+<ParamField path="isOpen" type="boolean" required>
+  Controls whether the search modal is visible.
+</ParamField>
+
+<ParamField path="onClose" type="() => void" required>
+  Callback function called when the modal should close (ESC key, backdrop click, or result selection).
+</ParamField>
+
+<ParamField path="isLoading" type="boolean" default="false">
+  When `true`, displays a loading state instead of results.
+</ParamField>
+
+<ParamField path="placeholder" type="string" default="'Search...'">
+  Placeholder text displayed in the search input.
+</ParamField>
+
+<ParamField path="recentSearches" type="SearchResult[]" default="[]">
+  Array of recent search results to display when the input is empty.
+</ParamField>
+
+<ParamField path="onSelectResult" type="(result: SearchResult, query: string) => void">
+  Callback function called when a result is selected. Receives the selected result and the current query.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply to the modal wrapper.
+</ParamField>
+
+<ParamField path="emptyState" type="ReactNode">
+  Custom component to display when no results are found. If not provided, a default empty state is shown.
+</ParamField>
+
+<ParamField path="loadingState" type="ReactNode">
+  Custom component to display while loading. If not provided, a default loading spinner is shown.
+</ParamField>
+
+<ParamField path="position" type="'top' | 'center'" default="'top'">
+  Position of the modal on screen. `'top'` aligns the modal near the top of the viewport, `'center'` centers it vertically.
+</ParamField>
+
+<ParamField path="paddingTop" type="string" default="'64px'">
+  Distance from the top of the viewport when `position` is `'top'`. Accepts any valid CSS value.
+</ParamField>
+
+### SearchResult Type
+
+```tsx
+type SearchResult = {
+  id: string;
+  header: string;
+  content: string;
+  link: string;
+  icon?: ReactNode;
+  metadata?: {
+    breadcrumbs?: string[];
+    [key: string]: unknown;
+  };
+};
+```
+
+<ParamField path="id" type="string" required>
+  Unique identifier for the search result.
+</ParamField>
+
+<ParamField path="header" type="string" required>
+  Main title text for the result.
+</ParamField>
+
+<ParamField path="content" type="string" required>
+  Description or snippet text for the result.
+</ParamField>
+
+<ParamField path="link" type="string" required>
+  URL or path for the result.
+</ParamField>
+
+<ParamField path="icon" type="ReactNode">
+  Optional icon to display next to the result.
+</ParamField>
+
+<ParamField path="metadata.breadcrumbs" type="string[]">
+  Optional array of breadcrumb strings displayed above the result header.
+</ParamField>
+
+## SearchButton Component
+
+A styled button that opens the search modal, typically used with `SearchProvider`.
+
+### Props
+
+<ParamField path="showShortcut" type="boolean" default="true">
+  Whether to display the keyboard shortcut text on the button.
+</ParamField>
+
+<ParamField path="shortcutText" type="string" default="'⌘K'">
+  Text to display as the keyboard shortcut.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply to the button.
+</ParamField>
+
+<ParamField path="children" type="ReactNode">
+  Content to display in the button. Defaults to `"Search..."`.
+</ParamField>
+
+Extends all standard HTML button attributes.
+
+### Example
+
+```tsx
+<SearchButton 
+  onClick={() => setIsOpen(true)}
+  showShortcut={true}
+  shortcutText="⌘K"
+>
+  Search documentation...
+</SearchButton>
+```
+
+## SearchProvider Component
+
+A context provider that manages search state and keyboard shortcuts. Use this for app-wide search functionality.
+
+### Props
+
+<ParamField path="searchProps" type="Omit<SearchProps, 'isOpen' | 'onClose'>" required>
+  Props to pass to the Search component (excluding `isOpen` and `onClose` which are managed by the provider).
+</ParamField>
+
+<ParamField path="shortcutKey" type="string" default="'k'">
+  Key to use for the keyboard shortcut.
+</ParamField>
+
+<ParamField path="requireModifier" type="boolean" default="true">
+  Whether the shortcut requires a modifier key (Cmd/Ctrl). When `false`, the key alone will trigger search (unless user is typing in an input).
+</ParamField>
+
+<ParamField path="children" type="ReactNode" required>
+  Child components that can access the search context.
+</ParamField>
+
+### Example with Provider
+
+```tsx
+import { SearchProvider, SearchButton } from '@mintlify/components';
+
+function App() {
+  const [results, setResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSearch = (query: string) => {
+    // Your search implementation
+  };
+
+  return (
+    <SearchProvider
+      shortcutKey="k"
+      requireModifier={true}
+      searchProps={{
+        onSearch: handleSearch,
+        results,
+        isLoading,
+        placeholder: 'Search documentation...',
+      }}
+    >
+      <div>
+        <SearchButton />
+        {/* Rest of your app */}
+      </div>
+    </SearchProvider>
+  );
+}
+```
+
+### useSearch Hook
+
+Access the search context from any component within `SearchProvider`.
+
+```tsx
+import { useSearch } from '@mintlify/components';
+
+function MyComponent() {
+  const search = useSearch();
+
+  return (
+    <button onClick={() => search?.open()}>
+      Open Search
+    </button>
+  );
+}
+```
+
+**Context value:**
+
+```tsx
+type SearchContextValue = {
+  isOpen: boolean;
+  open: () => void;
+  close: () => void;
+  toggle: () => void;
+};
+```
+
+## Features
+
+### Keyboard Navigation
+
+The Search component includes full keyboard support:
+
+- **ESC** - Close the search modal
+- **Arrow keys** - Navigate through results
+- **Enter** - Select the highlighted result
+- **Cmd/Ctrl + Enter** - Select the first result
+- **Tab** - Prevented when results are visible (stays in search input)
+- **Cmd/Ctrl + K** - Global shortcut (when using `SearchProvider`)
+
+### Recent Searches
+
+Display recent searches when the input is empty:
+
+```tsx
+const [recentSearches, setRecentSearches] = useState<SearchResult[]>([]);
+
+const handleSelectResult = (result: SearchResult, query: string) => {
+  // Add to recent searches (avoid duplicates)
+  setRecentSearches(prev => {
+    const filtered = prev.filter(item => item.id !== result.id);
+    return [result, ...filtered].slice(0, 5); // Keep last 5
+  });
+};
+
+<Search
+  recentSearches={recentSearches}
+  onSelectResult={handleSelectResult}
+  // ... other props
+/>
+```
+
+### Custom States
+
+Customize the loading and empty states:
+
+```tsx
+<Search
+  emptyState={
+    <div className="py-12 text-center">
+      <p className="text-sm font-semibold">No matches found</p>
+      <p className="text-xs text-stone-500">Try different keywords</p>
+    </div>
+  }
+  loadingState={
+    <div className="py-12 text-center">
+      <div className="animate-spin">⏳</div>
+      <p className="text-sm">Searching...</p>
+    </div>
+  }
+  // ... other props
+/>
+```
+
+### Modal Position
+
+Control where the modal appears:
+
+```tsx
+{/* Near the top of the viewport */}
+<Search position="top" paddingTop="64px" />
+
+{/* Centered vertically */}
+<Search position="center" />
+```
+
+## Source Code References
+
+- Search component: packages/components/src/components/search/search.tsx:113
+- SearchButton component: packages/components/src/components/search/button.tsx:11
+- SearchProvider component: packages/components/src/components/search/provider.tsx:27
+- SearchResult type: packages/components/src/components/search/search.tsx:30

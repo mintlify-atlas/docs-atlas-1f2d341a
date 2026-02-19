@@ -1,0 +1,346 @@
+---
+title: 'Update'
+description: 'Display changelog entries or updates with labels, tags, and descriptions'
+---
+
+## Overview
+
+The Update component is designed for changelog pages and release notes. It displays dated entries with labels, optional tags, descriptions, and rich content. Each update supports anchor links for easy sharing.
+
+## Basic Usage
+
+```jsx
+<Update id="v2.0.0" label="May 15, 2024" isVisible={true}>
+  <h3>New Features</h3>
+  <ul>
+    <li>Added dark mode support</li>
+    <li>Improved performance by 50%</li>
+    <li>New dashboard layout</li>
+  </ul>
+</Update>
+```
+
+## Props
+
+<ParamField path="id" type="string" required>
+  Unique identifier for the update. Used for:
+  - Anchor links (URL hash navigation)
+  - Headings registration in table of contents
+  - RSS feed item identification
+  
+  Example: `"v2.0.0"`, `"2024-05-15"`, `"may-update"`
+</ParamField>
+
+<ParamField path="label" type="string" required>
+  The primary label displayed for this update. Typically a date, version number, or release name.
+  
+  Example: `"May 15, 2024"`, `"v2.0.0"`, `"Spring Release"`
+</ParamField>
+
+<ParamField path="isVisible" type="boolean" required>
+  Controls whether the update is rendered. When `false`, the component returns `null`. Used for filtering updates based on tags or date ranges.
+</ParamField>
+
+<ParamField path="children" type="ReactNode">
+  The main content of the update. Typically includes headings, paragraphs, lists, images, or any Markdown/MDX content.
+</ParamField>
+
+<ParamField path="description" type="string">
+  Optional short description or summary of the update. Displayed below the tags in a secondary text style.
+</ParamField>
+
+<ParamField path="tags" type="string[]">
+  Array of tags to categorize the update. Common tags: `"New"`, `"Improvement"`, `"Fix"`, `"Breaking Change"`, `"Deprecated"`.
+  
+  Tags are automatically deduplicated and trimmed.
+</ParamField>
+
+<ParamField path="rss" type="{ title?: string; description?: string }">
+  Custom RSS feed metadata for this update. If not provided, defaults to the main `label` and `description`.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply to the update container.
+</ParamField>
+
+<ParamField path="aria-label" type="string" default="Navigate to changelog">
+  Accessible label for the anchor link icon.
+</ParamField>
+
+<ParamField path="onRegisterHeading" type="(id: string, rect: Rect) => void">
+  Callback fired when the update registers itself in the table of contents. Internal use for navigation features.
+</ParamField>
+
+<ParamField path="onUnregisterHeading" type="(id: string) => void">
+  Callback fired when the update unmounts and removes itself from table of contents.
+</ParamField>
+
+<ParamField path="onCopyAnchorLink" type="(id: string) => void">
+  Callback fired when the anchor link is copied to clipboard. Useful for analytics or user feedback.
+</ParamField>
+
+<ParamField path="hasContext" type="boolean">
+  Internal prop indicating whether the update is within a proper context provider. Enables heading registration features.
+</ParamField>
+
+## Examples
+
+### Simple Update
+
+```jsx
+<Update id="update-1" label="January 15, 2024" isVisible={true}>
+  <p>Fixed critical bug in authentication flow.</p>
+</Update>
+```
+
+### With Tags
+
+```jsx
+<Update 
+  id="v2.1.0" 
+  label="February 1, 2024"
+  tags={["New", "Improvement"]}
+  isVisible={true}
+>
+  <h3>Version 2.1.0</h3>
+  <ul>
+    <li><strong>New:</strong> Dark mode support</li>
+    <li><strong>Improvement:</strong> Faster page loads</li>
+  </ul>
+</Update>
+```
+
+### With Description
+
+```jsx
+<Update 
+  id="spring-2024" 
+  label="March 20, 2024"
+  description="Major release with performance improvements and new features"
+  tags={["New", "Breaking Change"]}
+  isVisible={true}
+>
+  <h3>Spring 2024 Release</h3>
+  <p>This release includes significant performance improvements and several breaking changes. Please review the migration guide.</p>
+</Update>
+```
+
+### Rich Content
+
+```jsx
+<Update 
+  id="v3.0.0" 
+  label="April 10, 2024"
+  tags={["New", "Breaking Change"]}
+  description="Complete redesign with new API"
+  isVisible={true}
+>
+  <h3>Version 3.0.0 - Major Update</h3>
+  
+  <h4>New Features</h4>
+  <ul>
+    <li>Completely redesigned UI</li>
+    <li>New REST API with better performance</li>
+    <li>Real-time collaboration features</li>
+  </ul>
+  
+  <h4>Breaking Changes</h4>
+  <ul>
+    <li>Removed deprecated <code>legacy()</code> method</li>
+    <li>Changed authentication flow</li>
+    <li>Updated minimum Node.js version to 18</li>
+  </ul>
+  
+  <h4>Migration Guide</h4>
+  <p>Follow our <a href="/migration">migration guide</a> to upgrade safely.</p>
+</Update>
+```
+
+### Changelog Page Pattern
+
+```jsx
+<div>
+  <Update 
+    id="v2.2.0" 
+    label="May 1, 2024"
+    tags={["New", "Improvement"]}
+    description="Spring release with new dashboard"
+    isVisible={true}
+  >
+    <h3>What's New</h3>
+    <ul>
+      <li>New analytics dashboard</li>
+      <li>Improved search functionality</li>
+      <li>Added export to PDF feature</li>
+    </ul>
+  </Update>
+
+  <Update 
+    id="v2.1.0" 
+    label="April 1, 2024"
+    tags={["Fix", "Improvement"]}
+    isVisible={true}
+  >
+    <h3>Bug Fixes</h3>
+    <ul>
+      <li>Fixed memory leak in file upload</li>
+      <li>Resolved race condition in API calls</li>
+    </ul>
+  </Update>
+
+  <Update 
+    id="v2.0.0" 
+    label="March 1, 2024"
+    tags={["New", "Breaking Change"]}
+    description="Major version release"
+    isVisible={true}
+  >
+    <h3>Version 2.0</h3>
+    <p>Complete rewrite with modern architecture...</p>
+  </Update>
+</div>
+```
+
+### With RSS Metadata
+
+```jsx
+<Update 
+  id="security-update" 
+  label="May 15, 2024"
+  tags={["Security", "Fix"]}
+  description="Critical security patch"
+  rss={{
+    title: "Security Update - Patch 1.2.3",
+    description: "This update addresses a critical security vulnerability in the authentication system."
+  }}
+  isVisible={true}
+>
+  <h3>Security Patch 1.2.3</h3>
+  <p>We've identified and fixed a critical vulnerability...</p>
+</Update>
+```
+
+### Conditional Visibility
+
+```jsx
+const selectedTags = ["New", "Improvement"];
+
+<div>
+  <Update 
+    id="update-1" 
+    label="May 1, 2024"
+    tags={["New"]}
+    isVisible={selectedTags.some(tag => ["New"].includes(tag))}
+  >
+    <p>New feature content...</p>
+  </Update>
+
+  <Update 
+    id="update-2" 
+    label="April 15, 2024"
+    tags={["Fix"]}
+    isVisible={selectedTags.some(tag => ["Fix"].includes(tag))}
+  >
+    <p>Bug fix content...</p>
+  </Update>
+</div>
+```
+
+## Layout
+
+The Update component uses a responsive two-column layout:
+
+**Desktop (lg breakpoint and above):**
+- Left column (160px fixed): Label, tags, and description
+- Right column (flexible): Main content
+- Left column is sticky on scroll
+
+**Mobile:**
+- Stacked layout (single column)
+- Label and tags on top
+- Content below
+
+## Features
+
+### Anchor Links
+
+Each update includes an anchor link functionality:
+- Hover over the label to reveal the link icon
+- Click the label to copy the anchor URL to clipboard
+- Updates the browser URL hash
+- Smooth scroll to update on page load if URL hash matches
+
+### Tag Management
+
+Tags are automatically:
+- Deduplicated (duplicates removed)
+- Trimmed (whitespace removed)
+- Filtered (empty strings removed)
+
+### Sticky Label
+
+On desktop, the label column is sticky:
+- Remains visible while scrolling through long content
+- Respects scroll margin top CSS variable (`--scroll-mt`)
+- Provides better context for long updates
+
+### Visual Hierarchy
+
+The component provides clear visual hierarchy:
+- **Label**: Primary color on light background, prominent and clickable
+- **Tags**: Secondary color, medium font weight
+- **Description**: Secondary color, regular weight
+- **Content**: Full prose styling with proper spacing
+
+### Dark Mode
+
+Full dark mode support with:
+- Adjusted background colors
+- Proper text contrast
+- Theme-appropriate shadows
+- Smooth transitions
+
+### Accessibility
+
+The Update component includes:
+- Proper `aria-label` for anchor links
+- Semantic HTML structure
+- Keyboard navigation support
+- Focus visible states
+- Descriptive link text
+
+## Common Tag Patterns
+
+Consistent tagging helps users quickly identify update types:
+
+- **New**: Brand new features or capabilities
+- **Improvement**: Enhancements to existing features
+- **Fix**: Bug fixes and corrections
+- **Breaking Change**: Changes that require user action
+- **Deprecated**: Features marked for future removal
+- **Security**: Security-related updates
+- **Performance**: Performance improvements
+- **Documentation**: Documentation updates
+
+## Best Practices
+
+<Callout variant="tip">
+  Use consistent date formats in labels across all updates (e.g., "May 15, 2024" or "2024-05-15") for better scanability.
+</Callout>
+
+<Callout variant="note">
+  Keep descriptions concise (1-2 sentences). They should summarize the update at a glance. Detailed information goes in the content.
+</Callout>
+
+<Callout variant="warning">
+  Always provide the `isVisible` prop. This is required for the component to render and enables filtering functionality.
+</Callout>
+
+## Styling
+
+The Update component:
+- Uses responsive flex layout
+- Includes proper spacing and padding
+- Applies prose styling to content
+- Supports custom className for additional styling
+- Respects system scroll margin top for sticky positioning

@@ -1,0 +1,200 @@
+---
+title: Installation
+description: Install Mintlify Components using npm, yarn, or pnpm
+---
+
+## Prerequisites
+
+Before installing Mintlify Components, make sure your environment meets these requirements:
+
+<CardGroup cols={2}>
+  <Card title="Node.js" icon="node">
+    Version **20.0.0** or higher
+  </Card>
+  <Card title="React" icon="react">
+    Version **^18.0.0** or **^19.0.0**
+  </Card>
+  <Card title="React DOM" icon="react">
+    Version **^18.0.0** or **^19.0.0**
+  </Card>
+  <Card title="Tailwind CSS" icon="paintbrush">
+    Version **3.x** or **4.x**
+  </Card>
+</CardGroup>
+
+<Warning>
+Node.js 20.0.0 or higher is required. The package will not work with older versions.
+</Warning>
+
+## Install the Package
+
+Choose your preferred package manager to install `@mintlify/components`:
+
+<CodeGroup>
+
+```bash npm
+npm install @mintlify/components
+```
+
+```bash pnpm
+pnpm add @mintlify/components
+```
+
+```bash yarn
+yarn add @mintlify/components
+```
+
+</CodeGroup>
+
+The package includes:
+- All React components with TypeScript definitions
+- Pre-built CSS styles
+- ESM and CommonJS module formats
+- Source maps for debugging
+
+## Verify Installation
+
+After installation, verify the package is correctly installed:
+
+<Steps>
+  <Step title="Check package.json">
+    Confirm `@mintlify/components` appears in your dependencies:
+
+    ```json package.json
+    {
+      "dependencies": {
+        "@mintlify/components": "^1.0.5",
+        "react": "^18.0.0",
+        "react-dom": "^18.0.0",
+        "tailwindcss": "^4.0.0"
+      }
+    }
+    ```
+  </Step>
+
+  <Step title="Test import">
+    Create a test file to ensure imports work correctly:
+
+    ```tsx test.tsx
+    import { Callout } from '@mintlify/components';
+
+    // If this imports without errors, installation was successful
+    console.log('Mintlify Components installed successfully!');
+    ```
+  </Step>
+
+  <Step title="Check node_modules">
+    Verify the package files are present:
+
+    ```bash
+    ls node_modules/@mintlify/components
+    ```
+
+    You should see a `dist` folder containing the compiled components.
+  </Step>
+</Steps>
+
+## Package Structure
+
+The installed package includes these exports:
+
+<Accordion title="Available exports">
+
+**Main entry point:**
+```tsx
+import { Accordion, Callout, CodeBlock, Tabs } from '@mintlify/components';
+```
+
+**Styles (required):**
+```css
+@import "@mintlify/components/styles.css";
+```
+
+The package exports these module formats:
+- **ESM**: `dist/index.js` (primary)
+- **CommonJS**: `dist/index.cjs` (compatibility)
+- **TypeScript**: `dist/index.d.ts` (type definitions)
+- **Styles**: `dist/styles.css` (component styles)
+
+</Accordion>
+
+## Component Inventory
+
+After installation, you have access to these components:
+
+### Layout
+`Accordion`, `Card`, `Columns`, `Expandable`, `Frame`, `Panel`, `Tabs`, `Tile`
+
+### Content
+`Callout`, `Steps`, `Badge`, `Icon`, `Tooltip`, `Update`
+
+### Code
+`CodeBlock`, `CodeGroup`
+
+### Data Display
+`Property`, `Tree`
+
+### Visualization
+`Mermaid`, `Color`
+
+### Utility
+`Search`, `View`
+
+<Note>
+Installation complete! Next, proceed to the [Setup](/setup) guide to configure Tailwind CSS and start using components.
+</Note>
+
+## Troubleshooting
+
+<Accordion title="Module not found error">
+  If you see `Cannot find module '@mintlify/components'`:
+
+  1. Clear your package manager cache:
+     ```bash
+     npm cache clean --force
+     # or
+     pnpm store prune
+     # or
+     yarn cache clean
+     ```
+
+  2. Delete `node_modules` and reinstall:
+     ```bash
+     rm -rf node_modules package-lock.json
+     npm install
+     ```
+
+  3. Verify your Node.js version:
+     ```bash
+     node --version  # Should be >= 20.0.0
+     ```
+</Accordion>
+
+<Accordion title="TypeScript errors">
+  If you encounter TypeScript errors:
+
+  1. Ensure your `tsconfig.json` includes:
+     ```json tsconfig.json
+     {
+       "compilerOptions": {
+         "moduleResolution": "bundler",
+         "jsx": "react-jsx"
+       }
+     }
+     ```
+
+  2. Restart your TypeScript server in your editor
+</Accordion>
+
+<Accordion title="Peer dependency warnings">
+  If you see peer dependency warnings, install the required dependencies:
+
+  ```bash
+  npm install react@^18.0.0 react-dom@^18.0.0
+  ```
+
+  Or for React 19:
+  ```bash
+  npm install react@^19.0.0 react-dom@^19.0.0
+  ```
+</Accordion>

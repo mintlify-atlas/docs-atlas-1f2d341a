@@ -1,0 +1,396 @@
+---
+title: Mermaid
+description: Render interactive Mermaid diagrams with zoom, pan, and multiple diagram type support
+---
+
+The `Mermaid` component renders interactive diagrams from Mermaid syntax with built-in zoom and pan controls. It supports all Mermaid diagram types and automatically adapts to light/dark themes.
+
+## Usage
+
+```jsx
+import { Mermaid } from '@mintlify/components';
+
+<Mermaid
+  chart={`graph TD
+    A[Start] --> B{Is it working?}
+    B -->|Yes| C[Great!]
+    B -->|No| D[Debug]
+    D --> B`}
+/>
+```
+
+## Props
+
+<ParamField path="chart" type="string" required>
+  The Mermaid diagram definition string. Supports all Mermaid diagram types.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply to the container.
+</ParamField>
+
+<ParamField path="ariaLabel" type="string" default="Mermaid diagram">
+  Accessible label for the diagram (for screen readers).
+</ParamField>
+
+<ParamField path="placement" type="'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'" default="bottom-right">
+  Position of the zoom and pan control buttons.
+</ParamField>
+
+<ParamField path="actions" type="boolean">
+  Whether to show the interactive controls. When `undefined`, controls are automatically shown when diagram height exceeds 120px. Set to `true` to always show controls, or `false` to always hide them.
+</ParamField>
+
+## Zoom and Pan Controls
+
+The Mermaid component includes interactive controls for navigating large diagrams:
+
+- **Zoom In**: Increase diagram size (magnification)
+- **Zoom Out**: Decrease diagram size
+- **Pan Up/Down/Left/Right**: Move the diagram viewport in any direction
+- **Reset View**: Return to the original view (resets zoom and pan)
+
+### Control Layout
+
+The controls are arranged in a 3×3 grid:
+
+```
+[ ]  [↑]  [+]
+[←]  [⟲]  [→]
+[ ]  [↓]  [-]
+```
+
+- Top row: Pan Up, Zoom In
+- Middle row: Pan Left, Reset, Pan Right
+- Bottom row: Pan Down, Zoom Out
+
+### Auto-Show Behavior
+
+By default, controls are automatically shown when the diagram height is at least 120px. This prevents cluttering small diagrams with unnecessary controls.
+
+## Supported Diagram Types
+
+The Mermaid component supports all standard Mermaid diagram types:
+
+### Flowchart
+
+```jsx
+<Mermaid
+  chart={`graph TD
+    A[Start] --> B{Is it working?}
+    B -->|Yes| C[Great!]
+    B -->|No| D[Debug]
+    D --> B`}
+/>
+```
+
+### Sequence Diagram
+
+```jsx
+<Mermaid
+  chart={`sequenceDiagram
+    participant Alice
+    participant Bob
+    Alice->>John: Hello John, how are you?
+    loop Healthcheck
+      John->>John: Fight against hypochondria
+    end
+    Note right of John: Rational thoughts prevail!
+    John-->>Alice: Great!
+    John->>Bob: How about you?
+    Bob-->>John: Jolly good!`}
+/>
+```
+
+### Class Diagram
+
+```jsx
+<Mermaid
+  chart={`classDiagram
+    Animal <|-- Duck
+    Animal <|-- Fish
+    Animal : +int age
+    Animal : +String gender
+    Animal: +isMammal()
+    class Duck{
+      +String beakColor
+      +swim()
+      +quack()
+    }`}
+/>
+```
+
+### State Diagram
+
+```jsx
+<Mermaid
+  chart={`stateDiagram-v2
+    [*] --> Still
+    Still --> Moving
+    Moving --> Still
+    Moving --> Crash
+    Crash --> [*]`}
+/>
+```
+
+### Entity Relationship Diagram
+
+```jsx
+<Mermaid
+  chart={`erDiagram
+    CUSTOMER ||--o{ ORDER : places
+    ORDER ||--|{ LINE-ITEM : contains
+    CUSTOMER }|..|{ DELIVERY-ADDRESS : uses`}
+/>
+```
+
+### Gantt Chart
+
+```jsx
+<Mermaid
+  chart={`gantt
+    title A Gantt Diagram
+    dateFormat YYYY-MM-DD
+    section Section
+    A task :a1, 2024-01-01, 30d
+    Another task :after a1, 20d`}
+/>
+```
+
+### Pie Chart
+
+```jsx
+<Mermaid
+  chart={`pie title Pets adopted by volunteers
+    "Dogs" : 386
+    "Cats" : 85
+    "Rats" : 15`}
+/>
+```
+
+### Git Graph
+
+```jsx
+<Mermaid
+  chart={`gitGraph
+    commit
+    commit
+    branch develop
+    checkout develop
+    commit
+    commit
+    checkout main
+    merge develop
+    commit`}
+/>
+```
+
+### User Journey
+
+```jsx
+<Mermaid
+  chart={`journey
+    title My working day
+    section Go to work
+      Make tea: 5: Me
+      Go upstairs: 3: Me
+      Do work: 1: Me, Cat
+    section Go home
+      Go downstairs: 5: Me
+      Sit down: 5: Me`}
+/>
+```
+
+## Examples
+
+### Basic Flowchart
+
+```jsx
+<Mermaid
+  chart={`graph TD
+    A[Start] --> B{Is it working?}
+    B -->|Yes| C[Great!]
+    B -->|No| D[Debug]
+    D --> B`}
+/>
+```
+
+### Complex Architecture Diagram
+
+```jsx
+<Mermaid
+  chart={`graph TB
+    subgraph Frontend
+      A[React App] --> B[Components]
+      B --> C[State Management]
+    end
+    subgraph Backend
+      D[API Gateway] --> E[Auth Service]
+      D --> F[Data Service]
+      E --> G[(Database)]
+      F --> G
+    end
+    A --> D`}
+/>
+```
+
+### Controls in Different Positions
+
+```jsx
+{/* Top-left */}
+<Mermaid
+  chart={`graph LR
+    A --> B --> C`}
+  placement="top-left"
+  actions={true}
+/>
+
+{/* Top-right */}
+<Mermaid
+  chart={`graph LR
+    A --> B --> C`}
+  placement="top-right"
+  actions={true}
+/>
+
+{/* Bottom-left */}
+<Mermaid
+  chart={`graph LR
+    A --> B --> C`}
+  placement="bottom-left"
+  actions={true}
+/>
+
+{/* Bottom-right (default) */}
+<Mermaid
+  chart={`graph LR
+    A --> B --> C`}
+  placement="bottom-right"
+  actions={true}
+/>
+```
+
+### Force Show/Hide Controls
+
+```jsx
+{/* Always show controls (even for small diagrams) */}
+<Mermaid
+  chart={`flowchart LR
+    A --> B`}
+  actions={true}
+/>
+
+{/* Always hide controls (even for large diagrams) */}
+<Mermaid
+  chart={`graph TD
+    A --> B --> C --> D --> E`}
+  actions={false}
+/>
+```
+
+### With Custom Styling
+
+```jsx
+<Mermaid
+  chart={`graph LR
+    A[Start] --> B[End]`}
+  className="border rounded-lg p-4 bg-stone-50 dark:bg-stone-800"
+/>
+```
+
+### Large Diagram with Scrollable Container
+
+```jsx
+<div className="h-[600px] w-[800px]">
+  <Mermaid
+    chart={`graph TD
+      A[Christmas] -->|Get money| B(Go shopping)
+      B --> C{Let me think}
+      C -->|One| D[Laptop]
+      C -->|Two| E[iPhone]
+      C -->|Three| F[Car]
+      D --> G[Work]
+      E --> H[Fun]
+      F --> I[Travel]
+      G --> J[Success]
+      H --> J
+      I --> J`}
+    placement="top-right"
+  />
+</div>
+```
+
+### Multiple Diagrams (with Unique IDs)
+
+```jsx
+{/* The component automatically handles unique IDs to prevent SVG conflicts */}
+<Mermaid
+  ariaLabel="Order processing diagram 1"
+  chart={`sequenceDiagram
+    participant Customer
+    participant API
+    Customer->>API: Create order
+    API-->>Customer: Order confirmed`}
+/>
+
+<Mermaid
+  ariaLabel="Order processing diagram 2"
+  chart={`sequenceDiagram
+    participant Customer
+    participant API
+    Customer->>API: Create order
+    API-->>Customer: Order confirmed`}
+/>
+```
+
+## Theme Support
+
+The Mermaid component automatically adapts to your site's theme:
+
+- **Light mode**: Uses Mermaid's `default` theme
+- **Dark mode**: Uses Mermaid's `dark` theme
+- **Font**: Inherits from the parent container
+
+## Error Handling
+
+If the diagram syntax is invalid, the component displays a user-friendly error message:
+
+```jsx
+<Mermaid
+  chart={`graph TD
+    A[Start --> B{Invalid syntax here`}
+/>
+```
+
+This will show:
+```
+Failed to render diagram
+[Error message from Mermaid parser]
+```
+
+## Technical Details
+
+- **Rendering**: Diagrams are rendered off-screen first, then inserted into the DOM
+- **Unique IDs**: Each diagram gets a unique ID to prevent SVG marker conflicts
+- **Marker ID Fix**: SVG marker IDs are automatically made unique to support multiple diagrams
+- **Gantt Width**: Gantt charts have a default width of 800px
+- **Re-rendering**: Diagrams automatically re-render when the chart content or theme changes
+
+## Accessibility
+
+- The diagram container has `role="img"` for screen readers
+- Custom `ariaLabel` can be provided for better descriptions
+- All control buttons have proper ARIA labels
+- The control group has `aria-label="Diagram zoom and pan controls"`
+
+## Performance
+
+- Diagrams are rendered asynchronously to avoid blocking the UI
+- Cancelled renders are properly cleaned up
+- Resize observers automatically manage control visibility
+
+## Source
+
+View the source code:
+- Mermaid: `packages/components/src/components/mermaid/mermaid.tsx:19`
+- Zoom Controls: `packages/components/src/components/mermaid/zoom-controls.tsx:34`

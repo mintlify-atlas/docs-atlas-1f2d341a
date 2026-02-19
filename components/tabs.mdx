@@ -1,0 +1,436 @@
+---
+title: 'Tabs'
+description: 'An accessible tabbed interface for organizing content into switchable panels'
+---
+
+The Tabs component provides an interactive way to organize content into multiple panels that users can switch between. It includes full keyboard navigation support and follows WAI-ARIA best practices.
+
+## Basic Usage
+
+```jsx
+<Tabs>
+  <Tabs.Item title="First Tab">
+    <p>This is the content of the first tab.</p>
+  </Tabs.Item>
+  <Tabs.Item title="Second Tab">
+    <p>This is the content of the second tab.</p>
+  </Tabs.Item>
+  <Tabs.Item title="Third Tab">
+    <p>This is the content of the third tab.</p>
+  </Tabs.Item>
+</Tabs>
+```
+
+## Props
+
+### Tabs (Root Component)
+
+<ParamField path="children" type="ReactElement<TabsItemProps> | ReactElement<TabsItemProps>[]" required>
+  One or more `Tabs.Item` components to display as tabs.
+</ParamField>
+
+<ParamField path="defaultTabIndex" type="number" default={0}>
+  Index of the initially active tab (0-based). Must be within the range of available tabs.
+</ParamField>
+
+<ParamField path="onTabChange" type="(tabIndex: number) => void">
+  Callback fired when a tab is clicked. Receives the new tab index.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply to the tabs container.
+</ParamField>
+
+<ParamField path="borderBottom" type="boolean" default={false}>
+  When `true`, adds a border at the bottom of the entire tabs container.
+</ParamField>
+
+<ParamField path="ariaLabel" type="string" default="Tabs">
+  ARIA label for the tab list, used by screen readers to identify the component.
+</ParamField>
+
+<ParamField path="panelsRef" type="RefObject<HTMLDivElement>">
+  Ref to the panels container. Used for advanced integrations with URL hash sync and tab state management.
+</ParamField>
+
+### Tabs.Item
+
+<ParamField path="title" type="string" required>
+  The text displayed on the tab button.
+</ParamField>
+
+<ParamField path="id" type="string">
+  Optional custom ID for the tab. If not provided, an ID is automatically generated from the title.
+</ParamField>
+
+<ParamField path="icon" type="string">
+  Icon name to display next to the tab title. Can be from Font Awesome or Lucide.
+</ParamField>
+
+<ParamField path="iconType" type="IconType">
+  Type of Font Awesome icon. Options: `"solid"`, `"regular"`, `"light"`, `"duotone"`, `"thin"`, `"sharp-solid"`, `"brands"`
+</ParamField>
+
+<ParamField path="iconLibrary" type="IconLibrary">
+  Icon library to use. Options: `"fontawesome"`, `"lucide"`
+</ParamField>
+
+<ParamField path="children" type="ReactNode">
+  The content to display when this tab is active.
+</ParamField>
+
+## Examples
+
+### Default Tabs
+
+```jsx
+<Tabs>
+  <Tabs.Item title="Overview">
+    <p>Overview content goes here.</p>
+  </Tabs.Item>
+  <Tabs.Item title="Documentation">
+    <p>Documentation content goes here.</p>
+  </Tabs.Item>
+  <Tabs.Item title="Examples">
+    <p>Examples content goes here.</p>
+  </Tabs.Item>
+</Tabs>
+```
+
+### With Default Tab
+
+```jsx
+<Tabs defaultTabIndex={1}>
+  <Tabs.Item title="First Tab">
+    <p>Content of the first tab.</p>
+  </Tabs.Item>
+  <Tabs.Item title="Second Tab (Default)">
+    <p>This tab is shown by default because defaultTabIndex is set to 1.</p>
+  </Tabs.Item>
+  <Tabs.Item title="Third Tab">
+    <p>Content of the third tab.</p>
+  </Tabs.Item>
+</Tabs>
+```
+
+### With Icons
+
+```jsx
+<Tabs>
+  <Tabs.Item icon="home" title="Home">
+    <p>Welcome to the home tab with a home icon.</p>
+  </Tabs.Item>
+  <Tabs.Item icon="gear" title="Settings">
+    <p>Configure your settings in this tab.</p>
+  </Tabs.Item>
+  <Tabs.Item icon="user" title="User">
+    <p>View user profile information here.</p>
+  </Tabs.Item>
+  <Tabs.Item icon="envelope" title="Messages">
+    <p>Check your messages in this tab.</p>
+  </Tabs.Item>
+</Tabs>
+```
+
+### With Border Bottom
+
+```jsx
+<Tabs borderBottom>
+  <Tabs.Item title="Overview">
+    <p>This tabs container has a border at the bottom.</p>
+  </Tabs.Item>
+  <Tabs.Item title="Details">
+    <p>The borderBottom prop adds visual separation.</p>
+  </Tabs.Item>
+</Tabs>
+```
+
+### Rich Content
+
+```jsx
+<Tabs>
+  <Tabs.Item title="Code Example">
+    <h2>Usage</h2>
+    <p>Here's how to use the component:</p>
+    <pre><code>{`import { Component } from '@your-org/component';
+
+function App() {
+  return <Component />;
+}`}</code></pre>
+  </Tabs.Item>
+  <Tabs.Item title="List Content">
+    <ul>
+      <li>First item in the list</li>
+      <li>Second item in the list</li>
+      <li>Third item in the list</li>
+      <li>Fourth item in the list</li>
+    </ul>
+  </Tabs.Item>
+  <Tabs.Item title="Mixed Content">
+    <h3>Section Title</h3>
+    <p>This tab demonstrates mixed content with headings and paragraphs.</p>
+    <div className="flex gap-2">
+      <span className="bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded text-sm">
+        Tag 1
+      </span>
+      <span className="bg-green-100 dark:bg-green-900 px-2 py-1 rounded text-sm">
+        Tag 2
+      </span>
+    </div>
+  </Tabs.Item>
+</Tabs>
+```
+
+### With Custom IDs
+
+```jsx
+<Tabs>
+  <Tabs.Item id="custom-tab-1" title="Custom ID Tab">
+    <p>This tab has a custom ID: custom-tab-1</p>
+  </Tabs.Item>
+  <Tabs.Item id="custom-tab-2" title="Another Custom">
+    <p>This tab has a custom ID: custom-tab-2</p>
+  </Tabs.Item>
+</Tabs>
+```
+
+<Note>
+  Custom IDs are useful for deep linking and URL synchronization. If not provided, IDs are automatically generated using a slugified version of the title.
+</Note>
+
+### With Callback
+
+```jsx
+<Tabs onTabChange={(index) => console.log(`Tab changed to index: ${index}`)}>
+  <Tabs.Item title="First">
+    <p>Click different tabs and check the console for callback output.</p>
+  </Tabs.Item>
+  <Tabs.Item title="Second">
+    <p>The onTabChange callback receives the new tab index.</p>
+  </Tabs.Item>
+  <Tabs.Item title="Third">
+    <p>This is useful for analytics or state management.</p>
+  </Tabs.Item>
+</Tabs>
+```
+
+### Code Language Tabs
+
+```jsx
+<Tabs>
+  <Tabs.Item icon="js" iconType="brands" title="JavaScript">
+    <pre><code>{`const greeting = "Hello, World!";
+console.log(greeting);`}</code></pre>
+  </Tabs.Item>
+  <Tabs.Item icon="python" iconType="brands" title="Python">
+    <pre><code>{`greeting = "Hello, World!"
+print(greeting)`}</code></pre>
+  </Tabs.Item>
+  <Tabs.Item icon="golang" iconType="brands" title="Go">
+    <pre><code>{`package main
+import "fmt"
+
+func main() {
+    fmt.Println("Hello, World!")
+}`}</code></pre>
+  </Tabs.Item>
+</Tabs>
+```
+
+### API Request/Response Tabs
+
+```jsx
+<Tabs>
+  <Tabs.Item title="Request">
+    <pre><code>{`POST /api/users
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john@example.com"
+}`}</code></pre>
+  </Tabs.Item>
+  <Tabs.Item title="Response">
+    <pre><code>{`200 OK
+Content-Type: application/json
+
+{
+  "id": "123",
+  "name": "John Doe",
+  "email": "john@example.com",
+  "createdAt": "2024-01-15T10:30:00Z"
+}`}</code></pre>
+  </Tabs.Item>
+</Tabs>
+```
+
+### Many Tabs with Scrolling
+
+```jsx
+<Tabs>
+  <Tabs.Item title="Tab 1">Content 1</Tabs.Item>
+  <Tabs.Item title="Tab 2">Content 2</Tabs.Item>
+  <Tabs.Item title="Tab 3">Content 3</Tabs.Item>
+  <Tabs.Item title="Tab 4">Content 4</Tabs.Item>
+  <Tabs.Item title="Tab 5">Content 5</Tabs.Item>
+  <Tabs.Item title="Tab 6">Content 6</Tabs.Item>
+  <Tabs.Item title="Tab 7">Content 7</Tabs.Item>
+  <Tabs.Item title="Tab 8">Content 8</Tabs.Item>
+</Tabs>
+```
+
+<Note>
+  When there are many tabs, the tab list automatically becomes horizontally scrollable to maintain usability.
+</Note>
+
+### Custom Styling
+
+```jsx
+<Tabs className="my-8 p-4 border-2 border-blue-500 rounded-md">
+  <Tabs.Item title="Styled Tabs">
+    <p>The tab list has custom styling applied via className.</p>
+  </Tabs.Item>
+  <Tabs.Item title="Another Tab">
+    <p>The className prop allows for custom styling of the container.</p>
+  </Tabs.Item>
+</Tabs>
+```
+
+## Keyboard Navigation
+
+The Tabs component includes full keyboard support following WAI-ARIA best practices:
+
+<ParamField path="Arrow Left" type="key">
+  Move focus to the previous tab (wraps from first to last)
+</ParamField>
+
+<ParamField path="Arrow Right" type="key">
+  Move focus to the next tab (wraps from last to first)
+</ParamField>
+
+<ParamField path="Home" type="key">
+  Move focus to the first tab
+</ParamField>
+
+<ParamField path="End" type="key">
+  Move focus to the last tab
+</ParamField>
+
+<ParamField path="Enter / Space" type="key">
+  Activate the focused tab
+</ParamField>
+
+<ParamField path="Tab" type="key">
+  Move focus from the tab list to the active tab panel
+</ParamField>
+
+## Styling
+
+The Tabs component automatically adapts to light and dark themes:
+
+### Tab States
+
+- **Inactive tabs**: Gray text with transparent border
+- **Active tab**: Primary color text with primary color bottom border
+- **Hover**: Border color changes to indicate interactivity
+- **Focus**: Visible focus ring for keyboard navigation
+
+### Tab Icons
+
+When icons are provided:
+- **Inactive**: Gray color matching text
+- **Active**: Primary color matching text
+- Icons are automatically sized and positioned
+
+## Accessibility
+
+The Tabs component follows WAI-ARIA Authoring Practices:
+
+- Uses proper ARIA roles (`role="tablist"`, `role="tab"`, `role="tabpanel"`)
+- Manages focus appropriately
+- Provides keyboard navigation
+- Uses `aria-selected` to indicate active tab
+- Uses `aria-controls` to link tabs to panels
+- Uses `aria-labelledby` to link panels to tabs
+- Uses `aria-hidden` to hide inactive panels
+- Proper `tabindex` management (0 for active, -1 for inactive)
+
+<Note>
+  The component automatically generates unique IDs for tabs and panels to ensure proper ARIA relationships.
+</Note>
+
+## Advanced Usage
+
+### URL Hash Synchronization
+
+For advanced integrations with URL state management:
+
+```jsx
+import { useRef } from 'react';
+import { Tabs } from '@mintlify/components';
+
+function MyComponent() {
+  const panelsRef = useRef<HTMLDivElement>(null);
+  
+  // Your custom URL sync logic
+  const handleTabChange = (index: number) => {
+    // Update URL hash
+    window.location.hash = `tab-${index}`;
+  };
+  
+  return (
+    <Tabs 
+      panelsRef={panelsRef}
+      onTabChange={handleTabChange}
+    >
+      <Tabs.Item title="Tab 1">Content 1</Tabs.Item>
+      <Tabs.Item title="Tab 2">Content 2</Tabs.Item>
+    </Tabs>
+  );
+}
+```
+
+### Custom Tab IDs for Deep Linking
+
+```jsx
+<Tabs>
+  <Tabs.Item id="overview" title="Overview">
+    <p>Access this tab via #overview</p>
+  </Tabs.Item>
+  <Tabs.Item id="getting-started" title="Getting Started">
+    <p>Access this tab via #getting-started</p>
+  </Tabs.Item>
+  <Tabs.Item id="api-reference" title="API Reference">
+    <p>Access this tab via #api-reference</p>
+  </Tabs.Item>
+</Tabs>
+```
+
+## Best Practices
+
+1. **Use descriptive tab titles**: Keep titles short but meaningful
+2. **Limit tab count**: Too many tabs can overwhelm users (consider accordion or other patterns)
+3. **Provide icons sparingly**: Icons should add clarity, not clutter
+4. **Test keyboard navigation**: Ensure all tabs are accessible via keyboard
+5. **Consider mobile**: On narrow screens, tabs scroll horizontally
+6. **Group related content**: Only use tabs for content that belongs in the same context
+
+```jsx
+{/* Good: Related content */}
+<Tabs>
+  <Tabs.Item title="Description">Product description</Tabs.Item>
+  <Tabs.Item title="Specifications">Technical specs</Tabs.Item>
+  <Tabs.Item title="Reviews">Customer reviews</Tabs.Item>
+</Tabs>
+
+{/* Bad: Unrelated content */}
+<Tabs>
+  <Tabs.Item title="Products">All products</Tabs.Item>
+  <Tabs.Item title="About">Company info</Tabs.Item>
+  <Tabs.Item title="Contact">Contact form</Tabs.Item>
+</Tabs>
+```
+
+<Warning>
+  Avoid nesting Tabs components inside each other. This creates a confusing user experience and accessibility issues. Use accordions or separate sections instead.
+</Warning>

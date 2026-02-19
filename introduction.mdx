@@ -1,0 +1,160 @@
+---
+title: Introduction
+description: Open source React UI components for documentation sites, built with Tailwind CSS
+---
+
+<img
+  className="block dark:hidden"
+  src="/images/hero-light.svg"
+  alt="Mintlify Components Hero Light"
+/>
+<img
+  className="hidden dark:block"
+  src="/images/hero-dark.svg"
+  alt="Mintlify Components Hero Dark"
+/>
+
+## Welcome to Mintlify Components
+
+Mintlify Components is a comprehensive library of production-ready React components designed specifically for documentation sites. Built with Tailwind CSS and fully open source, it provides everything you need to create beautiful, accessible, and interactive documentation.
+
+<CardGroup cols={2}>
+  <Card
+    title="Installation"
+    icon="download"
+    href="/installation"
+  >
+    Get started with npm, yarn, or pnpm in minutes
+  </Card>
+  <Card
+    title="Setup Guide"
+    icon="gear"
+    href="/setup"
+  >
+    Configure Tailwind CSS v3 or v4 for your project
+  </Card>
+  <Card
+    title="Components"
+    icon="grid"
+    href="/components/accordion"
+  >
+    Explore 20+ components for layout, content, and code
+  </Card>
+  <Card
+    title="GitHub"
+    icon="github"
+    href="https://github.com/mintlify/components"
+  >
+    View source code and contribute to the project
+  </Card>
+</CardGroup>
+
+## Key Features
+
+<CardGroup cols={3}>
+  <Card title="Modern React" icon="react">
+    Built with React 18+ support, including React 19 compatibility
+  </Card>
+  <Card title="Tailwind Native" icon="paintbrush">
+    Seamless integration with both Tailwind CSS v3 and v4
+  </Card>
+  <Card title="TypeScript First" icon="code">
+    Full TypeScript support with comprehensive type definitions
+  </Card>
+  <Card title="Accessible" icon="universal-access">
+    Built with accessibility in mind using @base-ui/react and @headlessui/react
+  </Card>
+  <Card title="Themeable" icon="palette">
+    Easily customize colors and styles with Tailwind configuration
+  </Card>
+  <Card title="Open Source" icon="code-branch">
+    MIT licensed and maintained by the community
+  </Card>
+</CardGroup>
+
+## Component Categories
+
+Mintlify Components includes over 20 carefully crafted components organized into focused categories:
+
+### Layout Components
+
+Structure your documentation with flexible layout primitives:
+- **Accordion** - Collapsible content sections
+- **Card** - Highlighted content containers
+- **Columns** - Multi-column layouts
+- **Expandable** - Show/hide content interactions
+- **Frame** - Embedded content wrappers
+- **Panel** - Sectioned content areas
+- **Tabs** - Tabbed navigation interfaces
+- **Tile** - Grid-based content blocks
+
+### Content Components
+
+Enhance your documentation with rich content elements:
+- **Callout** - Highlighted notices and alerts
+- **Steps** - Sequential instruction flows
+- **Badge** - Status and label indicators
+- **Icon** - Lucide icon integration
+- **Tooltip** - Contextual information overlays
+- **Update** - Version and changelog entries
+
+### Code Components
+
+Showcase code with syntax highlighting and features:
+- **CodeBlock** - Syntax-highlighted code with Shiki
+- **CodeGroup** - Multiple code examples with tabs
+
+### Data Display Components
+
+Present structured information:
+- **Property** - API reference properties
+- **Tree** - Hierarchical data structures
+
+### Visualization Components
+
+Create diagrams and visual elements:
+- **Mermaid** - Diagram and chart rendering
+- **Color** - Color palette displays
+
+### Utility Components
+
+Special-purpose functionality:
+- **Search** - Documentation search interface
+- **View** - Conditional rendering utilities
+
+## Quick Start Example
+
+```tsx
+import { Accordion, Callout, CodeBlock, Tabs } from '@mintlify/components';
+
+function Documentation() {
+  return (
+    <div>
+      <Callout type="info" title="Getting Started">
+        Welcome to Mintlify Components! This library provides everything
+        you need for beautiful documentation.
+      </Callout>
+
+      <Accordion title="What's included?">
+        <p>
+          Over 20 components for layout, content, code display, and more.
+          All components are built with Tailwind CSS and fully customizable.
+        </p>
+      </Accordion>
+    </div>
+  );
+}
+```
+
+## System Requirements
+
+Before installing, ensure your project meets these requirements:
+
+- **Node.js** >= 20.0.0
+- **React** ^18.0.0 or ^19.0.0
+- **React DOM** ^18.0.0 or ^19.0.0
+- **Tailwind CSS** v3 or v4
+
+<Note>
+Ready to get started? Head over to the [Installation](/installation) guide to add Mintlify Components to your project.
+</Note>

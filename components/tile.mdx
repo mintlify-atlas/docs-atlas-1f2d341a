@@ -1,0 +1,449 @@
+---
+title: 'Tile'
+description: 'A decorative card component for displaying visual content with a distinctive plus-pattern background'
+---
+
+The Tile component is a specialized card designed for showcasing visual content like icons, logos, or graphics with a distinctive plus-pattern background. It's commonly used in component galleries, feature showcases, or navigation grids.
+
+## Basic Usage
+
+```jsx
+<Tile href="/components/accordion">
+  <img src="/accordion-preview.svg" alt="Accordion component" />
+</Tile>
+```
+
+## Props
+
+<ParamField path="href" type="string" required>
+  URL to navigate to when the tile is clicked. External URLs automatically open in a new tab with `rel="noreferrer"`.
+</ParamField>
+
+<ParamField path="children" type="ReactNode" required>
+  The visual content to display inside the tile. Commonly an image, SVG, or icon component.
+</ParamField>
+
+<ParamField path="title" type="string">
+  Optional title displayed below the tile content. Text automatically truncates with ellipsis if too long.
+</ParamField>
+
+<ParamField path="description" type="string">
+  Optional description text displayed below the title. Text automatically truncates with ellipsis if too long.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply to the tile container.
+</ParamField>
+
+## Examples
+
+### With Title and Description
+
+```jsx
+<Tile 
+  href="/components/accordion" 
+  title="Accordion" 
+  description="Two variants"
+>
+  <img src="/accordion-preview.svg" alt="Accordion" />
+</Tile>
+```
+
+### Title Only
+
+```jsx
+<Tile href="/components/card" title="Card">
+  <img src="/card-preview.svg" alt="Card component" />
+</Tile>
+```
+
+### Description Only
+
+```jsx
+<Tile 
+  href="/components/tabs" 
+  description="Interactive tabbed interface"
+>
+  <img src="/tabs-preview.svg" alt="Tabs component" />
+</Tile>
+```
+
+### Visual Content Only
+
+```jsx
+<Tile href="/components/button">
+  <img src="/button-preview.svg" alt="Button component" />
+</Tile>
+```
+
+### With SVG Content
+
+```jsx
+<Tile 
+  href="/components/icon" 
+  title="Icon" 
+  description="Multiple libraries"
+>
+  <svg viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+  </svg>
+</Tile>
+```
+
+### With React Icon Component
+
+```jsx
+import { Zap } from 'lucide-react';
+
+<Tile 
+  href="/features/performance" 
+  title="Performance" 
+  description="Lightning fast"
+>
+  <Zap className="w-16 h-16 text-yellow-500" />
+</Tile>
+```
+
+### Component Gallery Grid
+
+```jsx
+<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+  <Tile href="/components/accordion" title="Accordion" description="Collapsible sections">
+    <img src="/accordion.svg" alt="Accordion" />
+  </Tile>
+  <Tile href="/components/card" title="Card" description="Content container">
+    <img src="/card.svg" alt="Card" />
+  </Tile>
+  <Tile href="/components/tabs" title="Tabs" description="Tabbed interface">
+    <img src="/tabs.svg" alt="Tabs" />
+  </Tile>
+  <Tile href="/components/button" title="Button" description="Interactive button">
+    <img src="/button.svg" alt="Button" />
+  </Tile>
+</div>
+```
+
+### Feature Showcase
+
+```jsx
+<div className="grid grid-cols-3 gap-6">
+  <Tile 
+    href="/features/fast" 
+    title="Lightning Fast" 
+    description="Optimized for speed"
+  >
+    <Zap className="w-20 h-20 text-yellow-500" />
+  </Tile>
+  <Tile 
+    href="/features/secure" 
+    title="Secure by Default" 
+    description="Built with security in mind"
+  >
+    <Shield className="w-20 h-20 text-green-500" />
+  </Tile>
+  <Tile 
+    href="/features/scalable" 
+    title="Infinitely Scalable" 
+    description="Grows with your needs"
+  >
+    <TrendingUp className="w-20 h-20 text-blue-500" />
+  </Tile>
+</div>
+```
+
+### External Link
+
+```jsx
+<Tile 
+  href="https://github.com/mintlify/components" 
+  title="GitHub" 
+  description="View source code"
+>
+  <GitHubIcon className="w-16 h-16" />
+</Tile>
+```
+
+<Note>
+  External links (starting with `http://` or `https://`) automatically open in a new tab with `target="_blank"` and `rel="noreferrer"` for security.
+</Note>
+
+### Custom Styling
+
+```jsx
+<Tile 
+  href="/special" 
+  title="Special Feature" 
+  className="border-2 border-blue-500"
+>
+  <Star className="w-16 h-16 text-blue-500" />
+</Tile>
+```
+
+### Dark/Light Mode Preview
+
+```jsx
+<Tile 
+  href="/components/theme" 
+  title="Theme Toggle" 
+  description="Light and dark modes"
+>
+  <div className="flex gap-2">
+    <Sun className="w-8 h-8 text-yellow-500" />
+    <Moon className="w-8 h-8 text-blue-500" />
+  </div>
+</Tile>
+```
+
+## Visual Design
+
+The Tile component features a distinctive design with several visual elements:
+
+### Plus Pattern Background
+
+- **Light mode**: Light gray plus symbols on a subtle gray background
+- **Dark mode**: Dark gray plus symbols on a dark background
+- Pattern repeats across the entire tile surface
+- Creates a professional, branded appearance
+- 50% opacity for subtlety
+
+### Content Container
+
+- Fixed height of 170px for consistent tile sizing
+- Centered content both horizontally and vertically
+- Rounded corners (rounded-2xl)
+- Padding ensures content doesn't touch edges
+- SVG content automatically scales to fit
+
+### Edge Fade Effect
+
+Subtle gradient fade at the left and right edges:
+- Creates a polished, finished appearance
+- Helps content feel contained within the tile
+- Automatically matches theme (light/dark)
+
+### Text Container
+
+When title or description is provided:
+- Centered alignment
+- Title: Medium weight, base size, stone-900 (dark) / stone-200 (light)
+- Description: Normal weight, small size, stone-600 (dark) / stone-400 (light)
+- Automatic text truncation with ellipsis for long text
+- Full text available on hover via `title` attribute
+
+## Styling
+
+The Tile component automatically adapts to light and dark themes. Customize appearance using the `className` prop:
+
+```jsx
+<Tile 
+  href="/custom" 
+  title="Custom Tile" 
+  className="shadow-xl hover:scale-105 transition-transform"
+>
+  <Content />
+</Tile>
+```
+
+### Content Sizing
+
+The tile automatically handles content sizing:
+
+- SVG elements scale to fit the 170px height container
+- Maximum width and height prevent overflow
+- Maintains aspect ratios
+- Content is centered automatically
+
+```jsx
+{/* SVG will auto-scale */}
+<Tile href="/component">
+  <svg viewBox="0 0 100 100">
+    {/* SVG content */}
+  </svg>
+</Tile>
+
+{/* Images will auto-scale */}
+<Tile href="/component">
+  <img src="/preview.png" alt="Preview" />
+</Tile>
+```
+
+## Hover Effects
+
+Tiles include built-in hover effects:
+- Subtle transition on hover
+- Cursor changes to pointer
+- Group states for interactive feedback
+- Maintains accessibility focus states
+
+## Use Cases
+
+### Component Documentation
+
+```jsx
+<div className="grid grid-cols-4 gap-4">
+  <Tile href="/components/accordion" title="Accordion">
+    <AccordionPreview />
+  </Tile>
+  <Tile href="/components/tabs" title="Tabs">
+    <TabsPreview />
+  </Tile>
+  <Tile href="/components/card" title="Card">
+    <CardPreview />
+  </Tile>
+  <Tile href="/components/button" title="Button">
+    <ButtonPreview />
+  </Tile>
+</div>
+```
+
+### Integration Showcase
+
+```jsx
+<div className="grid grid-cols-3 gap-6">
+  <Tile 
+    href="/integrations/github" 
+    title="GitHub" 
+    description="Source control"
+  >
+    <GitHubLogo />
+  </Tile>
+  <Tile 
+    href="/integrations/slack" 
+    title="Slack" 
+    description="Team chat"
+  >
+    <SlackLogo />
+  </Tile>
+  <Tile 
+    href="/integrations/vercel" 
+    title="Vercel" 
+    description="Deployment"
+  >
+    <VercelLogo />
+  </Tile>
+</div>
+```
+
+### Feature Navigation
+
+```jsx
+<div className="grid grid-cols-2 gap-4">
+  <Tile href="/features/analytics" title="Analytics">
+    <ChartIcon />
+  </Tile>
+  <Tile href="/features/api" title="API">
+    <CodeIcon />
+  </Tile>
+  <Tile href="/features/security" title="Security">
+    <LockIcon />
+  </Tile>
+  <Tile href="/features/performance" title="Performance">
+    <RocketIcon />
+  </Tile>
+</div>
+```
+
+### Template Gallery
+
+```jsx
+<div className="grid grid-cols-3 gap-4">
+  <Tile 
+    href="/templates/blog" 
+    title="Blog Template" 
+    description="Perfect for content sites"
+  >
+    <img src="/templates/blog-preview.png" alt="Blog template" />
+  </Tile>
+  <Tile 
+    href="/templates/docs" 
+    title="Documentation" 
+    description="Technical documentation"
+  >
+    <img src="/templates/docs-preview.png" alt="Docs template" />
+  </Tile>
+  <Tile 
+    href="/templates/landing" 
+    title="Landing Page" 
+    description="Marketing focused"
+  >
+    <img src="/templates/landing-preview.png" alt="Landing template" />
+  </Tile>
+</div>
+```
+
+## Accessibility
+
+The Tile component maintains accessibility:
+
+- Semantic anchor tag (`<a>`) for proper navigation
+- Keyboard focusable and activatable
+- Screen reader friendly with proper alt text on images
+- Focus indicators for keyboard navigation
+- Full title/description text available via `title` attribute even when truncated
+- Proper link behavior (internal vs external)
+
+<Note>
+  Always provide meaningful alt text for images within tiles to ensure screen reader users understand the content.
+</Note>
+
+## Responsive Behavior
+
+Tiles work well in responsive grids:
+
+```jsx
+{/* Responsive grid: 1 col mobile, 2 tablet, 3 desktop, 4 wide */}
+<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+  <Tile href="/1" title="Item 1"><Content1 /></Tile>
+  <Tile href="/2" title="Item 2"><Content2 /></Tile>
+  <Tile href="/3" title="Item 3"><Content3 /></Tile>
+  <Tile href="/4" title="Item 4"><Content4 /></Tile>
+</div>
+```
+
+## Best Practices
+
+1. **Use consistent sizing**: Keep all tiles in a grid the same height for visual harmony
+2. **Provide alt text**: Always include alt text for images
+3. **Keep titles short**: Titles truncate automatically but short titles work best
+4. **Optimize images**: Use appropriately sized preview images for performance
+5. **Group related content**: Use tiles for similar types of content (all components, all integrations, etc.)
+
+```jsx
+{/* Good: Consistent, related content */}
+<div className="grid grid-cols-4 gap-4">
+  <Tile href="/ui/button" title="Button"><ButtonPreview /></Tile>
+  <Tile href="/ui/input" title="Input"><InputPreview /></Tile>
+  <Tile href="/ui/select" title="Select"><SelectPreview /></Tile>
+  <Tile href="/ui/checkbox" title="Checkbox"><CheckboxPreview /></Tile>
+</div>
+
+{/* Bad: Mixed content types */}
+<div className="grid grid-cols-4 gap-4">
+  <Tile href="/button" title="Button"><ButtonPreview /></Tile>
+  <Tile href="/blog" title="Blog Post"><BlogIcon /></Tile>
+  <Tile href="/settings" title="Settings"><SettingsIcon /></Tile>
+  <Tile href="https://github.com" title="GitHub"><GitHubIcon /></Tile>
+</div>
+```
+
+<Warning>
+  Avoid placing too much text content inside tiles. They're designed for visual previews with short labels, not detailed descriptions or documentation.
+</Warning>
+
+## Performance Tips
+
+1. **Lazy load images**: Use lazy loading for tile images in large grids
+2. **Optimize SVGs**: Minimize SVG files used in tiles
+3. **Use appropriate image sizes**: Don't use oversized images that need heavy scaling
+4. **Consider virtualization**: For very large grids (100+ tiles), consider virtual scrolling
+
+```jsx
+{/* Good: Lazy loaded image */}
+<Tile href="/component" title="Component">
+  <img 
+    src="/preview.png" 
+    alt="Preview" 
+    loading="lazy"
+  />
+</Tile>
+```

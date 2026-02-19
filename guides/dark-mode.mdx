@@ -1,0 +1,386 @@
+---
+title: 'Dark Mode Setup'
+description: 'Configure dark mode and customize theme colors for @mintlify/components'
+icon: 'moon'
+---
+
+@mintlify/components includes built-in dark mode support with automatic theme detection. Components automatically adapt their appearance based on a `dark` class on the root HTML element.
+
+## How Dark Mode Works
+
+The library uses the `.dark` class selector pattern:
+
+- Light mode: No class on `<html>`
+- Dark mode: `<html class="dark">`
+
+Components detect theme changes automatically and update their styling accordingly.
+
+## Basic Setup
+
+<Steps>
+  <Step title="Add dark class toggle">
+    Implement a way to toggle the `dark` class on your root HTML element:
+
+    ```tsx
+    import { useEffect, useState } from 'react';
+
+    function ThemeToggle() {
+      const [isDark, setIsDark] = useState(false);
+
+      useEffect(() => {
+        const isDarkMode = document.documentElement.classList.contains('dark');
+        setIsDark(isDarkMode);
+      }, []);
+
+      const toggleTheme = () => {
+        document.documentElement.classList.toggle('dark');
+        setIsDark(!isDark);
+      };
+
+      return (
+        <button onClick={toggleTheme}>
+          {isDark ? '☀️ Light' : '🌙 Dark'}
+        </button>
+      );
+    }
+    ```
+  </Step>
+
+  <Step title="Components update automatically">
+    All @mintlify/components will automatically respond to the theme change:
+
+    ```tsx
+    import { Callout, Card, CodeBlock } from '@mintlify/components';
+
+    function App() {
+      return (
+        <>
+          <ThemeToggle />
+          <Callout variant="info">
+            This callout adapts to dark mode automatically
+          </Callout>
+        </>
+      );
+    }
+    ```
+  </Step>
+</Steps>
+
+## Using next-themes
+
+<Note>
+  For Next.js applications, `next-themes` is the recommended approach for handling theme management.
+</Note>
+
+<Steps>
+  <Step title="Install next-themes">
+    ```bash
+    npm install next-themes
+    ```
+  </Step>
+
+  <Step title="Add ThemeProvider">
+    Wrap your application with the `ThemeProvider`:
+
+    ```tsx app/layout.tsx
+    import { ThemeProvider } from 'next-themes';
+
+    export default function RootLayout({
+      children,
+    }: {
+      children: React.ReactNode;
+    }) {
+      return (
+        <html lang="en" suppressHydrationWarning>
+          <body>
+            <ThemeProvider attribute="class" defaultTheme="system">
+              {children}
+            </ThemeProvider>
+          </body>
+        </html>
+      );
+    }
+    ```
+  </Step>
+
+  <Step title="Create theme toggle">
+    ```tsx components/theme-toggle.tsx
+    'use client';
+
+    import { useTheme } from 'next-themes';
+    import { useEffect, useState } from 'react';
+
+    export function ThemeToggle() {
+      const [mounted, setMounted] = useState(false);
+      const { theme, setTheme } = useTheme();
+
+      useEffect(() => setMounted(true), []);
+
+      if (!mounted) return null;
+
+      return (
+        <button
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          className="px-4 py-2 rounded-lg border"
+        >
+          {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
+        </button>
+      );
+    }
+    ```
+  </Step>
+</Steps>
+
+## Detecting Theme in Components
+
+The library provides a `useIsDarkTheme` hook (internal use) that monitors theme changes:
+
+```tsx
+// Internal implementation reference
+import { useEffect, useState } from 'react';
+
+const useIsDarkTheme = () => {
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
+
+  useEffect(() => {
+    const getIsDarkTheme = () =>
+      document.documentElement.classList.contains('dark');
+    
+    setIsDarkTheme(getIsDarkTheme());
+
+    const mutationObserver = new MutationObserver(() => {
+      setIsDarkTheme(getIsDarkTheme());
+    });
+
+    mutationObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+
+    return () => mutationObserver.disconnect();
+  }, []);
+
+  return { isDarkTheme };
+};
+```
+
+You can implement a similar pattern in your own components to react to theme changes.
+
+## Customizing Dark Mode Colors
+
+### Tailwind v4
+
+Use CSS variables in your `@theme` block:
+
+```css styles.css
+@import "@mintlify/components/styles.css";
+@import "tailwindcss";
+
+@theme {
+  /* Light mode colors */
+  --color-primary: #3b82f6;
+  --color-primary-light: #dbeafe;
+  
+  /* Dark mode colors */
+  --color-primary-dark: #1e40af;
+  --color-background-dark: #0f172a;
+  --color-tooltip-foreground: #ffffff;
+}
+```
+
+### Tailwind v3
+
+Extend dark mode colors in your config:
+
+```js tailwind.config.js
+module.exports = {
+  darkMode: 'class', // Required!
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          DEFAULT: '#3b82f6',
+          light: '#dbeafe',
+          dark: '#1e40af',
+        },
+      },
+    },
+  },
+}
+```
+
+<Warning>
+  For Tailwind v3, you must set `darkMode: 'class'` in your config for dark mode to work with the components.
+</Warning>
+
+## Component-Specific Dark Mode
+
+### Callout Component
+
+Callouts automatically adapt their colors in dark mode:
+
+```tsx
+import { Callout } from '@mintlify/components';
+
+// Light: blue background with dark text
+// Dark: dark blue background with light text
+<Callout variant="note">
+  This note looks great in both themes
+</Callout>
+
+// Custom colors also work in dark mode
+<Callout variant="custom" color="#8b5cf6">
+  Custom color with automatic dark mode adjustment
+</Callout>
+```
+
+### Code Blocks
+
+Code blocks use Shiki for syntax highlighting with dual themes:
+
+```tsx
+import { CodeBlock } from '@mintlify/components';
+
+<CodeBlock
+  code={`console.log('Hello World');`}
+  language="javascript"
+/>
+```
+
+The code block automatically switches between light and dark syntax themes based on the current mode.
+
+### Custom Dark Mode Styles
+
+For custom dark mode styling:
+
+```css
+/* Light mode */
+.my-component {
+  background-color: white;
+  color: black;
+}
+
+/* Dark mode */
+html.dark .my-component {
+  background-color: rgb(14, 14, 15);
+  color: white;
+}
+
+/* Or use Tailwind classes */
+```
+
+```tsx
+<div className="bg-white dark:bg-stone-950 text-black dark:text-white">
+  Responsive to theme
+</div>
+```
+
+## CSS Variables for Dark Mode
+
+The library uses several CSS variables that adapt to dark mode:
+
+```css
+/* Code block fade overlay */
+--fade-color-light: /* Light mode background */
+--fade-color-dark: /* Dark mode background */
+--background-light: /* Default light background */
+--background-dark: /* Default dark background */
+
+/* Shiki syntax highlighting */
+--shiki-light: /* Light theme text color */
+--shiki-dark: /* Dark theme text color */
+--shiki-light-bg: /* Light theme background */
+--shiki-dark-bg: /* Dark theme background */
+```
+
+These variables are automatically managed by the components.
+
+## Persisting Theme Preference
+
+<CodeGroup>
+  ```tsx localStorage
+  import { useEffect, useState } from 'react';
+
+  function useTheme() {
+    const [theme, setTheme] = useState(() => {
+      if (typeof window !== 'undefined') {
+        return localStorage.getItem('theme') || 'light';
+      }
+      return 'light';
+    });
+
+    useEffect(() => {
+      const root = document.documentElement;
+      if (theme === 'dark') {
+        root.classList.add('dark');
+      } else {
+        root.classList.remove('dark');
+      }
+      localStorage.setItem('theme', theme);
+    }, [theme]);
+
+    return { theme, setTheme };
+  }
+  ```
+
+  ```tsx system-preference
+  import { useEffect, useState } from 'react';
+
+  function useSystemTheme() {
+    const [theme, setTheme] = useState('light');
+
+    useEffect(() => {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      const handleChange = (e: MediaQueryListEvent) => {
+        setTheme(e.matches ? 'dark' : 'light');
+        document.documentElement.classList.toggle('dark', e.matches);
+      };
+
+      setTheme(mediaQuery.matches ? 'dark' : 'light');
+      mediaQuery.addEventListener('change', handleChange);
+
+      return () => mediaQuery.removeEventListener('change', handleChange);
+    }, []);
+
+    return theme;
+  }
+  ```
+</CodeGroup>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Dark mode not working">
+    Verify that:
+    1. The `dark` class is being toggled on the `<html>` element
+    2. For Tailwind v3, `darkMode: 'class'` is set in your config
+    3. Component styles are imported before Tailwind CSS
+  </Accordion>
+
+  <Accordion title="Colors not updating on theme change">
+    Check that you're using the correct CSS variable names in your theme configuration. The components look for specific variables like `--color-primary-dark`.
+  </Accordion>
+
+  <Accordion title="Flashing on page load">
+    This happens when the theme is applied after initial render. Use `suppressHydrationWarning` on the `<html>` tag and apply the theme class before React hydrates:
+
+    ```html
+    <script>
+      if (localStorage.theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      }
+    </script>
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Tailwind Integration" icon="wind" href="/guides/tailwind-integration">
+    Learn about Tailwind CSS setup and configuration
+  </Card>
+  <Card title="TypeScript" icon="code" href="/guides/typescript">
+    Explore TypeScript types and exports
+  </Card>
+</CardGroup>

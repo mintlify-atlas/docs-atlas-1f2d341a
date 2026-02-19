@@ -1,0 +1,530 @@
+---
+title: FAQ
+description: Common questions and troubleshooting for Mintlify Components
+---
+
+Frequently asked questions and solutions to common issues when using Mintlify Components.
+
+## Installation & Setup
+
+<AccordionGroup>
+  <Accordion title="Why aren't my components styled correctly?">
+    This is usually caused by CSS import order issues. The Mintlify Components styles must be imported **before** Tailwind CSS directives.
+    
+    ### Tailwind v4
+    
+    ```css
+    /* Correct order */
+    @import "@mintlify/components/styles.css";
+    @import "tailwindcss";
+    
+    @theme {
+      --color-primary: #your-color;
+    }
+    ```
+    
+    ### Tailwind v3
+    
+    ```css
+    /* Correct order */
+    @import "@mintlify/components/styles.css";
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+    ```
+    
+    <Warning>
+      If you import Tailwind before the component styles, your custom theme values won't override the component defaults correctly.
+    </Warning>
+  </Accordion>
+  
+  <Accordion title="How do I customize the theme colors?">
+    Theme customization depends on your Tailwind CSS version.
+    
+    ### Tailwind v4
+    
+    Use the `@theme` directive in your CSS:
+    
+    ```css
+    @import "@mintlify/components/styles.css";
+    @import "tailwindcss";
+    
+    @theme {
+      --color-primary: oklch(0.6 0.2 250);
+      --color-primary-foreground: oklch(1 0 0);
+      --radius: 0.5rem;
+    }
+    ```
+    
+    ### Tailwind v3
+    
+    Override values in `tailwind.config.js`:
+    
+    ```js
+    module.exports = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              DEFAULT: '#your-color',
+              foreground: '#your-text-color',
+            },
+          },
+          borderRadius: {
+            radius: '0.5rem',
+          },
+        },
+      },
+    };
+    ```
+  </Accordion>
+  
+  <Accordion title="What Node.js version do I need?">
+    Mintlify Components requires **Node.js >= 20.0.0**.
+    
+    Check your Node.js version:
+    ```bash
+    node --version
+    ```
+    
+    If you need to upgrade, download the latest version from [nodejs.org](https://nodejs.org/) or use a version manager like [nvm](https://github.com/nvm-sh/nvm):
+    
+    ```bash
+    nvm install 20
+    nvm use 20
+    ```
+  </Accordion>
+  
+  <Accordion title="Can I use this with Next.js?">
+    Yes! Mintlify Components works with Next.js. However, you need to configure it properly.
+    
+    ### Next.js App Router (13+)
+    
+    Import styles in your root layout:
+    
+    ```tsx
+    // app/layout.tsx
+    import '@mintlify/components/styles.css';
+    import './globals.css'; // Your Tailwind styles
+    
+    export default function RootLayout({ children }) {
+      return (
+        <html lang="en">
+          <body>{children}</body>
+        </html>
+      );
+    }
+    ```
+    
+    ### Next.js Pages Router
+    
+    Import styles in `_app.tsx`:
+    
+    ```tsx
+    // pages/_app.tsx
+    import '@mintlify/components/styles.css';
+    import '../styles/globals.css';
+    
+    export default function App({ Component, pageProps }) {
+      return <Component {...pageProps} />;
+    }
+    ```
+    
+    <Note>
+      Some components may require `'use client'` directive in the App Router due to client-side interactivity.
+    </Note>
+  </Accordion>
+  
+  <Accordion title="Do I need to install Tailwind CSS separately?">
+    **Yes**, Tailwind CSS is a peer dependency. You need to install and configure it in your project.
+    
+    ### Install Tailwind CSS
+    
+    ```bash
+    npm install -D tailwindcss postcss autoprefixer
+    npx tailwindcss init -p
+    ```
+    
+    Then configure it according to the [Tailwind CSS documentation](https://tailwindcss.com/docs/installation).
+    
+    <Tip>
+      Mintlify Components works with both Tailwind v3 and v4.
+    </Tip>
+  </Accordion>
+</AccordionGroup>
+
+## TypeScript
+
+<AccordionGroup>
+  <Accordion title="Why am I getting TypeScript errors?">
+    Ensure you're using a compatible TypeScript version and that your `tsconfig.json` is properly configured.
+    
+    ### Minimum TypeScript Version
+    
+    We recommend TypeScript 5.0 or higher.
+    
+    ### Required tsconfig.json settings
+    
+    ```json
+    {
+      "compilerOptions": {
+        "jsx": "react-jsx",
+        "moduleResolution": "bundler",
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "strict": true
+      }
+    }
+    ```
+  </Accordion>
+  
+  <Accordion title="How do I import types?">
+    All component prop types are exported from the main package:
+    
+    ```tsx
+    import { Accordion, type AccordionProps } from '@mintlify/components';
+    import { Button, type ButtonProps } from '@mintlify/components';
+    
+    // Use in your code
+    const MyAccordion: React.FC<AccordionProps> = (props) => {
+      return <Accordion {...props} />;
+    };
+    ```
+  </Accordion>
+  
+  <Accordion title="Can I use this library with JavaScript?">
+    Yes! While Mintlify Components is built with TypeScript, you can use it in plain JavaScript projects without any issues. You just won't get type checking and autocomplete benefits.
+    
+    ```jsx
+    // Works fine in .jsx files
+    import { Callout, Badge } from '@mintlify/components';
+    
+    function MyComponent() {
+      return (
+        <div>
+          <Callout type="info">Hello</Callout>
+          <Badge>New</Badge>
+        </div>
+      );
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## React Compatibility
+
+<AccordionGroup>
+  <Accordion title="What React versions are supported?">
+    Mintlify Components supports **React 18** and **React 19**.
+    
+    ```json
+    {
+      "peerDependencies": {
+        "react": "^18.0.0 || ^19.0.0",
+        "react-dom": "^18.0.0 || ^19.0.0"
+      }
+    }
+    ```
+    
+    <Warning>
+      React 17 and earlier versions are not supported.
+    </Warning>
+  </Accordion>
+  
+  <Accordion title="Can I use this with React Server Components?">
+    Most components work with React Server Components, but some interactive components require client-side rendering.
+    
+    Components that need `'use client'`:
+    - Accordion (interactive)
+    - Tabs (interactive)
+    - Expandable (interactive)
+    - CodeBlock (copy button)
+    - Search (modal)
+    - Tooltip (hover state)
+    
+    Static components (work in RSC):
+    - Badge
+    - Callout
+    - Card
+    - Steps
+    - Frame
+    
+    ```tsx
+    'use client'; // Add this for interactive components
+    
+    import { Accordion } from '@mintlify/components';
+    
+    export default function MyComponent() {
+      return <Accordion title="Title">Content</Accordion>;
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Styling & Theming
+
+<AccordionGroup>
+  <Accordion title="How do I override component styles?">
+    All components accept a `className` prop that you can use to override or extend styles:
+    
+    ```tsx
+    <Callout 
+      type="info" 
+      className="my-4 border-2 border-blue-500"
+    >
+      Custom styled callout
+    </Callout>
+    ```
+    
+    You can also use Tailwind's arbitrary values:
+    
+    ```tsx
+    <Badge className="bg-[#ff0000] text-white">
+      Custom color
+    </Badge>
+    ```
+  </Accordion>
+  
+  <Accordion title="Why isn't dark mode working?">
+    Mintlify Components uses Tailwind's class-based dark mode strategy. Ensure your Tailwind config is set up correctly:
+    
+    ```js
+    // tailwind.config.js
+    module.exports = {
+      darkMode: 'class', // or 'media'
+      // ... rest of config
+    };
+    ```
+    
+    Then toggle dark mode by adding the `dark` class to a parent element:
+    
+    ```tsx
+    <html className={isDark ? 'dark' : ''}>
+      <body>
+        {/* Components will respond to dark mode */}
+      </body>
+    </html>
+    ```
+  </Accordion>
+  
+  <Accordion title="Can I use custom fonts?">
+    Yes! Components inherit font settings from your global CSS:
+    
+    ```css
+    @import "@mintlify/components/styles.css";
+    @import "tailwindcss";
+    
+    body {
+      font-family: 'Your Custom Font', sans-serif;
+    }
+    ```
+    
+    Or configure in Tailwind:
+    
+    ```js
+    // tailwind.config.js
+    module.exports = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Your Custom Font', 'sans-serif'],
+          },
+        },
+      },
+    };
+    ```
+  </Accordion>
+  
+  <Accordion title="How do I change the default border radius?">
+    Override the `--radius` CSS custom property:
+    
+    ### Tailwind v4
+    ```css
+    @theme {
+      --radius: 0.25rem; /* Smaller radius */
+    }
+    ```
+    
+    ### Tailwind v3
+    ```js
+    // tailwind.config.js
+    module.exports = {
+      theme: {
+        extend: {
+          borderRadius: {
+            radius: '0.25rem',
+          },
+        },
+      },
+    };
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Component-Specific Issues
+
+<AccordionGroup>
+  <Accordion title="CodeBlock: Syntax highlighting isn't working">
+    Make sure you're specifying the correct language:
+    
+    ```tsx
+    <CodeBlock language="typescript">
+      const x: string = 'hello';
+    </CodeBlock>
+    ```
+    
+    Supported languages include: `typescript`, `javascript`, `python`, `bash`, `json`, `jsx`, `tsx`, and many more.
+    
+    <Note>
+      The component uses Shiki for syntax highlighting, which supports all major programming languages.
+    </Note>
+  </Accordion>
+  
+  <Accordion title="Mermaid: Diagrams not rendering">
+    Ensure you're using valid Mermaid syntax:
+    
+    ```tsx
+    <Mermaid>
+      {`graph TD
+        A[Start] --> B[Process]
+        B --> C[End]`}
+    </Mermaid>
+    ```
+    
+    Common issues:
+    - Missing backticks in template literal
+    - Invalid Mermaid syntax
+    - Missing graph type declaration
+    
+    Test your diagram syntax at [mermaid.live](https://mermaid.live) before using it.
+  </Accordion>
+  
+  <Accordion title="Search: How do I customize search results?">
+    The Search component accepts custom rendering functions:
+    
+    ```tsx
+    <Search
+      onSearch={handleSearch}
+      renderResult={(result) => (
+        <div className="custom-result">
+          {result.title}
+        </div>
+      )}
+    />
+    ```
+    
+    You can also customize the placeholder, keyboard shortcuts, and more through props.
+  </Accordion>
+  
+  <Accordion title="Tabs: How do I control which tab is active?">
+    Use the `defaultValue` prop for uncontrolled tabs:
+    
+    ```tsx
+    <Tabs defaultValue="tab2">
+      <Tab title="Tab 1" value="tab1">Content 1</Tab>
+      <Tab title="Tab 2" value="tab2">Content 2</Tab>
+    </Tabs>
+    ```
+    
+    Or use `value` and `onValueChange` for controlled tabs:
+    
+    ```tsx
+    const [activeTab, setActiveTab] = useState('tab1');
+    
+    <Tabs value={activeTab} onValueChange={setActiveTab}>
+      <Tab title="Tab 1" value="tab1">Content 1</Tab>
+      <Tab title="Tab 2" value="tab2">Content 2</Tab>
+    </Tabs>
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Build & Deployment
+
+<AccordionGroup>
+  <Accordion title="Build errors with Vite">
+    If you're using Vite, you may need to optimize dependencies:
+    
+    ```js
+    // vite.config.js
+    export default {
+      optimizeDeps: {
+        include: ['@mintlify/components'],
+      },
+    };
+    ```
+  </Accordion>
+  
+  <Accordion title="Build errors with Webpack">
+    For Webpack 5, ensure you have the correct configuration:
+    
+    ```js
+    // webpack.config.js
+    module.exports = {
+      module: {
+        rules: [
+          {
+            test: /\.css$/,
+            use: ['style-loader', 'css-loader', 'postcss-loader'],
+          },
+        ],
+      },
+    };
+    ```
+  </Accordion>
+  
+  <Accordion title="Bundle size concerns">
+    Mintlify Components supports tree-shaking. Import only what you need:
+    
+    ```tsx
+    // Good: Tree-shakeable
+    import { Accordion, Callout } from '@mintlify/components';
+    
+    // Avoid: Imports everything
+    import * as Components from '@mintlify/components';
+    ```
+    
+    You can analyze your bundle size with tools like [webpack-bundle-analyzer](https://github.com/webpack-contrib/webpack-bundle-analyzer).
+  </Accordion>
+</AccordionGroup>
+
+## Getting Help
+
+<AccordionGroup>
+  <Accordion title="Where can I get more help?">
+    If your question isn't answered here:
+    
+    1. **Search existing issues**: Check [GitHub Issues](https://github.com/mintlify/components/issues) for similar problems
+    2. **GitHub Discussions**: Ask questions in [Discussions](https://github.com/mintlify/components/discussions)
+    3. **Documentation**: Browse the full [component documentation](https://www.mintlify.com/docs/components)
+    4. **Storybook**: View examples in [Storybook](https://storybook.mintlify.com)
+  </Accordion>
+  
+  <Accordion title="How do I report a bug?">
+    [Open a bug report](https://github.com/mintlify/components/issues/new?template=bug_report.md) on GitHub with:
+    
+    - Clear description of the issue
+    - Steps to reproduce
+    - Expected vs actual behavior
+    - Your environment (Node.js, React, Tailwind versions)
+    - Code snippet or reproduction repo
+    
+    See our [Contributing Guide](/contributing/overview) for more details.
+  </Accordion>
+  
+  <Accordion title="How do I request a new feature?">
+    [Open a feature request](https://github.com/mintlify/components/issues/new?template=feature_request.md) describing:
+    
+    - The feature you'd like to see
+    - Your use case and why it's valuable
+    - Examples or mockups if applicable
+    
+    You can also contribute the feature yourself! See the [Development Guide](/contributing/development).
+  </Accordion>
+</AccordionGroup>
+
+---
+
+<Tip>
+  **Still stuck?** Join the conversation in [GitHub Discussions](https://github.com/mintlify/components/discussions) or check out the [Contributing Guide](/contributing/overview) to get involved.
+</Tip>

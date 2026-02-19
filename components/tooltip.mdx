@@ -1,0 +1,311 @@
+---
+title: 'Tooltip'
+description: 'Display contextual information in a floating popup on hover or click'
+---
+
+## Overview
+
+The Tooltip component provides contextual information in a floating popup that appears when users hover over (on desktop) or click (on mobile) an element. It supports titles, descriptions, and call-to-action links.
+
+## Basic Usage
+
+```jsx
+<Tooltip description="This is helpful information">
+  Hover over me
+</Tooltip>
+```
+
+## Props
+
+<ParamField path="children" type="ReactNode" required>
+  The trigger element that activates the tooltip. Can be:
+  - Plain text (automatically gets dotted underline)
+  - React elements (rendered as-is)
+  - Interactive elements like buttons or links (maintains their interactivity)
+</ParamField>
+
+<ParamField path="description" type="string">
+  The main descriptive text shown in the tooltip popup. Typically contains the helpful information you want to convey.
+</ParamField>
+
+<ParamField path="title" type="string">
+  Optional title shown above the description in the tooltip. Displayed in a bolder, more prominent style.
+</ParamField>
+
+<ParamField path="cta" type="string">
+  Call-to-action text for an optional link. Must be used together with `href`. Displays with a chevron icon.
+</ParamField>
+
+<ParamField path="href" type="string">
+  URL for the call-to-action link. Must be used together with `cta`. Remote URLs automatically open in a new tab.
+</ParamField>
+
+<ParamField path="side" type="'top' | 'right' | 'bottom' | 'left'" default="top">
+  Preferred side of the trigger element where the tooltip appears. The tooltip will automatically flip to the opposite side if there's not enough space.
+</ParamField>
+
+<ParamField path="align" type="'start' | 'center' | 'end'" default="center">
+  Alignment of the tooltip relative to the trigger element:
+  - `start`: Aligns to the start edge
+  - `center`: Centers the tooltip (default)
+  - `end`: Aligns to the end edge
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply to the trigger element.
+</ParamField>
+
+## Examples
+
+### Simple Tooltip
+
+```jsx
+<Tooltip description="This is a simple tooltip">
+  Hover me
+</Tooltip>
+```
+
+### With Title
+
+```jsx
+<Tooltip 
+  title="Pro Tip" 
+  description="This tooltip has both a title and description for better context."
+>
+  Important term
+</Tooltip>
+```
+
+### With Call-to-Action
+
+```jsx
+<Tooltip
+  title="API Authentication"
+  description="Secure your API requests with authentication tokens."
+  cta="Learn more"
+  href="/docs/authentication"
+>
+  API Auth
+</Tooltip>
+```
+
+### Positioning
+
+<CodeGroup>
+```jsx Top (Default)
+<Tooltip description="Appears above the element" side="top">
+  Top tooltip
+</Tooltip>
+```
+
+```jsx Right
+<Tooltip description="Appears to the right" side="right">
+  Right tooltip
+</Tooltip>
+```
+
+```jsx Bottom
+<Tooltip description="Appears below the element" side="bottom">
+  Bottom tooltip
+</Tooltip>
+```
+
+```jsx Left
+<Tooltip description="Appears to the left" side="left">
+  Left tooltip
+</Tooltip>
+```
+</CodeGroup>
+
+### Alignment
+
+```jsx
+<Tooltip description="Aligned to start" align="start" side="bottom">
+  Start aligned
+</Tooltip>
+
+<Tooltip description="Centered alignment" align="center" side="bottom">
+  Center aligned
+</Tooltip>
+
+<Tooltip description="Aligned to end" align="end" side="bottom">
+  End aligned
+</Tooltip>
+```
+
+### Interactive Children
+
+<CodeGroup>
+```jsx With Button
+<Tooltip description="Click this button to save your changes">
+  <button>Save</button>
+</Tooltip>
+```
+
+```jsx With Link
+<Tooltip description="Opens documentation in a new tab">
+  <a href="/docs">Documentation</a>
+</Tooltip>
+```
+
+```jsx With Icon
+<Tooltip description="Settings and preferences">
+  <Icon icon="settings" />
+</Tooltip>
+```
+</CodeGroup>
+
+### External Links
+
+```jsx
+<Tooltip
+  title="GitHub Repository"
+  description="View the source code and contribute to the project."
+  cta="Open GitHub"
+  href="https://github.com/example/repo"
+>
+  Source Code
+</Tooltip>
+```
+
+### Complex Content
+
+```jsx
+<p>
+  The {' '}
+  <Tooltip 
+    title="React Hooks"
+    description="Functions that let you use state and other React features without writing a class."
+    cta="Read the guide"
+    href="/docs/hooks"
+  >
+    useState hook
+  </Tooltip>
+  {' '} is one of the most commonly used hooks.
+</p>
+```
+
+### In Documentation
+
+```jsx
+<Steps>
+  <Steps.Item title="Installation">
+    <p>
+      Install the package using{' '}
+      <Tooltip description="Node Package Manager - the default package manager for Node.js">
+        npm
+      </Tooltip>
+      {' '}or{' '}
+      <Tooltip description="Fast, reliable package manager - an alternative to npm">
+        yarn
+      </Tooltip>
+      .
+    </p>
+  </Steps.Item>
+</Steps>
+```
+
+## Behavior
+
+### Desktop (Hover Support)
+
+- Tooltip appears on hover
+- Disappears when mouse leaves
+- No delay for instant feedback
+
+### Mobile (No Hover)
+
+- Tooltip appears on click/tap
+- Remains open until:
+  - User clicks elsewhere (outside press)
+  - User presses Escape key
+  - User clicks the trigger again
+
+### Text vs Interactive Children
+
+**Plain Text:**
+- Automatically styled with dotted underline
+- Wrapped in a `<span>` for proper tooltip functionality
+- Gets an `aria-label` combining title and description
+
+**Interactive Elements:**
+- Rendered without modifications
+- Maintains original functionality
+- No automatic underline styling
+- No `aria-label` (interactive elements should have their own labels)
+
+### Collision Detection
+
+The tooltip automatically:
+- Flips to opposite side when near viewport edges
+- Maintains 8px padding from viewport edges
+- Adjusts position to stay fully visible
+
+## Features
+
+### Automatic Link Handling
+
+When using `cta` with `href`:
+- Remote URLs (starting with `http://` or `https://`) automatically:
+  - Open in a new tab (`target="_blank"`)
+  - Include security attributes (`rel="noreferrer"`)
+- Internal links open normally
+
+### Maximum Width
+
+Tooltips have a maximum width of 16rem (256px) to ensure content remains readable and doesn't span too wide.
+
+### Dark Mode
+
+Full dark mode support with:
+- Adjusted background and border colors
+- Proper text contrast
+- Smooth transitions between themes
+
+### Accessibility
+
+- Proper ARIA labels for non-interactive triggers
+- Keyboard navigation support
+- Focus visible states with ring indicators
+- Escape key closes tooltip
+- Outside click detection
+
+### Shadow and Styling
+
+Tooltips include:
+- Subtle shadow for depth
+- Rounded corners (12px border radius)
+- Proper spacing and padding
+- Clean typography hierarchy
+
+## Styling
+
+The tooltip popup includes:
+- White background (dark gray in dark mode)
+- Subtle border
+- Shadow for elevation
+- Proper text hierarchy:
+  - **Title**: 12px, medium weight, primary color
+  - **Description**: 12px, normal weight, secondary color
+  - **CTA**: 12px, medium weight, link color with hover state
+
+## Best Practices
+
+<Callout variant="tip">
+  Keep tooltip content concise. Long descriptions can be overwhelming. Consider using a CTA link to detailed documentation instead.
+</Callout>
+
+<Callout variant="note">
+  Use tooltips for supplementary information, not critical content. Users on mobile need to explicitly tap to see tooltips.
+</Callout>
+
+<Callout variant="warning">
+  Don't nest tooltips or use tooltips on disabled elements. These patterns can create confusing user experiences.
+</Callout>
+
+## Notes
+
+- The component uses `@base-ui/react/tooltip` as its foundation
+- Returns `null` if `children` is null or undefined
+- Title and description are optional, but at least one should be provided
+- CTA and href must be used together (both or neither)

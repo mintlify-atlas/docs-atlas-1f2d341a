@@ -1,0 +1,407 @@
+---
+title: 'CodeGroup'
+description: 'Display multiple code blocks with tabbed or dropdown navigation'
+icon: 'layer-group'
+---
+
+The CodeGroup component allows you to display multiple code examples in different languages or files, with tab-based or dropdown navigation between them.
+
+## Basic Usage
+
+```tsx
+import { CodeBlock } from '@mintlify/components';
+import { CodeGroup } from '@mintlify/components';
+
+<CodeGroup>
+  <CodeBlock filename="JavaScript" language="javascript">
+    {`console.log('Hello from JavaScript');`}
+  </CodeBlock>
+  <CodeBlock filename="Python" language="python">
+    {`print('Hello from Python')`}
+  </CodeBlock>
+  <CodeBlock filename="Java" language="java">
+    {`System.out.println("Hello from Java");`}
+  </CodeBlock>
+</CodeGroup>
+```
+
+## Props
+
+<ParamField path="children" type="ReactElement<CodeBlockProps>[] | ReactElement<CodeBlockProps>">
+  One or more CodeBlock components to display in the group.
+</ParamField>
+
+<ParamField path="dropdown" type="boolean" default="false">
+  Use dropdown selector instead of tabs for navigation. Useful when you have many code blocks or limited horizontal space.
+</ParamField>
+
+<ParamField path="codeBlockTheme" type="'system' | 'dark'" default="system">
+  The UI theme for the code group container:
+  - `"system"`: Adapts to light/dark mode
+  - `"dark"`: Always uses dark theme
+</ParamField>
+
+<ParamField path="codeBlockThemeObject" type="CodeStyling">
+  Custom syntax highlighting theme applied to all child CodeBlocks. Can be:
+  - A string: `"system"` or `"dark"` for default themes
+  - An object with a `theme` property for Shiki themes
+</ParamField>
+
+<ParamField path="isSmallText" type="boolean">
+  Use smaller text size for all child code blocks.
+</ParamField>
+
+<ParamField path="initialSelectedTab" type="number" default="0">
+  The index of the initially selected tab (0-based).
+</ParamField>
+
+<ParamField path="onSelectedTabChange" type="(index: number) => void">
+  Callback function called when the selected tab changes.
+</ParamField>
+
+<ParamField path="noMargins" type="boolean">
+  Remove default margins (mt-5 mb-8) from the code group.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes for the code group container.
+</ParamField>
+
+<ParamField path="copyButtonProps" type="CopyToClipboardButtonProps">
+  Props to customize the copy button for the active code block.
+</ParamField>
+
+## Examples
+
+### Tabs Mode (Default)
+
+The default mode displays tabs for navigation:
+
+```tsx
+<CodeGroup>
+  <CodeBlock filename="app.js" icon="js" language="javascript">
+    {`import React from 'react';
+
+function App() {
+  return <h1>Hello World</h1>;
+}
+
+export default App;`}
+  </CodeBlock>
+  <CodeBlock filename="main.py" icon="python" language="python">
+    {`def main():
+    print("Hello World")
+
+if __name__ == "__main__":
+    main()`}
+  </CodeBlock>
+  <CodeBlock filename="HelloWorld.java" icon="java" language="java">
+    {`public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello World");
+    }
+}`}
+  </CodeBlock>
+</CodeGroup>
+```
+
+### Dropdown Mode
+
+Use dropdown mode when you have many options or limited space:
+
+```tsx
+<CodeGroup dropdown={true}>
+  <CodeBlock filename="JavaScript" icon="js" language="javascript">
+    {`const greeting = 'Hello';`}
+  </CodeBlock>
+  <CodeBlock filename="TypeScript" icon="typescript" language="typescript">
+    {`const greeting: string = 'Hello';`}
+  </CodeBlock>
+  <CodeBlock filename="Python" icon="python" language="python">
+    {`greeting = 'Hello'`}
+  </CodeBlock>
+  <CodeBlock filename="Java" icon="java" language="java">
+    {`String greeting = "Hello";`}
+  </CodeBlock>
+  <CodeBlock filename="Go" icon="go" language="go">
+    {`greeting := "Hello"`}
+  </CodeBlock>
+</CodeGroup>
+```
+
+### With Line Numbers
+
+All child CodeBlocks support individual props:
+
+```tsx
+<CodeGroup>
+  <CodeBlock 
+    filename="example.js" 
+    icon="js" 
+    language="javascript"
+    lines={true}
+  >
+    {`function fibonacci(n) {
+  if (n <= 1) return n;
+  return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+console.log(fibonacci(10));`}
+  </CodeBlock>
+  <CodeBlock 
+    filename="example.py" 
+    icon="python" 
+    language="python"
+    lines={true}
+  >
+    {`def fibonacci(n):
+    if n <= 1:
+        return n
+    return fibonacci(n - 1) + fibonacci(n - 2)
+
+print(fibonacci(10))`}
+  </CodeBlock>
+</CodeGroup>
+```
+
+### With Line Highlighting
+
+Each code block can have different highlighted lines:
+
+```tsx
+<CodeGroup>
+  <CodeBlock 
+    filename="config.js" 
+    language="javascript"
+    lines={true}
+    highlight={JSON.stringify([3, 5, 7])}
+  >
+    {`export default {
+  port: 3000,
+  host: 'localhost',
+  debug: true,
+  logLevel: 'info',
+  cache: false,
+  timeout: 30000
+};`}
+  </CodeBlock>
+  <CodeBlock 
+    filename="config.py" 
+    language="python"
+    lines={true}
+    highlight={JSON.stringify([2, 4, 6])}
+  >
+    {`CONFIG = {
+    "port": 3000,
+    "host": "localhost",
+    "debug": True,
+    "log_level": "info",
+    "cache": False,
+    "timeout": 30000
+}`}
+  </CodeBlock>
+</CodeGroup>
+```
+
+### With Focus Mode
+
+```tsx
+<CodeGroup>
+  <CodeBlock 
+    filename="api.js" 
+    language="javascript"
+    lines={true}
+    focus={JSON.stringify([5, 6, 7, 8])}
+  >
+    {`async function fetchUser(id) {
+  const response = await fetch(\`/api/users/\${id}\`);
+  
+  if (!response.ok) {
+    throw new Error('Failed to fetch user');
+  }
+  
+  const user = await response.json();
+  return user;
+}`}
+  </CodeBlock>
+  <CodeBlock 
+    filename="api.py" 
+    language="python"
+    lines={true}
+    focus={JSON.stringify([4, 5, 6])}
+  >
+    {`import requests
+
+def fetch_user(id):
+    response = requests.get(f'/api/users/{id}')
+    response.raise_for_status()
+    return response.json()`}
+  </CodeBlock>
+</CodeGroup>
+```
+
+### Expandable Code in Groups
+
+```tsx
+<CodeGroup>
+  <CodeBlock 
+    filename="longfile.js" 
+    icon="js" 
+    language="javascript"
+    expandable={true}
+    lines={true}
+  >
+    {`// Very long JavaScript code...
+function example1() {
+  // ...
+}
+
+function example2() {
+  // ...
+}
+
+// ... many more lines`}
+  </CodeBlock>
+  <CodeBlock 
+    filename="longfile.py" 
+    icon="python" 
+    language="python"
+    expandable={true}
+    lines={true}
+  >
+    {`# Very long Python code...
+def example1():
+    pass
+
+def example2():
+    pass
+
+# ... many more lines`}
+  </CodeBlock>
+</CodeGroup>
+```
+
+### Custom Shiki Theme for All Blocks
+
+Apply a custom theme to all code blocks in the group:
+
+```tsx
+<CodeGroup 
+  codeBlockTheme="dark"
+  codeBlockThemeObject={{ theme: "dracula" }}
+>
+  <CodeBlock filename="JavaScript" language="javascript">
+    {`const theme = 'dracula';`}
+  </CodeBlock>
+  <CodeBlock filename="Python" language="python">
+    {`theme = 'dracula'`}
+  </CodeBlock>
+</CodeGroup>
+```
+
+### Dual Themes (Light/Dark)
+
+```tsx
+<CodeGroup 
+  codeBlockThemeObject={{
+    theme: { 
+      light: "everforest-light", 
+      dark: "dracula" 
+    }
+  }}
+>
+  <CodeBlock filename="example.js" language="javascript">
+    {`const adaptiveTheme = true;`}
+  </CodeBlock>
+  <CodeBlock filename="example.py" language="python">
+    {`adaptive_theme = True`}
+  </CodeBlock>
+</CodeGroup>
+```
+
+### Controlled Tab Selection
+
+```tsx
+const [selectedTab, setSelectedTab] = useState(0);
+
+<CodeGroup 
+  initialSelectedTab={selectedTab}
+  onSelectedTabChange={(index) => {
+    console.log('Tab changed to:', index);
+    setSelectedTab(index);
+  }}
+>
+  <CodeBlock filename="First" language="javascript">
+    {`console.log('First tab');`}
+  </CodeBlock>
+  <CodeBlock filename="Second" language="javascript">
+    {`console.log('Second tab');`}
+  </CodeBlock>
+  <CodeBlock filename="Third" language="javascript">
+    {`console.log('Third tab');`}
+  </CodeBlock>
+</CodeGroup>
+```
+
+### With Code Wrapping
+
+```tsx
+<CodeGroup>
+  <CodeBlock 
+    filename="long-line.js" 
+    language="javascript"
+    wrap={true}
+    lines={true}
+  >
+    {`const veryLongVariableName = "This is a very long string that will wrap to the next line instead of requiring horizontal scrolling";`}
+  </CodeBlock>
+  <CodeBlock 
+    filename="long-line.py" 
+    language="python"
+    wrap={true}
+    lines={true}
+  >
+    {`very_long_variable_name = "This is a very long string that will wrap to the next line instead of requiring horizontal scrolling"`}
+  </CodeBlock>
+</CodeGroup>
+```
+
+## Tab Navigation Behavior
+
+- **Tabs Mode**: Displays horizontal tabs at the top of the code group
+  - Scrollable when tabs don't fit
+  - Shows selected state with an underline indicator
+  - Hover effects provide visual feedback
+  - Icons and filenames are displayed together
+
+- **Dropdown Mode**: Displays a dropdown selector
+  - Shows the current selection's filename and icon
+  - Opens a menu to select other options
+  - Better for many options or narrow layouts
+  - Language is displayed in the dropdown options
+
+## Performance Optimization
+
+The CodeGroup component optimizes performance by:
+
+- Only highlighting the currently selected code block
+- Using lazy rendering for non-visible tabs
+- Deferring syntax highlighting until a tab is selected
+- Preserving tab focus during keyboard navigation
+
+## Accessibility
+
+- Uses semantic `role="tab"` and `role="tabpanel"` attributes
+- Supports keyboard navigation (Arrow keys, Tab, Enter)
+- Maintains focus when switching tabs
+- Provides proper ARIA labels for screen readers
+- Copy button has descriptive `aria-label`
+
+## Notes
+
+- Each CodeBlock child should have a unique `filename` prop for identification
+- The `language` prop on each CodeBlock determines syntax highlighting
+- All CodeBlock props (lines, highlight, focus, wrap, etc.) work within CodeGroup
+- The selected tab is preserved during re-renders unless controlled via props
+- Hash URLs are cleared when switching tabs to avoid navigation conflicts
+- The first child is selected by default unless `initialSelectedTab` is specified

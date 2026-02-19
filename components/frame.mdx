@@ -1,0 +1,354 @@
+---
+title: 'Frame'
+description: 'A decorative container for showcasing visual content with optional captions'
+---
+
+The Frame component provides an elegant container for displaying images, videos, or interactive content with a decorative grid pattern background and optional title and description.
+
+## Basic Usage
+
+```jsx
+<Frame>
+  <img src="/screenshot.png" alt="Application screenshot" />
+</Frame>
+```
+
+## Props
+
+<ParamField path="as" type="div" default="div">
+  The HTML element type to render as the frame container. Currently only supports `"div"`.
+</ParamField>
+
+<ParamField path="title" type="string">
+  Optional title displayed above the frame with a hand pointer icon. Useful for providing context or hints.
+</ParamField>
+
+<ParamField path="description" type="string">
+  Optional description text displayed below the frame content. Useful for captions or additional context.
+</ParamField>
+
+<ParamField path="renderDescription" type="(description: string) => ReactNode">
+  Custom render function for the description. Receives the description string and returns a ReactNode.
+  
+  Default implementation: `(text) => <p>{text}</p>`
+</ParamField>
+
+<ParamField path="style" type="CSSProperties">
+  Inline CSS styles to apply to the frame container. Commonly used for setting dimensions.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply to the outer frame container.
+</ParamField>
+
+<ParamField path="children" type="ReactNode" required>
+  The content to display inside the frame. Can be images, videos, or any React elements.
+</ParamField>
+
+## Examples
+
+### Basic Frame
+
+```jsx
+<Frame>
+  <img src="/dashboard.png" alt="Dashboard view" />
+</Frame>
+```
+
+### With Title (Hint)
+
+```jsx
+<Frame title="Click the button to continue">
+  <img src="/onboarding.png" alt="Onboarding screen" />
+</Frame>
+```
+
+### With Description
+
+```jsx
+<Frame description="This is the main dashboard view">
+  <img src="/dashboard.png" alt="Dashboard" />
+</Frame>
+```
+
+### With All Features
+
+```jsx
+<Frame 
+  title="This frame shows all available features" 
+  description="Complete frame example"
+>
+  <img src="/complete-example.png" alt="Complete example" />
+</Frame>
+```
+
+### Custom Dimensions
+
+```jsx
+<Frame style={{ width: "600px", height: "400px" }}>
+  <img src="/screenshot.png" alt="Screenshot" />
+</Frame>
+```
+
+### With Video Content
+
+```jsx
+<Frame description="Product demo video">
+  <video controls autoPlay muted loop>
+    <source src="/demo.mp4" type="video/mp4" />
+  </video>
+</Frame>
+```
+
+<Note>
+  The Frame component automatically enhances video elements with additional props for better compatibility and user experience.
+</Note>
+
+### With Interactive Content
+
+```jsx
+<Frame title="Try clicking around">
+  <iframe 
+    src="https://example.com/interactive-demo" 
+    width="100%" 
+    height="400px"
+  />
+</Frame>
+```
+
+### With Custom Description Rendering
+
+```jsx
+<Frame 
+  description="Figure 1.2: System Architecture Diagram"
+  renderDescription={(text) => (
+    <p className="italic text-center text-sm">{text}</p>
+  )}
+>
+  <img src="/architecture.png" alt="Architecture" />
+</Frame>
+```
+
+### Multiple Frames
+
+```jsx
+<>
+  <Frame title="Step 1: Sign in">
+    <img src="/step1.png" alt="Sign in screen" />
+  </Frame>
+  
+  <Frame title="Step 2: Configure settings">
+    <img src="/step2.png" alt="Settings screen" />
+  </Frame>
+  
+  <Frame title="Step 3: Start using">
+    <img src="/step3.png" alt="Main application" />
+  </Frame>
+</>
+```
+
+### Responsive Frame
+
+```jsx
+<Frame className="w-full max-w-4xl mx-auto">
+  <img 
+    src="/responsive-design.png" 
+    alt="Responsive design" 
+    className="w-full h-auto"
+  />
+</Frame>
+```
+
+### Custom Background
+
+```jsx
+<Frame 
+  style={{
+    width: "500px",
+    height: "300px",
+    background: "linear-gradient(45deg, #ff6b6b, #4ecdc4)"
+  }}
+>
+  <div className="p-4 text-white">
+    <h3>Custom Background</h3>
+    <p>Frame with custom gradient background</p>
+  </div>
+</Frame>
+```
+
+## Visual Design
+
+The Frame component includes several visual elements:
+
+### Background Pattern
+
+A decorative grid pattern in the background:
+- Light mode: Subtle stone-colored grid
+- Dark mode: Semi-transparent white grid
+- Creates depth and visual interest
+- Automatically masks at the bottom for a fade effect
+
+### Frame Border
+
+A subtle border overlay that:
+- Light mode: Black with 5% opacity
+- Dark mode: White with 5% opacity
+- Provides definition without being distracting
+
+### Content Container
+
+The inner content area:
+- White background in light mode
+- Dark stone background in dark mode
+- Rounded corners for a polished look
+- Centered content by default
+
+### Title Icon
+
+When a title is provided, a hand pointer icon appears:
+- Indicates interactivity or important information
+- Stone-colored in both light and dark modes
+- Positioned to the left of the title text
+
+## Styling
+
+The Frame automatically adapts to light and dark themes. Customize appearance using the `className` and `style` props:
+
+```jsx
+<Frame 
+  className="my-8 shadow-xl" 
+  style={{ maxWidth: "800px" }}
+>
+  <img src="/featured.png" alt="Featured content" />
+</Frame>
+```
+
+### Common Customizations
+
+```jsx
+{/* Full width frame */}
+<Frame className="w-full">
+  <img src="/wide-image.png" alt="Wide image" />
+</Frame>
+
+{/* Centered with margin */}
+<Frame className="mx-auto my-8 max-w-4xl">
+  <img src="/centered.png" alt="Centered content" />
+</Frame>
+
+{/* With shadow */}
+<Frame className="shadow-2xl">
+  <img src="/shadowed.png" alt="Shadowed frame" />
+</Frame>
+```
+
+## Video Enhancement
+
+The Frame component automatically enhances video elements by:
+- Setting optimal attributes for autoplay and looping
+- Ensuring proper aspect ratios
+- Adding mobile-friendly controls
+- Optimizing for performance
+
+```jsx
+<Frame description="Auto-enhanced video">
+  <video src="/demo.mp4" />
+</Frame>
+```
+
+<Note>
+  Video enhancement is handled automatically via the `enhanceVideoProps` utility function.
+</Note>
+
+## Use Cases
+
+### Product Screenshots
+
+```jsx
+<Frame title="New dashboard design">
+  <img src="/new-dashboard.png" alt="New dashboard" />
+</Frame>
+```
+
+### Tutorial Steps
+
+```jsx
+<Frame 
+  title="Click the + button to add a new item"
+  description="Step 3 of 5"
+>
+  <img src="/tutorial-step-3.png" alt="Tutorial step 3" />
+</Frame>
+```
+
+### Before/After Comparisons
+
+```jsx
+<div className="grid grid-cols-2 gap-4">
+  <Frame description="Before">
+    <img src="/before.png" alt="Before" />
+  </Frame>
+  <Frame description="After">
+    <img src="/after.png" alt="After" />
+  </Frame>
+</div>
+```
+
+### Code Output Visualization
+
+```jsx
+<Frame description="Expected output">
+  <div className="p-8 bg-stone-50 dark:bg-stone-900">
+    <h2>Hello World</h2>
+    <p>This is the rendered output of the code above.</p>
+  </div>
+</Frame>
+```
+
+### Embedded Demos
+
+```jsx
+<Frame 
+  title="Try the interactive demo below"
+  style={{ height: "500px" }}
+>
+  <iframe 
+    src="https://codesandbox.io/embed/demo" 
+    width="100%" 
+    height="100%"
+  />
+</Frame>
+```
+
+## Accessibility
+
+The Frame component maintains accessibility:
+- Semantic HTML structure
+- `aria-hidden="true"` on decorative elements
+- Proper content ordering for screen readers
+- Support for image alt text
+- Focus management for interactive content
+
+<Warning>
+  Always provide meaningful alt text for images within Frame components to ensure accessibility for screen reader users.
+</Warning>
+
+## Best Practices
+
+1. **Set dimensions**: Use `style` prop to set explicit width/height for consistent layouts
+2. **Provide context**: Use `title` for hints and `description` for captions
+3. **Optimize images**: Use appropriately sized images to avoid performance issues
+4. **Alt text**: Always include descriptive alt text for images
+5. **Responsive design**: Use className to make frames responsive on different screen sizes
+
+```jsx
+{/* Good example */}
+<Frame 
+  title="Upload your files here"
+  description="Drag and drop or click to browse"
+  className="w-full max-w-2xl mx-auto"
+  style={{ minHeight: "300px" }}
+>
+  <UploadZone />
+</Frame>
+```

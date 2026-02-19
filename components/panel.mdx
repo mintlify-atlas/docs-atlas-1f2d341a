@@ -1,0 +1,360 @@
+---
+title: 'Panel'
+description: 'A responsive utility component for showing content only on mobile and tablet devices'
+---
+
+The Panel component is a simple utility that displays its children only on screens smaller than the `xl` breakpoint (1280px). It's useful for creating mobile-specific layouts or showing different content on mobile versus desktop.
+
+## Basic Usage
+
+```jsx
+<Panel>
+  <p>This content only appears on mobile and tablet devices</p>
+</Panel>
+```
+
+## Props
+
+<ParamField path="children" type="ReactNode" required>
+  The content to display on mobile and tablet devices.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply to the panel container.
+</ParamField>
+
+The Panel component also accepts all standard HTML `div` attributes through spread props.
+
+## Breakpoint Behavior
+
+The Panel component uses Tailwind's responsive breakpoints:
+
+- **Visible**: On screens < 1280px (mobile, tablet, small laptops)
+- **Hidden**: On screens ≥ 1280px (`xl` breakpoint and above)
+
+```jsx
+{/* Visible on mobile/tablet, hidden on desktop */}
+<Panel>
+  <MobileNavigation />
+</Panel>
+
+{/* Complement with desktop-only content */}
+<div className="hidden xl:block">
+  <DesktopNavigation />
+</div>
+```
+
+## Examples
+
+### Mobile Navigation
+
+```jsx
+<Panel>
+  <nav className="mobile-nav">
+    <button>Menu</button>
+    <button>Search</button>
+    <button>Profile</button>
+  </nav>
+</Panel>
+```
+
+### Mobile-Specific Banner
+
+```jsx
+<Panel>
+  <div className="bg-blue-500 p-4 text-white">
+    <p>Download our mobile app for a better experience!</p>
+    <button className="mt-2 bg-white text-blue-500 px-4 py-2 rounded">
+      Download
+    </button>
+  </div>
+</Panel>
+```
+
+### Responsive Layout
+
+```jsx
+{/* Mobile layout */}
+<Panel>
+  <div className="space-y-4">
+    <Card title="Feature 1">Mobile layout for feature 1</Card>
+    <Card title="Feature 2">Mobile layout for feature 2</Card>
+    <Card title="Feature 3">Mobile layout for feature 3</Card>
+  </div>
+</Panel>
+
+{/* Desktop layout */}
+<div className="hidden xl:grid xl:grid-cols-3 xl:gap-4">
+  <Card title="Feature 1">Desktop layout for feature 1</Card>
+  <Card title="Feature 2">Desktop layout for feature 2</Card>
+  <Card title="Feature 3">Desktop layout for feature 3</Card>
+</div>
+```
+
+### Mobile Table of Contents
+
+```jsx
+<Panel>
+  <div className="border rounded-lg p-4 mb-6">
+    <h3 className="font-bold mb-2">On This Page</h3>
+    <ul className="space-y-2">
+      <li><a href="#section-1">Introduction</a></li>
+      <li><a href="#section-2">Getting Started</a></li>
+      <li><a href="#section-3">Examples</a></li>
+    </ul>
+  </div>
+</Panel>
+```
+
+### Mobile Alert
+
+```jsx
+<Panel>
+  <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+    <p className="text-yellow-700">
+      <strong>Note:</strong> Some features are optimized for desktop viewing.
+    </p>
+  </div>
+</Panel>
+```
+
+### Custom Styling
+
+```jsx
+<Panel className="bg-stone-50 dark:bg-stone-900 p-4 rounded-lg">
+  <p>Panel with custom styling applied</p>
+</Panel>
+```
+
+### Conditional Content
+
+```jsx
+<Panel>
+  <button 
+    className="w-full bg-primary text-white py-3 rounded-lg"
+    onClick={() => setMobileMenuOpen(true)}
+  >
+    Open Mobile Menu
+  </button>
+</Panel>
+
+<div className="hidden xl:block">
+  <HorizontalNavigationBar />
+</div>
+```
+
+## Common Patterns
+
+### Mobile/Desktop Content Switch
+
+```jsx
+<>
+  {/* Mobile version */}
+  <Panel>
+    <MobileComponent />
+  </Panel>
+  
+  {/* Desktop version */}
+  <div className="hidden xl:block">
+    <DesktopComponent />
+  </div>
+</>
+```
+
+### Responsive Sidebar
+
+```jsx
+{/* Mobile: collapsible menu */}
+<Panel>
+  <Accordion title="Navigation" defaultOpen={false}>
+    <NavigationLinks />
+  </Accordion>
+</Panel>
+
+{/* Desktop: persistent sidebar */}
+<div className="hidden xl:block xl:w-64">
+  <aside className="fixed">
+    <NavigationLinks />
+  </aside>
+</div>
+```
+
+### Mobile CTA
+
+```jsx
+<Panel>
+  <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t shadow-lg">
+    <button className="w-full bg-primary text-white py-3 rounded-lg">
+      Get Started
+    </button>
+  </div>
+</Panel>
+```
+
+## Implementation Details
+
+The Panel component is a simple wrapper that applies the following Tailwind classes:
+
+```jsx
+className="block xl:hidden"
+```
+
+This means:
+- `block`: Display as block element
+- `xl:hidden`: Hidden on xl breakpoint (≥1280px) and above
+
+## Use Cases
+
+### 1. Mobile-Only Components
+
+Show components that only make sense on mobile devices:
+
+```jsx
+<Panel>
+  <TouchGestureGuide />
+</Panel>
+```
+
+### 2. Performance Optimization
+
+Conditionally render heavy components only where needed:
+
+```jsx
+<Panel>
+  <LightweightMobileComponent />
+</Panel>
+
+<div className="hidden xl:block">
+  <FeatureRichDesktopComponent />
+</div>
+```
+
+### 3. Progressive Enhancement
+
+Start with mobile content, enhance for desktop:
+
+```jsx
+<Panel>
+  <SimpleMobileView />
+</Panel>
+
+<div className="hidden xl:block">
+  <EnhancedDesktopView />
+</div>
+```
+
+### 4. Layout Adaptations
+
+Different layouts for different screen sizes:
+
+```jsx
+{/* Stacked mobile layout */}
+<Panel>
+  <div className="space-y-4">
+    <Section1 />
+    <Section2 />
+    <Section3 />
+  </div>
+</Panel>
+
+{/* Grid desktop layout */}
+<div className="hidden xl:grid xl:grid-cols-3 xl:gap-6">
+  <Section1 />
+  <Section2 />
+  <Section3 />
+</div>
+```
+
+## Styling
+
+The Panel component accepts the `className` prop for custom styling:
+
+```jsx
+<Panel className="my-4 p-6 bg-stone-100 rounded-xl">
+  <p>Custom styled panel</p>
+</Panel>
+```
+
+Common customizations:
+
+```jsx
+{/* With padding and background */}
+<Panel className="p-4 bg-stone-50">
+  <MobileContent />
+</Panel>
+
+{/* Sticky header */}
+<Panel className="sticky top-0 z-50 bg-white shadow">
+  <MobileHeader />
+</Panel>
+
+{/* Full width with border */}
+<Panel className="w-full border-b pb-4">
+  <MobileBanner />
+</Panel>
+```
+
+## Accessibility
+
+The Panel component maintains the same accessibility features as a standard `div` element:
+
+- Semantic HTML (renders as `<div>`)
+- Respects all ARIA attributes passed via props
+- Screen readers will read the content when visible
+- No special focus management needed
+
+<Note>
+  The Panel component is purely presentational and doesn't affect the DOM structure or accessibility tree - it only controls visibility via CSS.
+</Note>
+
+## Best Practices
+
+1. **Pair with desktop content**: Always provide alternative desktop content when using Panel
+2. **Test responsiveness**: Verify content displays correctly at the breakpoint threshold
+3. **Avoid duplicating content**: Don't render the same content in both Panel and desktop versions
+4. **Consider performance**: Use Panel to load mobile-optimized assets instead of full desktop versions
+
+```jsx
+{/* Good: Different content for each viewport */}
+<Panel>
+  <MobileOptimizedImage src="/image-mobile.jpg" />
+</Panel>
+<div className="hidden xl:block">
+  <HighResDesktopImage src="/image-desktop.jpg" />
+</div>
+
+{/* Bad: Same content duplicated */}
+<Panel>
+  <ExpensiveComponent />
+</Panel>
+<div className="hidden xl:block">
+  <ExpensiveComponent />
+</div>
+```
+
+## Combining with Other Components
+
+The Panel component works well with other responsive utilities:
+
+```jsx
+{/* Mobile tabs, desktop columns */}
+<Panel>
+  <Tabs defaultTabIndex={0}>
+    <Tabs.Item title="Tab 1"><Content1 /></Tabs.Item>
+    <Tabs.Item title="Tab 2"><Content2 /></Tabs.Item>
+    <Tabs.Item title="Tab 3"><Content3 /></Tabs.Item>
+  </Tabs>
+</Panel>
+
+<div className="hidden xl:block">
+  <Columns cols={3}>
+    <Content1 />
+    <Content2 />
+    <Content3 />
+  </Columns>
+</div>
+```
+
+<Warning>
+  When using Panel for navigation or critical content, ensure there's an accessible alternative for desktop users. Don't hide essential functionality in a Panel without providing a desktop equivalent.
+</Warning>

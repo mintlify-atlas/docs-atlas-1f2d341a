@@ -1,0 +1,148 @@
+---
+title: 'View'
+description: 'Conditional rendering component for multi-view content'
+icon: 'eye'
+---
+
+The View component provides conditional rendering for multi-view content. It only renders its children when its title matches the active view.
+
+## Basic Usage
+
+```tsx
+import { View } from '@mintlify/components';
+
+function MyComponent({ items }) {
+  return (
+    <>
+      <View title="React" items={items}>
+        <p>This content is shown when React view is active</p>
+      </View>
+      
+      <View title="Vue" items={items}>
+        <p>This content is shown when Vue view is active</p>
+      </View>
+      
+      <View title="Angular" items={items}>
+        <p>This content is shown when Angular view is active</p>
+      </View>
+    </>
+  );
+}
+```
+
+## Props
+
+<ParamField path="title" type="string" required>
+  The title of this view. Must match one of the titles in the `items` array to be visible.
+</ParamField>
+
+<ParamField path="items" type="MultiViewItemType[]" required>
+  Array of view items from the multi-view context. Each item should have a `title` and `active` property.
+  
+  **Type definition:**
+  ```tsx
+  type MultiViewItemType = {
+    title: string;
+    active: boolean;
+    // ... other properties
+  };
+  ```
+  
+  <Note>
+  This prop is typically passed automatically from the MDX context when using Views in Mintlify documentation. You generally don't need to provide this manually.
+  </Note>
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply to the view wrapper.
+</ParamField>
+
+<ParamField path="children" type="ReactNode">
+  The content to display when this view is active.
+</ParamField>
+
+Extends all standard HTML div attributes.
+
+## How It Works
+
+The View component:
+
+1. Waits for the component to mount (prevents hydration mismatches)
+2. Checks if any item in the `items` array has a matching `title` and is marked as `active`
+3. Only renders children when both conditions are met
+4. Returns `null` (nothing) when the view is not active
+
+## Usage in MDX
+
+In Mintlify documentation, Views are typically used with code blocks or content that should be shown conditionally:
+
+```mdx
+<CodeGroup>
+  <View title="npm">
+    ```bash
+    npm install @mintlify/components
+    ```
+  </View>
+  
+  <View title="yarn">
+    ```bash
+    yarn add @mintlify/components
+    ```
+  </View>
+  
+  <View title="pnpm">
+    ```bash
+    pnpm add @mintlify/components
+    ```
+  </View>
+</CodeGroup>
+```
+
+## Styling
+
+The View component automatically applies:
+
+- Prose styling (`prose dark:prose-invert`) for rich content
+- A multi-view item class for internal tracking
+- Custom classes via the `className` prop
+
+```tsx
+<View 
+  title="Example" 
+  items={items}
+  className="my-4 border rounded-lg p-4"
+>
+  <p>Styled content</p>
+</View>
+```
+
+## Important Notes
+
+<Warning>
+The View component uses `useIsomorphicLayoutEffect` to prevent rendering until after mount. This means content will not appear during server-side rendering (SSR). This is intentional to avoid hydration mismatches.
+</Warning>
+
+<Tip>
+When using Views, make sure each View has a unique `title` that corresponds to a view option in your multi-view configuration.
+</Tip>
+
+## TypeScript
+
+Full type safety is provided:
+
+```tsx
+import { View, type ViewProps } from '@mintlify/components';
+
+const MyView: React.FC<ViewProps> = ({ title, items, children }) => {
+  return (
+    <View title={title} items={items}>
+      {children}
+    </View>
+  );
+};
+```
+
+## Source Code Reference
+
+- View component: packages/components/src/components/view/view.tsx:17
+- ViewProps type: packages/components/src/components/view/view.tsx:8

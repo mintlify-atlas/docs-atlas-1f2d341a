@@ -1,0 +1,496 @@
+---
+title: 'TypeScript Usage'
+description: 'Learn about TypeScript support, type exports, and type-safe usage of @mintlify/components'
+icon: 'code'
+---
+
+@mintlify/components is written in TypeScript and exports comprehensive type definitions for all components, props, and utilities.
+
+## Type Definitions
+
+All types are automatically included when you install the package:
+
+```json package.json
+{
+  "dependencies": {
+    "@mintlify/components": "^1.0.0"
+  }
+}
+```
+
+The package exports types at `./dist/index.d.ts` which are automatically resolved by TypeScript.
+
+## Component Prop Types
+
+Every component exports its prop types for type-safe usage:
+
+### Accordion
+
+```tsx
+import type { AccordionProps, AccordionGroupProps } from '@mintlify/components';
+
+const MyAccordion: React.FC<AccordionProps> = (props) => {
+  // props are fully typed
+  return <Accordion {...props} />;
+};
+```
+
+### Badge
+
+```tsx
+import type { 
+  BadgeProps, 
+  BadgeColor, 
+  BadgeShape, 
+  BadgeSize 
+} from '@mintlify/components';
+
+const color: BadgeColor = 'blue';
+const shape: BadgeShape = 'rounded';
+const size: BadgeSize = 'md';
+
+<Badge color={color} shape={shape} size={size}>
+  TypeScript
+</Badge>
+```
+
+### Callout
+
+```tsx
+import type { CalloutProps, CalloutVariant } from '@mintlify/components';
+
+const variant: CalloutVariant = 'info'; // 'info' | 'warning' | 'note' | 'tip' | 'check' | 'danger' | 'custom'
+
+<Callout variant={variant} icon="info" color="#3b82f6">
+  Type-safe callout configuration
+</Callout>
+```
+
+### Card
+
+```tsx
+import type { 
+  CardProps, 
+  CardPropsBase,
+  CardComponentProps,
+  CardIconProps 
+} from '@mintlify/components';
+
+const cardProps: CardProps = {
+  title: 'Getting Started',
+  icon: 'rocket',
+  href: '/docs/getting-started',
+};
+
+<Card {...cardProps} />
+```
+
+### Code Block
+
+```tsx
+import type { CodeBlockProps, BaseCodeBlockProps } from '@mintlify/components';
+
+const codeProps: CodeBlockProps = {
+  code: 'console.log("Hello");',
+  language: 'javascript',
+  showLineNumbers: true,
+};
+
+<CodeBlock {...codeProps} />
+```
+
+### CodeGroup
+
+```tsx
+import type { CodeGroupProps } from '@mintlify/components';
+
+const groupProps: CodeGroupProps = {
+  children: [
+    <CodeBlock key="js" code="console.log('Hi');" language="javascript" />,
+    <CodeBlock key="py" code="print('Hi')" language="python" />,
+  ],
+};
+
+<CodeGroup {...groupProps} />
+```
+
+### Icon
+
+```tsx
+import type { IconProps } from '@mintlify/components';
+
+const iconProps: IconProps = {
+  icon: 'github',
+  iconType: 'regular',
+  iconLibrary: 'lucide',
+};
+
+<Icon {...iconProps} />
+```
+
+### Steps
+
+```tsx
+import type { StepsProps, StepsItemProps, StepTitleSize } from '@mintlify/components';
+import { STEP_TITLE_SIZES } from '@mintlify/components';
+
+const titleSize: StepTitleSize = 'h3'; // From STEP_TITLE_SIZES
+
+const stepProps: StepsItemProps = {
+  title: 'Install Package',
+  children: 'Run npm install',
+};
+```
+
+### Tabs
+
+```tsx
+import type { TabsProps, TabsItemProps } from '@mintlify/components';
+
+const tabsConfig: TabsProps = {
+  children: [
+    { label: 'JavaScript', content: <div>JS content</div> },
+    { label: 'TypeScript', content: <div>TS content</div> },
+  ],
+};
+```
+
+### Tooltip
+
+```tsx
+import type { TooltipProps } from '@mintlify/components';
+
+const tooltipProps: TooltipProps = {
+  content: 'Helpful information',
+  children: <button>Hover me</button>,
+};
+
+<Tooltip {...tooltipProps} />
+```
+
+## Complete Type Exports
+
+Here's a comprehensive list of all exported types:
+
+<CodeGroup>
+  ```tsx component-types
+  // Component prop types
+  import type {
+    AccordionProps,
+    AccordionGroupProps,
+    BadgeProps,
+    BadgeColor,
+    BadgeShape,
+    BadgeSize,
+    CalloutProps,
+    CalloutVariant,
+    CardProps,
+    CardPropsBase,
+    CardComponentProps,
+    CardIconProps,
+    CodeBlockProps,
+    BaseCodeBlockProps,
+    CodeGroupProps,
+    IconProps,
+    StepsProps,
+    StepsItemProps,
+    StepTitleSize,
+    TabsProps,
+    TabsItemProps,
+    TooltipProps,
+  } from '@mintlify/components';
+  ```
+
+  ```tsx utility-types
+  // Utility function types
+  import type { ClassValue } from 'clsx';
+  
+  // The cn function accepts ClassValue types
+  import { cn } from '@mintlify/components';
+  
+  // Usage
+  const className = cn(
+    'base-class',
+    condition && 'conditional-class',
+    ['array', 'of', 'classes'],
+    { 'class-name': true }
+  );
+  ```
+</CodeGroup>
+
+## Type-Safe Variants
+
+Many components use discriminated unions for type-safe variant props:
+
+```tsx
+import { Callout } from '@mintlify/components';
+import type { CalloutVariant } from '@mintlify/components';
+
+// TypeScript knows which props are valid for each variant
+function getCalloutConfig(variant: CalloutVariant) {
+  switch (variant) {
+    case 'info':
+    case 'warning':
+    case 'note':
+    case 'tip':
+    case 'check':
+    case 'danger':
+      // Preset variants - icon is automatically provided
+      return { variant };
+    case 'custom':
+      // Custom variant requires icon and color
+      return { variant, icon: 'star', color: '#fbbf24' };
+  }
+}
+
+<Callout {...getCalloutConfig('info')}>
+  Type-safe variant handling
+</Callout>
+```
+
+## Generic Component Props
+
+For components that accept generic React props:
+
+```tsx
+import type { ComponentPropsWithoutRef } from 'react';
+import { Badge } from '@mintlify/components';
+import type { BadgeProps } from '@mintlify/components';
+
+// Extend component props with additional HTML attributes
+type ExtendedBadgeProps = BadgeProps & ComponentPropsWithoutRef<'div'>;
+
+const MyBadge = (props: ExtendedBadgeProps) => {
+  return <Badge {...props} />;
+};
+
+// Now you can use additional div props
+<MyBadge 
+  color="blue" 
+  onClick={() => console.log('clicked')}
+  data-testid="my-badge"
+>
+  Clickable
+</MyBadge>
+```
+
+## Using the cn Utility
+
+The `cn` utility function is fully typed using `clsx`:
+
+```tsx
+import { cn } from '@mintlify/components';
+import type { ClassValue } from 'clsx';
+
+// All these are valid:
+const classes = cn(
+  'base-class',                          // string
+  condition && 'conditional',            // conditional string
+  { 'active': isActive },               // object
+  ['array', 'of', 'classes'],           // array
+  undefined,                             // undefined (ignored)
+  null,                                  // null (ignored)
+);
+
+// Use with component props
+interface Props {
+  className?: string;
+  isActive?: boolean;
+}
+
+const Component = ({ className, isActive }: Props) => (
+  <div className={cn('base', isActive && 'active', className)}>
+    Content
+  </div>
+);
+```
+
+## Constants and Enums
+
+Some components export constants for valid values:
+
+```tsx
+import { STEP_TITLE_SIZES } from '@mintlify/components';
+import type { StepTitleSize } from '@mintlify/components';
+
+// STEP_TITLE_SIZES contains all valid title sizes
+const validSizes: StepTitleSize[] = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+
+function renderStep(titleSize: StepTitleSize) {
+  // titleSize is constrained to valid values
+  return <Steps titleSize={titleSize}>...</Steps>;
+}
+```
+
+## Type Inference
+
+TypeScript can infer types from usage:
+
+```tsx
+import { Card } from '@mintlify/components';
+
+// Type is inferred from the component
+const cards = [
+  { title: 'Guide 1', icon: 'book', href: '/guide-1' },
+  { title: 'Guide 2', icon: 'rocket', href: '/guide-2' },
+] as const;
+
+// TypeScript knows the shape of each card
+cards.map((card) => (
+  <Card key={card.href} {...card} />
+));
+```
+
+## Utility Type Helpers
+
+Create helper types for common patterns:
+
+```tsx
+import type { CalloutProps, CardProps } from '@mintlify/components';
+
+// Extract specific prop types
+type CalloutVariants = CalloutProps['variant'];
+type CardIcons = CardProps['icon'];
+
+// Create custom component types
+type InfoCalloutProps = Omit<CalloutProps, 'variant'> & {
+  variant: 'info';
+};
+
+const InfoCallout = (props: InfoCalloutProps) => (
+  <Callout {...props} />
+);
+```
+
+## Working with Children
+
+Type children props correctly:
+
+```tsx
+import type { ReactNode } from 'react';
+import { Accordion } from '@mintlify/components';
+
+interface WrapperProps {
+  children: ReactNode;
+  title?: string;
+}
+
+const AccordionWrapper = ({ children, title }: WrapperProps) => (
+  <Accordion title={title || 'Default Title'}>
+    {children}
+  </Accordion>
+);
+```
+
+## Advanced: Custom Icon Types
+
+For components that accept icons:
+
+```tsx
+import type { IconProps } from '@mintlify/components';
+import type { IconType, IconLibrary } from '@mintlify/components';
+
+// These types are used internally but can be referenced
+type CustomIconConfig = {
+  icon: string;
+  iconType?: IconType;
+  iconLibrary?: IconLibrary;
+};
+
+const config: CustomIconConfig = {
+  icon: 'github',
+  iconType: 'regular',
+  iconLibrary: 'lucide',
+};
+```
+
+<Note>
+  Some internal types like `IconType` and `IconLibrary` may not be directly exported. Refer to the component's prop types for available options.
+</Note>
+
+## tsconfig.json Configuration
+
+Recommended TypeScript configuration:
+
+```json tsconfig.json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "types": ["node"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}
+```
+
+## Type-Safe Component Composition
+
+Build type-safe wrapper components:
+
+```tsx
+import { Card, Callout } from '@mintlify/components';
+import type { CardProps, CalloutProps } from '@mintlify/components';
+
+interface FeatureCardProps extends Omit<CardProps, 'icon'> {
+  status: 'stable' | 'beta' | 'deprecated';
+}
+
+function FeatureCard({ status, ...props }: FeatureCardProps) {
+  const icons = {
+    stable: 'check',
+    beta: 'flask',
+    deprecated: 'x',
+  };
+
+  return <Card {...props} icon={icons[status]} />;
+}
+
+// Usage is fully type-checked
+<FeatureCard 
+  title="New Feature"
+  status="beta"  // Only accepts 'stable' | 'beta' | 'deprecated'
+  href="/features"
+/>
+```
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Type errors after installation">
+    1. Ensure TypeScript version is 5.0 or higher
+    2. Run `npm install` to ensure types are properly installed
+    3. Restart your TypeScript language server
+  </Accordion>
+
+  <Accordion title="Cannot find module or type declarations">
+    Check that `@mintlify/components` is in your `dependencies` (not `devDependencies`) and that your `moduleResolution` is set to `bundler` or `node16` in `tsconfig.json`.
+  </Accordion>
+
+  <Accordion title="Prop types not autocompleting">
+    Make sure you're importing both the component and its types:
+    ```tsx
+    import { Component } from '@mintlify/components';
+    import type { ComponentProps } from '@mintlify/components';
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Tailwind Integration" icon="wind" href="/guides/tailwind-integration">
+    Set up Tailwind CSS with the components
+  </Card>
+  <Card title="Dark Mode" icon="moon" href="/guides/dark-mode">
+    Configure dark mode theming
+  </Card>
+</CardGroup>

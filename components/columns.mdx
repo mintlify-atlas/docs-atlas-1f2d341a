@@ -1,0 +1,261 @@
+---
+title: 'Columns'
+description: 'A responsive grid layout component for organizing content into columns'
+---
+
+The Columns component creates a responsive grid layout for organizing child elements into columns. It automatically adapts to different screen sizes, displaying as a single column on mobile and multiple columns on larger screens.
+
+## Basic Usage
+
+```jsx
+<Columns cols={2}>
+  <div>Column 1 content</div>
+  <div>Column 2 content</div>
+  <div>Column 3 content</div>
+  <div>Column 4 content</div>
+</Columns>
+```
+
+## Props
+
+<ParamField path="cols" type="ColCount | `${ColCount}`" default={2}>
+  Number of columns to display on screens larger than mobile. 
+  
+  Accepts values: `1`, `2`, `3`, or `4`
+  
+  Can be provided as a number or string. On mobile devices, content always displays in a single column.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply to the columns container.
+</ParamField>
+
+<ParamField path="children" type="ReactNode" required>
+  The content to display in columns. Each child element becomes a column item.
+</ParamField>
+
+## Examples
+
+### Two Columns (Default)
+
+```jsx
+<Columns>
+  <div>
+    <h3>First Column</h3>
+    <p>Content for the first column.</p>
+  </div>
+  <div>
+    <h3>Second Column</h3>
+    <p>Content for the second column.</p>
+  </div>
+</Columns>
+```
+
+### Three Columns
+
+```jsx
+<Columns cols={3}>
+  <div>
+    <h3>Column 1</h3>
+    <p>First column content</p>
+  </div>
+  <div>
+    <h3>Column 2</h3>
+    <p>Second column content</p>
+  </div>
+  <div>
+    <h3>Column 3</h3>
+    <p>Third column content</p>
+  </div>
+</Columns>
+```
+
+### Four Columns
+
+```jsx
+<Columns cols={4}>
+  <Card icon="code" title="Feature 1">Description 1</Card>
+  <Card icon="rocket" title="Feature 2">Description 2</Card>
+  <Card icon="star" title="Feature 3">Description 3</Card>
+  <Card icon="heart" title="Feature 4">Description 4</Card>
+</Columns>
+```
+
+### Single Column
+
+```jsx
+<Columns cols={1}>
+  <div>This content will always display in a single column</div>
+  <div>Even on larger screens</div>
+</Columns>
+```
+
+### Custom Gap Spacing
+
+```jsx
+<Columns cols={2} className="gap-8">
+  <div>Column with larger gap</div>
+  <div>Column with larger gap</div>
+</Columns>
+```
+
+### With Cards
+
+```jsx
+<Columns cols={3}>
+  <Card icon="book" title="Documentation">
+    Read our comprehensive documentation.
+  </Card>
+  <Card icon="code" title="API Reference">
+    Explore the API reference.
+  </Card>
+  <Card icon="github" iconType="brands" title="GitHub">
+    View the source code on GitHub.
+  </Card>
+</Columns>
+```
+
+### Mixed Content
+
+```jsx
+<Columns cols={2}>
+  <div>
+    <h3>Text Content</h3>
+    <p>This column contains regular text content with paragraphs and headings.</p>
+    <ul>
+      <li>List item 1</li>
+      <li>List item 2</li>
+      <li>List item 3</li>
+    </ul>
+  </div>
+  <div>
+    <h3>Code Example</h3>
+    <pre><code>{`function example() {
+  return "Hello World";
+}`}</code></pre>
+  </div>
+</Columns>
+```
+
+### Unequal Number of Items
+
+The Columns component handles unequal numbers of items gracefully:
+
+```jsx
+<Columns cols={3}>
+  <div>Item 1</div>
+  <div>Item 2</div>
+  <div>Item 3</div>
+  <div>Item 4</div>
+  <div>Item 5</div>
+</Columns>
+```
+
+In this example with 5 items in 3 columns, the layout will be:
+- Row 1: 3 items
+- Row 2: 2 items
+
+## Responsive Behavior
+
+The Columns component uses a mobile-first responsive design:
+
+- **Mobile screens**: All content displays in a single column regardless of the `cols` prop
+- **Screens ≥640px (sm breakpoint)**: Content displays in the specified number of columns
+
+```jsx
+{/* On mobile: single column, On desktop: 3 columns */}
+<Columns cols={3}>
+  <div>Responsive column 1</div>
+  <div>Responsive column 2</div>
+  <div>Responsive column 3</div>
+</Columns>
+```
+
+## Styling
+
+The Columns component includes built-in gap spacing and adapts to light and dark themes. You can customize the appearance using the `className` prop:
+
+```jsx
+<Columns cols={2} className="gap-6 mb-8">
+  <div>Column with custom styling</div>
+  <div>Column with custom styling</div>
+</Columns>
+```
+
+### Available Tailwind Utilities
+
+Common customizations you can apply:
+
+- **Gap spacing**: `gap-2`, `gap-4`, `gap-6`, `gap-8`
+- **Margin**: `mt-4`, `mb-6`, `my-8`
+- **Padding**: `p-4`, `px-6`
+- **Alignment**: `items-start`, `items-center`, `items-end`
+
+<Note>
+  The default gap between columns is `gap-4` (1rem / 16px). Use the `className` prop to override this with different gap values.
+</Note>
+
+## Use Cases
+
+### Feature Comparison
+
+```jsx
+<Columns cols={3}>
+  <div>
+    <h4>Basic Plan</h4>
+    <ul>
+      <li>Feature A</li>
+      <li>Feature B</li>
+      <li>Feature C</li>
+    </ul>
+  </div>
+  <div>
+    <h4>Pro Plan</h4>
+    <ul>
+      <li>All Basic features</li>
+      <li>Feature D</li>
+      <li>Feature E</li>
+    </ul>
+  </div>
+  <div>
+    <h4>Enterprise Plan</h4>
+    <ul>
+      <li>All Pro features</li>
+      <li>Feature F</li>
+      <li>Feature G</li>
+    </ul>
+  </div>
+</Columns>
+```
+
+### Code Examples
+
+```jsx
+<Columns cols={2}>
+  <div>
+    <h4>JavaScript</h4>
+    <pre><code>{`const greeting = "Hello";
+console.log(greeting);`}</code></pre>
+  </div>
+  <div>
+    <h4>Python</h4>
+    <pre><code>{`greeting = "Hello"
+print(greeting)`}</code></pre>
+  </div>
+</Columns>
+```
+
+### Image Gallery
+
+```jsx
+<Columns cols={4}>
+  <img src="/image1.jpg" alt="Gallery image 1" />
+  <img src="/image2.jpg" alt="Gallery image 2" />
+  <img src="/image3.jpg" alt="Gallery image 3" />
+  <img src="/image4.jpg" alt="Gallery image 4" />
+</Columns>
+```
+
+## Accessibility
+
+The Columns component uses semantic HTML and maintains proper document flow for screen readers. Content is presented in a logical order that makes sense when read linearly on mobile devices.

@@ -1,0 +1,336 @@
+---
+title: 'Card'
+description: 'A flexible card component for displaying content with optional icons, images, and links'
+---
+
+The Card component is a versatile container for displaying content with support for icons, header images, links, and call-to-action buttons. It automatically handles external link detection and provides hover effects.
+
+## Basic Usage
+
+<CodeGroup>
+
+```jsx Default
+<Card title="Default Card">
+  This is a basic card with just a title and content.
+</Card>
+```
+
+```jsx With Icon
+<Card title="Card with Icon" icon="cat">
+  This card includes an icon from the icon library.
+</Card>
+```
+
+```jsx As Link
+<Card title="Clickable Card" icon="cat" href="/docs/getting-started">
+  This card is a link. Click it to navigate.
+</Card>
+```
+
+</CodeGroup>
+
+## Props
+
+<ParamField path="title" type="ReactNode">
+  The title displayed at the top of the card. Prefer using a string value for better compatibility with accessibility and semantic HTML.
+</ParamField>
+
+<ParamField path="icon" type="ReactNode | string">
+  Icon to display in the card. Can be:
+  - A string icon name (e.g., `"cat"`, `"bolt"`) from Font Awesome or Lucide
+  - An image URL (will be rendered as an `<img>` tag)
+  - A custom React component/element
+</ParamField>
+
+<ParamField path="iconType" type="IconType">
+  Type of Font Awesome icon. Options: `"solid"`, `"regular"`, `"light"`, `"duotone"`, `"thin"`, `"sharp-solid"`, `"brands"`
+  
+  Only used when `icon` is a string and not an image URL.
+</ParamField>
+
+<ParamField path="iconLibrary" type="IconLibrary">
+  Icon library to use. Options: `"fontawesome"`, `"lucide"`
+  
+  Only used when `icon` is a string.
+</ParamField>
+
+<ParamField path="color" type="string">
+  Custom color for the icon. Accepts any CSS color value (hex, rgb, etc.). When provided, overrides the default icon color.
+</ParamField>
+
+<ParamField path="img" type="string">
+  URL of a header image to display at the top of the card, above the title and content.
+</ParamField>
+
+<ParamField path="horizontal" type="boolean" default={false}>
+  When `true`, displays the card content in a horizontal layout with the icon and text side by side.
+</ParamField>
+
+<ParamField path="href" type="string">
+  URL to navigate to when the card is clicked. Makes the entire card clickable. External URLs automatically open in a new tab.
+</ParamField>
+
+<ParamField path="cta" type="string">
+  Call-to-action text displayed at the bottom of the card with an arrow icon.
+</ParamField>
+
+<ParamField path="arrow" type="boolean">
+  Controls display of the arrow icon in the top-right corner. By default, arrows are shown for external links. Set explicitly to `true` or `false` to override.
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default={false}>
+  When `true`, disables the card link and shows reduced opacity for the CTA.
+</ParamField>
+
+<ParamField path="as" type="ElementType">
+  Custom component to render as the root element. Useful for integrating with routing libraries like Next.js Link or React Router Link.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply to the card container.
+</ParamField>
+
+<ParamField path="children" type="ReactNode">
+  The main content to display inside the card.
+</ParamField>
+
+## Examples
+
+### Icons
+
+<CodeGroup>
+
+```jsx Font Awesome Icon
+<Card title="Card with Icon" icon="heart" iconType="solid">
+  This card uses a Font Awesome solid icon.
+</Card>
+```
+
+```jsx Lucide Icon
+<Card title="Card with Lucide" icon="Zap" iconLibrary="lucide">
+  This card uses a Lucide icon.
+</Card>
+```
+
+```jsx Custom Icon Color
+<Card title="Card with Colored Icon" icon="heart" color="#ef4444">
+  This card has a custom colored icon.
+</Card>
+```
+
+```jsx Image Icon
+<Card 
+  title="Card with Image Icon" 
+  icon="https://example.com/icon.svg"
+>
+  This card uses an image URL as the icon.
+</Card>
+```
+
+```jsx Custom React Icon
+<Card 
+  title="Card with Custom Icon" 
+  icon={<Zap />}
+>
+  This card uses a custom React component as the icon.
+</Card>
+```
+
+</CodeGroup>
+
+### Layouts
+
+<CodeGroup>
+
+```jsx Vertical (Default)
+<Card title="Vertical Card" icon="bolt">
+  This card displays content in a vertical layout.
+</Card>
+```
+
+```jsx Horizontal
+<Card title="Horizontal Card" icon="bolt" horizontal={true}>
+  This card displays content in a horizontal layout.
+</Card>
+```
+
+```jsx With Header Image
+<Card 
+  title="Card with Header Image" 
+  img="https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?w=800"
+>
+  This card includes a header image above the content.
+</Card>
+```
+
+```jsx Image and Icon
+<Card 
+  title="Complete Card" 
+  img="https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?w=800" 
+  icon="bolt"
+>
+  This card has both a header image and an icon.
+</Card>
+```
+
+</CodeGroup>
+
+### Links and CTAs
+
+<CodeGroup>
+
+```jsx Internal Link
+<Card title="Clickable Card" icon="cat" href="/docs/getting-started">
+  This card is a link. Click it to navigate.
+</Card>
+```
+
+```jsx External Link
+<Card title="External Link Card" icon="bolt" href="https://example.com">
+  This card links to an external site. Notice the arrow icon.
+</Card>
+```
+
+```jsx External Link Without Arrow
+<Card 
+  title="External Link Without Arrow" 
+  icon="heart" 
+  href="https://example.com" 
+  arrow={false}
+>
+  This external link card has the arrow icon disabled.
+</Card>
+```
+
+```jsx Internal Link With Arrow
+<Card 
+  title="Internal Link with Arrow" 
+  icon="fire" 
+  href="/docs" 
+  arrow={true}
+>
+  This internal link card has the arrow icon explicitly enabled.
+</Card>
+```
+
+```jsx With Call to Action
+<Card title="Card with Call to Action" icon="bolt" cta="Learn more">
+  This card includes a call-to-action button at the bottom.
+</Card>
+```
+
+```jsx CTA and Link Combined
+<Card 
+  title="CTA Card as Link" 
+  icon="cat" 
+  href="/docs/guide" 
+  cta="Read the guide"
+>
+  This card is both clickable and has a visible CTA.
+</Card>
+```
+
+</CodeGroup>
+
+### Card States
+
+```jsx Disabled Card
+<Card 
+  title="Disabled Card" 
+  icon="heart" 
+  href="/some-page" 
+  cta="Try to click" 
+  disabled={true}
+>
+  This card is disabled and cannot be clicked.
+</Card>
+```
+
+### Custom Link Component
+
+Use the `as` prop to integrate with routing libraries:
+
+```jsx Next.js Example
+import Link from 'next/link';
+
+<Card 
+  as={Link} 
+  href="/custom-route" 
+  icon="bolt" 
+  title="Using Custom Link Component"
+>
+  This card uses Next.js Link via the "as" prop.
+</Card>
+```
+
+<Note>
+  The `as` prop accepts any component that forwards standard link props including `href`.
+</Note>
+
+### Fully Featured Example
+
+```jsx
+<Card
+  title="Premium Feature"
+  icon="fire"
+  color="#f59e0b"
+  img="https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800"
+  href="/premium"
+  cta="Upgrade now"
+  arrow={true}
+>
+  Get access to all premium features with our upgraded plan.
+</Card>
+```
+
+### Card Grid
+
+```jsx
+<div className="grid grid-cols-2 gap-4">
+  <Card cta="Begin" href="/start" icon="rocket" title="Getting Started">
+    Start building with our platform.
+  </Card>
+  <Card cta="Explore" href="/features" icon="fire" title="Features">
+    Discover all the powerful features.
+  </Card>
+  <Card cta="Join" href="/community" icon="users" title="Community">
+    Join our growing community.
+  </Card>
+  <Card cta="Get Help" href="/support" icon="circle-check" title="Support">
+    Get help when you need it.
+  </Card>
+</div>
+```
+
+## Styling
+
+The Card component automatically adapts to light and dark themes. Customize the appearance using the `className` prop:
+
+```jsx
+<Card
+  title="Card with Custom Styles"
+  icon="heart"
+  className="shadow-lg border-4 border-blue-500"
+>
+  This card has custom styling applied via the className prop.
+</Card>
+```
+
+## Hover Effects
+
+Cards with an `href` prop automatically receive hover effects:
+- Primary color border on hover
+- Primary color CTA text on hover (when not disabled)
+- Focus ring for keyboard navigation
+
+<Warning>
+  External links (URLs starting with `http://` or `https://`) automatically open in a new tab with `target="_blank"` and `rel="noreferrer"` for security.
+</Warning>
+
+## Accessibility
+
+The Card component includes built-in accessibility features:
+- Semantic HTML structure with proper heading hierarchy
+- Focus indicators for keyboard navigation
+- Support for screen readers with proper alt text for images
+- Disabled state properly communicated to assistive technologies

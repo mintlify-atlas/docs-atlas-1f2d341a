@@ -1,0 +1,356 @@
+---
+title: Setup
+description: Configure Tailwind CSS v3 or v4 to work with Mintlify Components
+---
+
+After installing Mintlify Components, you need to import the component styles and configure Tailwind CSS. The setup process differs slightly between Tailwind CSS v3 and v4.
+
+<Note>
+Make sure you've completed the [Installation](/installation) steps before proceeding with setup.
+</Note>
+
+## Choose Your Tailwind Version
+
+Select the setup instructions for your Tailwind CSS version:
+
+<CardGroup cols={2}>
+  <Card title="Tailwind CSS v4" icon="4" href="#tailwind-css-v4">
+    Modern setup with the new CSS-first configuration
+  </Card>
+  <Card title="Tailwind CSS v3" icon="3" href="#tailwind-css-v3">
+    Traditional setup with JavaScript configuration
+  </Card>
+</CardGroup>
+
+## Tailwind CSS v4
+
+Tailwind CSS v4 introduces a new CSS-first configuration approach. The order of imports is critical for proper theming.
+
+<Steps>
+  <Step title="Import component styles first">
+    Open your main CSS file (usually `app/globals.css` or `src/index.css`) and add the component styles **before** the Tailwind import:
+
+    ```css globals.css
+    @import "@mintlify/components/styles.css";
+    @import "tailwindcss";
+
+    @theme {
+      --color-primary: #0ea5e9;
+      --color-secondary: #8b5cf6;
+    }
+    ```
+
+    <Warning>
+    The component styles **must** be imported before `@import "tailwindcss"`. This ensures your custom theme values override the component defaults.
+    </Warning>
+  </Step>
+
+  <Step title="Configure theme variables">
+    Customize component styling using CSS variables in the `@theme` block:
+
+    ```css globals.css
+    @import "@mintlify/components/styles.css";
+    @import "tailwindcss";
+
+    @theme {
+      /* Primary brand color */
+      --color-primary: #0ea5e9;
+      
+      /* Accent color for highlights */
+      --color-accent: #f59e0b;
+      
+      /* Custom spacing */
+      --spacing-card: 1.5rem;
+      
+      /* Typography */
+      --font-family-sans: 'Inter', system-ui, sans-serif;
+    }
+    ```
+
+    These variables will be available to both Tailwind and the components.
+  </Step>
+
+  <Step title="Verify setup">
+    Test that everything is working by importing and using a component:
+
+    ```tsx app/page.tsx
+    import { Callout } from '@mintlify/components';
+
+    export default function Home() {
+      return (
+        <div className="p-8">
+          <Callout type="success" title="Setup Complete">
+            Mintlify Components is ready to use with Tailwind CSS v4!
+          </Callout>
+        </div>
+      );
+    }
+    ```
+  </Step>
+</Steps>
+
+### Tailwind v4 Example
+
+Here's a complete example with dark mode support:
+
+```css globals.css
+@import "@mintlify/components/styles.css";
+@import "tailwindcss";
+
+@theme {
+  /* Light mode colors */
+  --color-primary: #0ea5e9;
+  --color-background: #ffffff;
+  --color-foreground: #0f172a;
+  
+  /* Dark mode colors */
+  @media (prefers-color-scheme: dark) {
+    --color-background: #0f172a;
+    --color-foreground: #f1f5f9;
+  }
+  
+  /* Typography */
+  --font-family-sans: 'Inter', system-ui, sans-serif;
+  --font-family-mono: 'Fira Code', monospace;
+  
+  /* Spacing */
+  --spacing-page: 2rem;
+}
+```
+
+## Tailwind CSS v3
+
+For Tailwind CSS v3, import the styles and configure your theme in `tailwind.config.js`.
+
+<Steps>
+  <Step title="Import component styles">
+    Open your main CSS file and import the component styles **before** the Tailwind directives:
+
+    ```css globals.css
+    @import "@mintlify/components/styles.css";
+
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+    ```
+
+    <Warning>
+    Import the component styles before the `@tailwind` directives to ensure proper style precedence.
+    </Warning>
+  </Step>
+
+  <Step title="Configure tailwind.config.js">
+    Extend your Tailwind configuration to customize component styling:
+
+    ```js tailwind.config.js
+    /** @type {import('tailwindcss').Config} */
+    module.exports = {
+      content: [
+        './app/**/*.{js,ts,jsx,tsx,mdx}',
+        './components/**/*.{js,ts,jsx,tsx,mdx}',
+        './node_modules/@mintlify/components/**/*.js',
+      ],
+      theme: {
+        extend: {
+          colors: {
+            primary: '#0ea5e9',
+            secondary: '#8b5cf6',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['Fira Code', 'monospace'],
+          },
+        },
+      },
+      plugins: [],
+    };
+    ```
+
+    <Note>
+    Add `node_modules/@mintlify/components/**/*.js` to the `content` array so Tailwind includes the component styles.
+    </Note>
+  </Step>
+
+  <Step title="Verify setup">
+    Test the configuration with a simple component:
+
+    ```tsx app/page.tsx
+    import { Callout } from '@mintlify/components';
+
+    export default function Home() {
+      return (
+        <div className="p-8">
+          <Callout type="success" title="Setup Complete">
+            Mintlify Components is ready to use with Tailwind CSS v3!
+          </Callout>
+        </div>
+      );
+    }
+    ```
+  </Step>
+</Steps>
+
+### Tailwind v3 Example
+
+Here's a complete configuration with custom colors and dark mode:
+
+```js tailwind.config.js
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './node_modules/@mintlify/components/**/*.js',
+  ],
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          DEFAULT: '#0ea5e9',
+          dark: '#0284c7',
+        },
+        background: {
+          light: '#ffffff',
+          dark: '#0f172a',
+        },
+      },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        mono: ['Fira Code', 'Consolas', 'monospace'],
+      },
+      spacing: {
+        'card': '1.5rem',
+        'section': '3rem',
+      },
+    },
+  },
+  plugins: [],
+};
+```
+
+## Import Order Explained
+
+The import order is critical for proper theming and customization:
+
+<CodeGroup>
+
+```css Tailwind v4 (Correct)
+@import "@mintlify/components/styles.css"; /* 1. Component defaults */
+@import "tailwindcss";                      /* 2. Tailwind utilities */
+
+@theme {
+  --color-primary: #0ea5e9;                 /* 3. Your overrides */
+}
+```
+
+```css Tailwind v3 (Correct)
+@import "@mintlify/components/styles.css"; /* 1. Component defaults */
+
+@tailwind base;                             /* 2. Tailwind base */
+@tailwind components;                       /* 3. Tailwind components */
+@tailwind utilities;                        /* 4. Tailwind utilities */
+```
+
+</CodeGroup>
+
+<Warning>
+Importing styles **after** Tailwind will prevent your custom theme values from overriding the component defaults.
+</Warning>
+
+## Start Using Components
+
+Now you're ready to use Mintlify Components in your application:
+
+```tsx
+import { 
+  Accordion, 
+  Callout, 
+  CodeBlock, 
+  Tabs,
+  Steps 
+} from '@mintlify/components';
+
+export default function Documentation() {
+  return (
+    <div>
+      <Callout type="info" title="Welcome">
+        Start building beautiful documentation with Mintlify Components.
+      </Callout>
+
+      <Steps>
+        <Step title="Install">
+          Install the package with your preferred package manager.
+        </Step>
+        <Step title="Configure">
+          Set up Tailwind CSS following the instructions above.
+        </Step>
+        <Step title="Build">
+          Start using components in your documentation.
+        </Step>
+      </Steps>
+
+      <Tabs>
+        <Tab title="JavaScript">
+          <CodeBlock language="javascript">
+            {`console.log('Hello, Mintlify!');`}
+          </CodeBlock>
+        </Tab>
+        <Tab title="TypeScript">
+          <CodeBlock language="typescript">
+            {`const greeting: string = 'Hello, Mintlify!';`}
+          </CodeBlock>
+        </Tab>
+      </Tabs>
+    </div>
+  );
+}
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Explore Components" icon="grid" href="/components/accordion">
+    Browse the full component library and examples
+  </Card>
+  <Card title="Theming Guide" icon="palette" href="/concepts/theming">
+    Learn how to customize colors and styles
+  </Card>
+  <Card title="TypeScript" icon="code" href="/guides/typescript">
+    Use components with full type safety
+  </Card>
+  <Card title="Dark Mode" icon="moon" href="/guides/dark-mode">
+    Implement dark mode in your documentation
+  </Card>
+</CardGroup>
+
+## Troubleshooting
+
+<Accordion title="Styles not applying">
+  If component styles aren't being applied:
+
+  1. Verify the import order in your CSS file
+  2. Check that `@mintlify/components/styles.css` is imported before Tailwind
+  3. Clear your build cache and restart your dev server
+  4. For Tailwind v3, ensure `node_modules/@mintlify/components/**/*.js` is in the `content` array
+</Accordion>
+
+<Accordion title="Theme overrides not working">
+  If your custom theme values aren't overriding component defaults:
+
+  **Tailwind v4:**
+  - Ensure `@import "@mintlify/components/styles.css"` comes **before** `@import "tailwindcss"`
+  - Place theme customizations in the `@theme` block
+
+  **Tailwind v3:**
+  - Ensure `@import "@mintlify/components/styles.css"` comes **before** `@tailwind` directives
+  - Use `extend` in your `tailwind.config.js` to preserve default values
+</Accordion>
+
+<Accordion title="Build errors with Tailwind v4">
+  If you encounter build errors with Tailwind CSS v4:
+
+  1. Update to the latest version: `npm install tailwindcss@latest`
+  2. Ensure you're using `@import "tailwindcss"` (not `@tailwind` directives)
+  3. Check that your build tool supports Tailwind v4 (Vite 6+, Next.js 15+, etc.)
+</Accordion>

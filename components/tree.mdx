@@ -1,0 +1,263 @@
+---
+title: Tree
+description: Display hierarchical file and folder structures with keyboard navigation
+---
+
+The `Tree` component renders an interactive, accessible file tree view with support for expandable folders, keyboard navigation, and type-ahead search.
+
+## Usage
+
+```jsx
+import { Tree } from '@mintlify/components';
+
+<Tree>
+  <Tree.File name="README.md" />
+  <Tree.Folder name="src">
+    <Tree.File name="index.ts" />
+    <Tree.File name="app.tsx" />
+  </Tree.Folder>
+</Tree>
+```
+
+## Tree Root Props
+
+<ParamField path="children" type="ReactNode" required>
+  The tree content, typically a combination of `Tree.File` and `Tree.Folder` components.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply to the tree root container.
+</ParamField>
+
+## Tree.Folder Props
+
+<ParamField path="name" type="string" required>
+  The display name of the folder.
+</ParamField>
+
+<ParamField path="defaultOpen" type="boolean" default="false">
+  Whether the folder should be expanded by default.
+</ParamField>
+
+<ParamField path="children" type="ReactNode">
+  The contents of the folder (nested files and folders).
+</ParamField>
+
+<ParamField path="openable" type="boolean" default="true">
+  Whether the folder can be opened/closed. If `false` or if there are no children, the folder cannot be expanded.
+</ParamField>
+
+## Tree.File Props
+
+<ParamField path="name" type="string" required>
+  The display name of the file.
+</ParamField>
+
+## Keyboard Navigation
+
+The Tree component implements the WAI-ARIA tree pattern with full keyboard support:
+
+- **Arrow Down**: Move focus to the next visible tree item
+- **Arrow Up**: Move focus to the previous visible tree item
+- **Arrow Right**: If focused on a folder:
+  - If collapsed, expand the folder
+  - If expanded, move focus to the first child
+- **Arrow Left**: If focused on a folder:
+  - If expanded, collapse the folder
+  - If collapsed, move focus to the parent folder
+- **Home**: Move focus to the first tree item
+- **End**: Move focus to the last visible tree item
+- **Enter** or **Space**: Activate the focused item (toggle folder or activate file)
+- *****: Expand all sibling folders at the current level
+- **Type-ahead**: Type any character to jump to the next item starting with that character
+  - Continues building search string if typed within 500ms
+  - Searches in a circular manner through all visible items
+
+## Examples
+
+### Basic File Tree
+
+```jsx
+<Tree>
+  <Tree.File name="README.md" />
+  <Tree.Folder name="src">
+    <Tree.File name="index.ts" />
+    <Tree.File name="app.tsx" />
+  </Tree.Folder>
+  <Tree.Folder name="public">
+    <Tree.File name="favicon.ico" />
+  </Tree.Folder>
+</Tree>
+```
+
+### Folders Expanded by Default
+
+```jsx
+<Tree>
+  <Tree.Folder name="src" defaultOpen>
+    <Tree.File name="index.ts" />
+    <Tree.Folder name="components" defaultOpen>
+      <Tree.File name="Button.tsx" />
+      <Tree.File name="Card.tsx" />
+    </Tree.Folder>
+    <Tree.Folder name="utils">
+      <Tree.File name="cn.ts" />
+    </Tree.Folder>
+  </Tree.Folder>
+</Tree>
+```
+
+### Deeply Nested Structure
+
+```jsx
+<Tree>
+  <Tree.Folder name="packages" defaultOpen>
+    <Tree.Folder name="components" defaultOpen>
+      <Tree.Folder name="src" defaultOpen>
+        <Tree.Folder name="components" defaultOpen>
+          <Tree.Folder name="tree" defaultOpen>
+            <Tree.File name="tree.tsx" />
+            <Tree.File name="tree.stories.tsx" />
+            <Tree.File name="index.ts" />
+          </Tree.Folder>
+        </Tree.Folder>
+      </Tree.Folder>
+    </Tree.Folder>
+  </Tree.Folder>
+</Tree>
+```
+
+### Files Only (Flat List)
+
+```jsx
+<Tree>
+  <Tree.File name="package.json" />
+  <Tree.File name="tsconfig.json" />
+  <Tree.File name="README.md" />
+  <Tree.File name=".gitignore" />
+  <Tree.File name=".eslintrc.js" />
+</Tree>
+```
+
+### Empty and Non-Openable Folders
+
+```jsx
+<Tree>
+  <Tree.Folder name="src">
+    <Tree.File name="index.ts" />
+  </Tree.Folder>
+  {/* Empty folder with no children - not openable */}
+  <Tree.Folder name="empty-folder" />
+  {/* Explicitly non-openable folder */}
+  <Tree.Folder name="dist" openable={false} />
+</Tree>
+```
+
+### Complete Project Structure
+
+```jsx
+<Tree>
+  <Tree.Folder name="my-project" defaultOpen>
+    <Tree.File name=".gitignore" />
+    <Tree.File name="package.json" />
+    <Tree.File name="tsconfig.json" />
+    <Tree.File name="README.md" />
+    <Tree.Folder name="src" defaultOpen>
+      <Tree.File name="index.ts" />
+      <Tree.File name="App.tsx" />
+      <Tree.Folder name="components">
+        <Tree.File name="Header.tsx" />
+        <Tree.File name="Footer.tsx" />
+        <Tree.File name="Sidebar.tsx" />
+      </Tree.Folder>
+      <Tree.Folder name="hooks">
+        <Tree.File name="useAuth.ts" />
+        <Tree.File name="useTheme.ts" />
+      </Tree.Folder>
+      <Tree.Folder name="utils">
+        <Tree.File name="cn.ts" />
+        <Tree.File name="api.ts" />
+      </Tree.Folder>
+      <Tree.Folder name="styles">
+        <Tree.File name="globals.css" />
+        <Tree.File name="variables.css" />
+      </Tree.Folder>
+    </Tree.Folder>
+    <Tree.Folder name="public">
+      <Tree.File name="favicon.ico" />
+      <Tree.File name="robots.txt" />
+      <Tree.Folder name="images">
+        <Tree.File name="logo.svg" />
+        <Tree.File name="hero.png" />
+      </Tree.Folder>
+    </Tree.Folder>
+    <Tree.Folder name="tests">
+      <Tree.File name="setup.ts" />
+      <Tree.Folder name="unit">
+        <Tree.File name="utils.test.ts" />
+      </Tree.Folder>
+      <Tree.Folder name="e2e">
+        <Tree.File name="home.spec.ts" />
+      </Tree.Folder>
+    </Tree.Folder>
+  </Tree.Folder>
+</Tree>
+```
+
+### With Custom Styling
+
+```jsx
+<Tree className="w-64 rounded-lg bg-stone-50 p-4 dark:bg-stone-900">
+  <Tree.Folder name="src" defaultOpen>
+    <Tree.File name="index.ts" />
+    <Tree.File name="app.tsx" />
+  </Tree.Folder>
+  <Tree.File name="package.json" />
+</Tree>
+```
+
+### Long File Names (Automatic Truncation)
+
+```jsx
+<Tree className="w-64">
+  <Tree.Folder
+    name="this-is-a-really-long-folder-name-that-should-truncate"
+    defaultOpen
+  >
+    <Tree.File name="this-is-a-really-long-file-name-that-should-also-truncate.tsx" />
+    <Tree.File name="another-very-long-file-name.config.ts" />
+  </Tree.Folder>
+  <Tree.File name="extremely-long-filename-at-root-level.md" />
+</Tree>
+```
+
+## Behavior
+
+- **Roving Tab Index**: Only one tree item is focusable at a time (tab index management)
+- **Type-ahead Search**: Accumulates typed characters within 500ms to search for matching items
+- **Circular Navigation**: Type-ahead search wraps around to the beginning after reaching the end
+- **Visual Indicators**: 
+  - Closed folders show a folder icon
+  - Open folders show an open folder icon
+  - Files show a file icon
+- **Indentation**: Each nesting level increases indentation by a calculated amount
+- **Visual Hierarchy**: Connecting lines show parent-child relationships for expanded folders
+
+## Accessibility
+
+- **ARIA Role**: Tree uses `role="tree"`, folders and files use `role="treeitem"`
+- **ARIA Properties**:
+  - `aria-expanded`: Indicates folder open/closed state
+  - `aria-level`: Indicates nesting depth
+  - `aria-selected`: Indicates selection state (always false by default)
+  - `aria-owns`: Links folders to their child groups
+- **ARIA Label**: Tree has default `aria-label="File tree"`
+- **Keyboard Support**: Full keyboard navigation following WAI-ARIA tree pattern
+- **Focus Management**: Proper focus and tabindex management for keyboard users
+
+## Source
+
+View the source code:
+- Tree Root: `packages/components/src/components/tree/root.tsx:26`
+- Tree Folder: `packages/components/src/components/tree/folder.tsx:10`
+- Tree File: `packages/components/src/components/tree/file.tsx:9`

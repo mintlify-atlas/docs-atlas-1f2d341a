@@ -1,0 +1,317 @@
+---
+title: 'CodeBlock'
+description: 'Display syntax-highlighted code with Shiki'
+icon: 'code'
+---
+
+The CodeBlock component provides syntax highlighting powered by Shiki, with support for line numbers, code wrapping, line highlighting, focus mode, expandable content, and copy-to-clipboard functionality.
+
+## Basic Usage
+
+```tsx
+import { CodeBlock } from '@mintlify/components';
+
+<CodeBlock language="javascript">
+  {`console.log('Hello, World!');`}
+</CodeBlock>
+```
+
+## Props
+
+<ParamField path="language" type="string">
+  The programming language for syntax highlighting (e.g., "javascript", "python", "java").
+</ParamField>
+
+<ParamField path="lang" type="string">
+  Alias for `language` prop.
+</ParamField>
+
+<ParamField path="filename" type="string">
+  Display a filename in the code block header.
+</ParamField>
+
+<ParamField path="icon" type="string">
+  Icon to display in the code block header (e.g., "js", "python", "java").
+</ParamField>
+
+<ParamField path="lines" type="boolean">
+  Enable line numbers.
+</ParamField>
+
+<ParamField path="wrap" type="boolean">
+  Enable code wrapping instead of horizontal scrolling.
+</ParamField>
+
+<ParamField path="expandable" type="boolean">
+  Make the code block expandable/collapsible when content exceeds a certain height.
+</ParamField>
+
+<ParamField path="highlight" type="string">
+  Lines to highlight as a JSON stringified array (e.g., `"[1,3,4,5]"`).
+</ParamField>
+
+<ParamField path="focus" type="string">
+  Lines to focus on (dims other lines) as a JSON stringified array (e.g., `"[2,4,6]"`).
+</ParamField>
+
+<ParamField path="codeBlockTheme" type="'system' | 'dark'" default="system">
+  The UI theme for the code block container:
+  - `"system"`: Adapts to light/dark mode
+  - `"dark"`: Always uses dark theme
+</ParamField>
+
+<ParamField path="codeBlockThemeObject" type="CodeStyling">
+  Custom syntax highlighting theme. Can be:
+  - A string: `"system"` or `"dark"` for default themes
+  - An object with a `theme` property for Shiki themes:
+    - Single theme: `{ theme: "dracula" }`
+    - Dual themes: `{ theme: { light: "everforest-light", dark: "dracula" } }`
+</ParamField>
+
+<ParamField path="isSmallText" type="boolean">
+  Use smaller text size (text-xs instead of text-sm).
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes for the code block container.
+</ParamField>
+
+<ParamField path="copyButtonProps" type="CopyToClipboardButtonProps">
+  Props to customize the copy button behavior and appearance.
+</ParamField>
+
+<ParamField path="children" type="ReactNode">
+  The code content to display.
+</ParamField>
+
+## Examples
+
+### With Filename and Icon
+
+```tsx
+<CodeBlock 
+  filename="HelloWorld.java" 
+  icon="java"
+  language="java"
+>
+  {`class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}`}
+</CodeBlock>
+```
+
+### With Line Numbers
+
+```tsx
+<CodeBlock 
+  language="python"
+  lines={true}
+>
+  {`def greet(name):
+    return f"Hello, {name}!"
+
+print(greet("World"))`}
+</CodeBlock>
+```
+
+### With Line Highlighting
+
+Highlight specific lines to draw attention to important code:
+
+```tsx
+<CodeBlock 
+  language="javascript"
+  lines={true}
+  highlight={JSON.stringify([3, 5, 7])}
+>
+  {`function calculateSum(a, b) {
+  // Validate inputs
+  if (typeof a !== 'number' || typeof b !== 'number') {
+    throw new Error('Arguments must be numbers');
+  }
+  // Calculate and return sum
+  return a + b;
+}
+
+console.log(calculateSum(5, 3));`}
+</CodeBlock>
+```
+
+### With Focus Mode
+
+Focus on specific lines while dimming others:
+
+```tsx
+<CodeBlock 
+  language="typescript"
+  lines={true}
+  focus={JSON.stringify([2, 3, 4])}
+>
+  {`interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+const user: User = {
+  id: '123',
+  name: 'John Doe',
+  email: 'john@example.com'
+};`}
+</CodeBlock>
+```
+
+### Highlight and Focus Combined
+
+```tsx
+<CodeBlock 
+  language="javascript"
+  lines={true}
+  highlight={JSON.stringify([2, 4, 6])}
+  focus={JSON.stringify([1, 3, 5])}
+>
+  {`// This demonstrates both highlight and focus
+const highlighted1 = true;
+const focused1 = true;
+const highlighted2 = true;
+const focused2 = true;
+const highlighted3 = true;`}
+</CodeBlock>
+```
+
+### With Code Wrapping
+
+```tsx
+<CodeBlock 
+  language="javascript"
+  wrap={true}
+  lines={true}
+>
+  {`const veryLongLine = "This is a very long line of code that would normally require horizontal scrolling, but with wrap enabled it will wrap to the next line instead.";`}
+</CodeBlock>
+```
+
+### Expandable Code Block
+
+For long code snippets, enable expandable mode:
+
+```tsx
+<CodeBlock 
+  language="python"
+  expandable={true}
+  lines={true}
+  filename="library.py"
+>
+  {`# Long Python code here...
+class DataProcessor:
+    def __init__(self):
+        self.data = []
+    
+    def process(self, item):
+        # Process logic
+        pass
+    
+    # ... many more lines ...`}
+</CodeBlock>
+```
+
+### Custom Shiki Theme
+
+Use any Shiki theme for syntax highlighting:
+
+```tsx
+<CodeBlock 
+  language="javascript"
+  codeBlockThemeObject={{ theme: "dracula" }}
+>
+  {`const message = 'Using Dracula theme';
+console.log(message);`}
+</CodeBlock>
+```
+
+### Dual Themes (Light/Dark)
+
+Provide different themes for light and dark modes:
+
+```tsx
+<CodeBlock 
+  language="typescript"
+  codeBlockThemeObject={{
+    theme: { 
+      light: "everforest-light", 
+      dark: "dracula" 
+    }
+  }}
+>
+  {`type Theme = 'light' | 'dark';
+const currentTheme: Theme = 'light';`}
+</CodeBlock>
+```
+
+## Available Shiki Themes
+
+The component supports all standard Shiki themes including:
+
+- `andromeeda`, `aurora-x`, `ayu-dark`
+- `catppuccin-frappe`, `catppuccin-latte`, `catppuccin-macchiato`, `catppuccin-mocha`
+- `dark-plus`, `dracula`, `dracula-soft`
+- `everforest-dark`, `everforest-light`
+- `github-dark`, `github-dark-default`, `github-dark-dimmed`, `github-dark-high-contrast`
+- `github-light`, `github-light-default`, `github-light-high-contrast`
+- `gruvbox-dark-hard`, `gruvbox-dark-medium`, `gruvbox-dark-soft`
+- `gruvbox-light-hard`, `gruvbox-light-medium`, `gruvbox-light-soft`
+- `houston`, `kanagawa-dragon`, `kanagawa-lotus`, `kanagawa-wave`
+- `laserwave`, `light-plus`, `material-theme`, `material-theme-darker`
+- `material-theme-lighter`, `material-theme-ocean`, `material-theme-palenight`
+- `min-dark`, `min-light`, `monokai`, `night-owl`, `nord`
+- `one-dark-pro`, `one-light`, `plastic`, `poimandres`
+- `red`, `rose-pine`, `rose-pine-dawn`, `rose-pine-moon`
+- `slack-dark`, `slack-ochin`, `snazzy-light`
+- `solarized-dark`, `solarized-light`, `synthwave-84`
+- `tokyo-night`, `vesper`, `vitesse-black`, `vitesse-dark`, `vitesse-light`
+- `css-variables`
+
+## Copy to Clipboard
+
+The CodeBlock automatically includes a copy-to-clipboard button that:
+
+- Appears in the top-right corner
+- Shows a tooltip on hover ("Copy" / "Copied!")
+- Hides if the clipboard API is unavailable
+- Can be customized via `copyButtonProps`
+
+### Customizing Copy Button
+
+```tsx
+<CodeBlock 
+  language="javascript"
+  copyButtonProps={{
+    showTooltip: false,
+    copyButtonAriaLabel: "Copy code to clipboard",
+    tooltipCopyText: "Copy code",
+    tooltipCopiedText: "Copied successfully!",
+    onCopied: (result, text) => {
+      console.log('Copy result:', result);
+    }
+  }}
+>
+  {`const code = 'example';`}
+</CodeBlock>
+```
+
+## Accessibility
+
+- The copy button includes proper `aria-label` attributes
+- Code blocks use semantic HTML with proper `lang` attributes
+- Keyboard navigation is fully supported
+- Focus indicators are visible and clear
+
+## Notes
+
+- The component uses Shiki for syntax highlighting, providing accurate, language-aware highlighting
+- Line highlighting and focus can be combined for powerful code demonstrations
+- The expandable feature automatically calculates height based on content
+- When using `filename` or `icon`, the code block displays a header section
+- The fade overlay (gradient edge effect) is disabled when using `wrap`, `highlight`, `focus`, or `expandable`

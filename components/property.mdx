@@ -1,0 +1,286 @@
+---
+title: Property
+description: Display API property documentation with type information, status badges, and default values
+---
+
+The `Property` component is used to document API properties, parameters, and fields. It displays the property name, type, and description along with optional metadata like default values, requirement status, and deprecation notices.
+
+## Usage
+
+```jsx
+import { Property } from '@mintlify/components';
+
+<Property name="user_id" type="string" required>
+  The unique identifier for the user.
+</Property>
+```
+
+## Props
+
+<ParamField path="name" type="string" required>
+  The name of the property or parameter.
+</ParamField>
+
+<ParamField path="type" type="string" required>
+  The data type of the property (e.g., `string`, `number`, `boolean`, `object`, `array`, `integer`, `enum`).
+</ParamField>
+
+<ParamField path="children" type="ReactNode" required>
+  The description or content explaining the property. Supports markdown formatting.
+</ParamField>
+
+<ParamField path="required" type="boolean" default="false">
+  Whether the property is required. Displays a "required" badge when `true`.
+</ParamField>
+
+<ParamField path="default" type="unknown">
+  The default value for the property. Automatically stringified and displayed as a badge. Complex nested objects are not displayed.
+</ParamField>
+
+<ParamField path="deprecated" type="boolean" default="false">
+  Whether the property is deprecated. Displays a "deprecated" badge when `true`.
+</ParamField>
+
+<ParamField path="location" type="string">
+  Where the parameter is located (e.g., `"path"`, `"query"`, `"header"`, `"body"`, `"cookie"`). Displayed as a badge.
+</ParamField>
+
+<ParamField path="hidden" type="boolean" default="false">
+  If `true`, the property will not be rendered at all.
+</ParamField>
+
+<ParamField path="id" type="string">
+  Custom HTML id for the property. Used for anchor links.
+</ParamField>
+
+<ParamField path="pre" type="string[]">
+  Array of custom labels to display before the type (e.g., `["v2"]` for version badges).
+</ParamField>
+
+<ParamField path="post" type="string[]">
+  Array of custom labels to display after other badges (e.g., `["read-only"]`).
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply to the property container.
+</ParamField>
+
+<ParamField path="onMount" type="() => void">
+  Callback function executed when the component mounts.
+</ParamField>
+
+<ParamField path="navigateToHeaderAriaLabel" type="string" default="Navigate to header">
+  ARIA label for the header anchor link (for accessibility).
+</ParamField>
+
+<ParamField path="defaultLabel" type="string" default="default">
+  Custom label text for the default value badge. Useful for internationalization.
+</ParamField>
+
+<ParamField path="requiredLabel" type="string" default="required">
+  Custom label text for the required badge. Useful for internationalization.
+</ParamField>
+
+<ParamField path="deprecatedLabel" type="string" default="deprecated">
+  Custom label text for the deprecated badge. Useful for internationalization.
+</ParamField>
+
+## Examples
+
+### Basic Property
+
+Simple property with name, type, and description:
+
+```jsx
+<Property name="user_id" type="string">
+  The unique identifier for the user.
+</Property>
+```
+
+### Required Property
+
+Mark a property as required:
+
+```jsx
+<Property name="api_key" type="string" required>
+  Your API key for authentication. This field is required.
+</Property>
+```
+
+### Property with Default Value
+
+Show a default value:
+
+```jsx
+<Property name="limit" type="integer" default={10}>
+  Maximum number of results to return.
+</Property>
+```
+
+### Property with Location
+
+Specify where the parameter is located:
+
+```jsx
+<Property name="page" type="integer" location="query">
+  The page number for pagination.
+</Property>
+```
+
+### Deprecated Property
+
+Mark a property as deprecated:
+
+```jsx
+<Property name="legacy_token" type="string" deprecated>
+  This field is deprecated. Use api_key instead.
+</Property>
+```
+
+### Property with All Metadata
+
+```jsx
+<Property
+  name="complex_field"
+  type="object"
+  location="body"
+  required
+  deprecated
+  default={{ key: "value" }}
+>
+  A complex field showing all available pills and metadata.
+</Property>
+```
+
+### Multiple Properties
+
+Document multiple related properties:
+
+```jsx
+<Property name="id" type="string" required>
+  Unique identifier for the object.
+</Property>
+
+<Property name="email" type="string" required>
+  The user's email address.
+</Property>
+
+<Property name="name" type="string">
+  The user's display name.
+</Property>
+
+<Property name="created_at" type="timestamp">
+  Time at which the object was created.
+</Property>
+
+<Property name="metadata" type="object">
+  Additional key-value pairs attached to the object.
+</Property>
+```
+
+### Custom Pre/Post Labels
+
+Add custom badges before and after the type:
+
+```jsx
+<Property name="status" type="enum" pre={["v2"]} post={["read-only"]}>
+  The current status of the resource.
+</Property>
+```
+
+### Different Locations
+
+```jsx
+<Property name="user_id" type="string" location="path" required>
+  The user ID in the URL path.
+</Property>
+
+<Property name="limit" type="integer" location="query" default={20}>
+  Number of results to return.
+</Property>
+
+<Property name="Authorization" type="string" location="header" required>
+  Bearer token for authentication.
+</Property>
+
+<Property name="payload" type="object" location="body">
+  The request body containing the data to create.
+</Property>
+
+<Property name="session_id" type="string" location="cookie">
+  Session identifier stored in cookies.
+</Property>
+```
+
+### Internationalized Labels
+
+Customize badge labels for different languages:
+
+```jsx
+<Property
+  name="api_key"
+  type="string"
+  required
+  requiredLabel="必填"
+>
+  用于身份验证的 API 密钥。
+</Property>
+
+<Property
+  name="limit"
+  type="integer"
+  default={10}
+  defaultLabel="默认值"
+>
+  返回结果的最大数量。
+</Property>
+
+<Property
+  name="legacy_token"
+  type="string"
+  deprecated
+  deprecatedLabel="已弃用"
+>
+  此字段已弃用，请使用 api_key 代替。
+</Property>
+```
+
+### Custom Styling
+
+Apply custom CSS classes:
+
+```jsx
+<Property
+  name="highlighted"
+  type="string"
+  className="rounded-lg bg-yellow-50 px-4 dark:bg-yellow-900/20"
+>
+  This property has a custom background highlight.
+</Property>
+
+<Property
+  name="bordered"
+  type="string"
+  className="rounded-lg border-2 border-blue-300 px-4 dark:border-blue-700"
+>
+  This property has a custom border style.
+</Property>
+```
+
+## Behavior
+
+- **Hidden Properties**: When `hidden={true}`, the property is not rendered at all
+- **Default Values**: Complex objects with nested objects are automatically hidden to prevent display issues
+- **Default Value Length**: Default values longer than the maximum length are not displayed
+- **Type Display**: The type is always displayed prominently alongside the property name
+- **Badge Order**: Badges are displayed in this order: pre → type → location → required → default → deprecated → post
+
+## Accessibility
+
+- Each property can have an `id` for anchor linking
+- The `navigateToHeaderAriaLabel` prop allows customization of the anchor link's ARIA label
+- All badges and metadata are properly labeled for screen readers
+
+## Source
+
+View the source code: `packages/components/src/components/property/property.tsx:7`

@@ -1,0 +1,351 @@
+---
+title: 'Expandable'
+description: 'A collapsible section for showing and hiding additional content'
+---
+
+The Expandable component provides a simple way to show and hide content with customizable toggle text. It's commonly used for displaying optional details, child attributes, or nested information in API documentation.
+
+## Basic Usage
+
+```jsx
+<Expandable title="details">
+  <div className="py-4">
+    <p>This is the expandable content that appears when opened.</p>
+  </div>
+</Expandable>
+```
+
+## Props
+
+<ParamField path="title" type="string" default="child attributes">
+  The text displayed in the toggle button after "Show" or "Hide".
+</ParamField>
+
+<ParamField path="defaultOpen" type="boolean" default={false}>
+  Whether the expandable should be open by default.
+</ParamField>
+
+<ParamField path="openedText" type="string" default="Hide">
+  The text displayed when the expandable is open (before the title).
+</ParamField>
+
+<ParamField path="closedText" type="string" default="Show">
+  The text displayed when the expandable is closed (before the title).
+</ParamField>
+
+<ParamField path="lazy" type="boolean" default={false}>
+  When `true`, children are not rendered until the expandable is first opened. Useful for performance optimization with heavy content.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply to the expandable container.
+</ParamField>
+
+<ParamField path="children" type="ReactNode">
+  The content to display inside the expandable when opened.
+</ParamField>
+
+<ParamField path="onChange" type="(open: boolean) => void">
+  Callback fired when the expandable state changes. Receives the new open state.
+</ParamField>
+
+<ParamField path="onOpen" type="() => void">
+  Callback fired when the expandable is opened.
+</ParamField>
+
+<ParamField path="onClose" type="() => void">
+  Callback fired when the expandable is closed.
+</ParamField>
+
+<ParamField path="onMount" type="() => void">
+  Callback fired when the expandable component mounts.
+</ParamField>
+
+<ParamField path="uniqueParamId" type="string">
+  Unique identifier for session storage persistence. When provided, the expandable state is saved and restored across page reloads.
+</ParamField>
+
+<ParamField path="anchor" type="string">
+  Anchor identifier for deep linking. When the URL contains this anchor, the expandable automatically opens.
+</ParamField>
+
+<ParamField path="hasScrolledToAnchorRef" type="RefObject<boolean>">
+  Ref object to track if scrolling to anchor has occurred. Used internally for anchor-based navigation.
+</ParamField>
+
+## Examples
+
+### Default (Closed)
+
+```jsx
+<Expandable title="details">
+  <div className="py-4">
+    <p>This expandable starts in the closed state.</p>
+  </div>
+</Expandable>
+```
+
+### Default Open
+
+```jsx
+<Expandable title="details" defaultOpen={true}>
+  <div className="py-4">
+    <p>This expandable starts in the open state.</p>
+  </div>
+</Expandable>
+```
+
+### Custom Title
+
+```jsx
+<Expandable title="advanced options">
+  <div className="py-4">
+    <p>The title prop customizes what appears after "Show" or "Hide".</p>
+  </div>
+</Expandable>
+```
+
+### Custom Toggle Text
+
+```jsx
+<Expandable 
+  title="section" 
+  openedText="Collapse" 
+  closedText="Expand"
+>
+  <div className="py-4">
+    <p>
+      Custom toggle text: "Expand section" when closed, 
+      "Collapse section" when open.
+    </p>
+  </div>
+</Expandable>
+```
+
+### Internationalization
+
+```jsx
+<Expandable 
+  title="atributos secundarios" 
+  openedText="Ocultar" 
+  closedText="Mostrar"
+>
+  <div className="py-4">
+    <p>Este es el contenido del componente expandible en español.</p>
+  </div>
+</Expandable>
+```
+
+### With Callbacks
+
+```jsx
+<Expandable
+  title="interactive content"
+  onChange={(open) => console.log("onChange:", open)}
+  onOpen={() => console.log("onOpen")}
+  onClose={() => console.log("onClose")}
+  onMount={() => console.log("onMount")}
+>
+  <div className="py-4">
+    <p>
+      Toggle this expandable and check the browser console 
+      to see the callbacks firing.
+    </p>
+  </div>
+</Expandable>
+```
+
+### Lazy Loading
+
+```jsx
+<Expandable title="lazy content" lazy={true}>
+  <div className="py-4">
+    <p>
+      With lazy=true, children are not rendered until the 
+      expandable is first opened.
+    </p>
+    <ExpensiveComponent />
+  </div>
+</Expandable>
+```
+
+<Note>
+  Use `lazy={true}` for expandables containing heavy content like large data tables, charts, or complex components to improve initial page load performance.
+</Note>
+
+### Custom Styling
+
+```jsx
+<Expandable 
+  title="styled content" 
+  className="bg-blue-50 dark:bg-blue-950"
+>
+  <div className="py-4">
+    <p>Custom className applied to the root element for styling.</p>
+  </div>
+</Expandable>
+```
+
+### API Documentation Use Case
+
+```jsx
+<Expandable title="response fields" defaultOpen={true}>
+  <div className="space-y-3 py-4">
+    <div>
+      <code className="text-pink-600 dark:text-pink-400">id</code>
+      <span className="ml-2 text-sm text-stone-500">string</span>
+      <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
+        Unique identifier for the resource.
+      </p>
+    </div>
+    <div>
+      <code className="text-pink-600 dark:text-pink-400">name</code>
+      <span className="ml-2 text-sm text-stone-500">string</span>
+      <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
+        Display name of the resource.
+      </p>
+    </div>
+    <div>
+      <code className="text-pink-600 dark:text-pink-400">createdAt</code>
+      <span className="ml-2 text-sm text-stone-500">datetime</span>
+      <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
+        Timestamp when the resource was created.
+      </p>
+    </div>
+  </div>
+</Expandable>
+```
+
+### With Session Storage Persistence
+
+```jsx
+<Expandable title="persistent state" uniqueParamId="my-expandable-id">
+  <div className="py-4">
+    <p>
+      This expandable's state persists across page reloads 
+      using session storage.
+    </p>
+  </div>
+</Expandable>
+```
+
+<Warning>
+  When using `uniqueParamId`, ensure each expandable has a unique ID to avoid state conflicts.
+</Warning>
+
+### Nested Expandables
+
+```jsx
+<Expandable title="parent section" defaultOpen={true}>
+  <div className="py-4">
+    <p>This is the parent expandable content.</p>
+    
+    <Expandable title="nested section 1">
+      <div className="py-4">
+        <p>First nested expandable content.</p>
+      </div>
+    </Expandable>
+    
+    <Expandable title="nested section 2">
+      <div className="py-4">
+        <p>Second nested expandable content.</p>
+      </div>
+    </Expandable>
+  </div>
+</Expandable>
+```
+
+## Styling
+
+The Expandable component automatically adapts to light and dark themes with a subtle border and hover effects:
+
+- Light mode: Light gray border with darker hover state
+- Dark mode: White border with lighter hover state
+
+The toggle button includes:
+- A chevron icon that rotates 90° when open
+- Hover effects for better interactivity
+- Focus states for keyboard navigation
+
+## Behavior
+
+### Toggle Interaction
+
+The expandable can be toggled by:
+- Clicking anywhere on the summary bar
+- Keyboard navigation (Enter/Space on the summary element)
+
+### Animation
+
+The expand/collapse animation is handled natively by the browser using the `<details>` element, providing smooth transitions across all browsers.
+
+## Accessibility
+
+The Expandable component includes built-in accessibility features:
+
+- Uses native HTML `<details>` and `<summary>` elements
+- Proper ARIA attributes (`aria-controls`, `aria-expanded`)
+- Keyboard navigation support
+- Focus indicators for keyboard users
+- Unique IDs for content regions
+- Semantic HTML structure for screen readers
+
+<Note>
+  The expandable automatically generates unique IDs for ARIA attributes based on the title and React's `useId` hook.
+</Note>
+
+## Common Use Cases
+
+### API Response Properties
+
+```jsx
+<ParamField path="user" type="object">
+  User information
+  
+  <Expandable title="properties">
+    <div className="py-4">
+      <ParamField path="id" type="string">User ID</ParamField>
+      <ParamField path="name" type="string">User name</ParamField>
+      <ParamField path="email" type="string">User email</ParamField>
+    </div>
+  </Expandable>
+</ParamField>
+```
+
+### Optional Configuration
+
+```jsx
+<Expandable title="advanced configuration">
+  <div className="py-4">
+    <h4>Advanced Options</h4>
+    <ul>
+      <li><strong>timeout</strong>: Request timeout in milliseconds</li>
+      <li><strong>retries</strong>: Number of retry attempts</li>
+      <li><strong>cache</strong>: Enable response caching</li>
+    </ul>
+  </div>
+</Expandable>
+```
+
+### Technical Details
+
+```jsx
+<Expandable title="technical specifications">
+  <div className="py-4">
+    <table>
+      <tr>
+        <td>Protocol</td>
+        <td>HTTPS</td>
+      </tr>
+      <tr>
+        <td>Authentication</td>
+        <td>Bearer Token</td>
+      </tr>
+      <tr>
+        <td>Rate Limit</td>
+        <td>1000 requests/hour</td>
+      </tr>
+    </table>
+  </div>
+</Expandable>
+```

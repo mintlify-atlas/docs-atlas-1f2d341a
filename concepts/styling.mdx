@@ -1,0 +1,417 @@
+---
+title: Styling with Tailwind CSS
+description: Learn how to style Mintlify Components using Tailwind CSS classes and utilities
+---
+
+## Overview
+
+Mintlify Components is built with Tailwind CSS v4 and uses utility-first styling. All components accept a `className` prop for custom styling, and the library uses `clsx` and `tailwind-merge` for efficient class composition.
+
+## Class Composition Utility
+
+The library provides a `cn` utility function that combines `clsx` and `tailwind-merge`:
+
+From `packages/components/src/utils/cn.ts:1-9`:
+
+```typescript
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+const cn = (...inputs: ClassValue[]) => {
+  return twMerge(clsx(inputs));
+};
+
+export { cn };
+```
+
+<Note>
+This utility intelligently merges Tailwind classes, ensuring that conflicting classes are resolved correctly. For example, `cn('px-2', 'px-4')` returns `'px-4'`.
+</Note>
+
+## Styling Components
+
+### Basic Styling
+
+All components accept a `className` prop:
+
+```tsx
+<Card className="shadow-lg hover:shadow-xl transition-shadow">
+  Custom styled card
+</Card>
+
+<Badge className="font-bold uppercase" color="blue">
+  Custom badge
+</Badge>
+```
+
+### Responsive Styling
+
+Use Tailwind's responsive prefixes:
+
+```tsx
+<Accordion className="mb-4 md:mb-6 lg:mb-8">
+  Responsive spacing
+</Accordion>
+
+<Card 
+  className="flex-col md:flex-row gap-4 md:gap-6" 
+  horizontal
+>
+  Responsive layout
+</Card>
+```
+
+<Tabs>
+  <Tabs.Item title="Mobile First">
+    ```tsx
+    <div className="text-sm md:text-base lg:text-lg">
+      Scales up on larger screens
+    </div>
+    ```
+  </Tabs.Item>
+  <Tabs.Item title="Breakpoints">
+    ```tsx
+    // Tailwind breakpoints:
+    // sm: 640px
+    // md: 768px
+    // lg: 1024px
+    // xl: 1280px
+    // 2xl: 1536px
+    
+    <div className="w-full sm:w-1/2 lg:w-1/3">
+      Responsive width
+    </div>
+    ```
+  </Tabs.Item>
+</Tabs>
+
+## Dark Mode Styling
+
+All components support dark mode through the `dark:` prefix:
+
+```tsx
+<div className="bg-white dark:bg-stone-900">
+  <h1 className="text-stone-900 dark:text-white">
+    Themed heading
+  </h1>
+</div>
+```
+
+### Component Dark Mode Patterns
+
+From the Card component (`packages/components/src/components/card/card.tsx:165-169`):
+
+```typescript
+className={cn(
+  "border border-stone-950/10 bg-white",
+  "dark:border-white/10 dark:bg-background-dark",
+  className
+)}
+```
+
+<Info>
+Components use the `dark:` variant extensively. Make sure your application adds the `dark` class to the `html` element when dark mode is active.
+</Info>
+
+## Custom Utilities
+
+### Border Standard
+
+For consistent borders:
+
+```tsx
+<div className="border-standard rounded-2xl p-6">
+  Themed border that adapts to light/dark mode
+</div>
+```
+
+### Text Wrapping
+
+For better text handling:
+
+```tsx
+<div className="overflow-wrap-anywhere">
+  HandlesLongUnbrokenStringsSafely
+</div>
+```
+
+### Scrollbar Styles
+
+For custom scrollbars:
+
+```tsx
+<div className="scrollbar-common h-64 overflow-auto">
+  Content with custom scrollbar
+</div>
+
+<pre className="scrollbar-code-dark">
+  <code>Syntax highlighted code</code>
+</pre>
+```
+
+## Typography Plugin
+
+The library includes the `@tailwindcss/typography` plugin for prose styling:
+
+```tsx
+<div className="prose dark:prose-invert">
+  <h1>Styled Heading</h1>
+  <p>Automatically styled paragraph text.</p>
+  <ul>
+    <li>List items with proper spacing</li>
+  </ul>
+</div>
+```
+
+### Prose in Components
+
+Many components use the `prose` class internally:
+
+From `packages/components/src/components/accordion/accordion.tsx:230`:
+
+```tsx
+<div className="prose prose-stone dark:prose-invert mx-6 mt-2 mb-4">
+  {children}
+</div>
+```
+
+<Tip>
+When nesting components that already use `prose`, you may need to use `not-prose` to prevent double styling.
+</Tip>
+
+## Component Data Attributes
+
+Components expose data attributes for advanced styling:
+
+```tsx
+// Tabs component
+<div data-active="true" data-component-part="tab-button">
+  Active tab
+</div>
+
+// Badge component  
+<span 
+  data-shape="pill" 
+  data-variant="outline" 
+  data-disabled
+>
+  Badge
+</span>
+```
+
+### Styling with Data Attributes
+
+```css
+/* Target active tabs */
+[data-component-part="tab-button"][data-active="true"] {
+  @apply font-bold;
+}
+
+/* Target disabled badges */
+[data-disabled] {
+  @apply opacity-50 cursor-not-allowed;
+}
+```
+
+## Advanced Patterns
+
+### Conditional Classes
+
+From `packages/components/src/components/badge/badge.tsx:129-143`:
+
+```typescript
+className={cn(
+  "relative inline-flex w-fit items-center font-medium",
+  "data-[shape='pill']:rounded-full",
+  "data-[variant='outline']:outline-1",
+  sizeVariants[size],
+  colorVariants[color],
+  isInteractive && !disabled && "cursor-pointer hover:opacity-80",
+  className
+)}
+```
+
+<Note>
+This pattern uses both data attributes and conditional logic to apply classes dynamically.
+</Note>
+
+### Group Hover Effects
+
+From `packages/components/src/components/card/card.tsx:192-201`:
+
+```tsx
+<div className="group">
+  <div className="text-stone-400 group-hover:text-primary">
+    Changes color on parent hover
+  </div>
+</div>
+```
+
+### Arbitrary Values
+
+For one-off custom values:
+
+```tsx
+<div className="w-[250px] h-[calc(100vh-80px)]">
+  Custom dimensions
+</div>
+
+<div className="bg-[#1a1a1a] text-[rgb(255,100,50)]">
+  Custom colors
+</div>
+```
+
+## Layout Utilities
+
+### Flexbox
+
+```tsx
+<Card className="flex flex-col gap-4 md:flex-row md:gap-6">
+  Responsive flex layout
+</Card>
+```
+
+### Grid
+
+```tsx
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+  <Card>Item 1</Card>
+  <Card>Item 2</Card>
+  <Card>Item 3</Card>
+</div>
+```
+
+### Spacing
+
+```tsx
+<div className="space-y-4">
+  <Card>Automatic vertical spacing</Card>
+  <Card>Between siblings</Card>
+</div>
+```
+
+## Color System
+
+### Component Colors
+
+From the Badge component color variants (`packages/components/src/components/badge/badge.tsx:29-48`):
+
+```tsx
+<Badge color="gray">Default</Badge>
+<Badge color="blue">Information</Badge>
+<Badge color="green">Success</Badge>
+<Badge color="yellow">Warning</Badge>
+<Badge color="red">Error</Badge>
+<Badge color="purple">Special</Badge>
+```
+
+### Custom Colors
+
+Components that support custom colors:
+
+```tsx
+<Callout variant="custom" color="#8b5cf6">
+  Custom purple callout
+</Callout>
+
+<Icon icon="star" color="#fbbf24" />
+```
+
+<Info>
+When using custom colors, the component automatically calculates appropriate contrast colors for text and borders.
+</Info>
+
+## Animation and Transitions
+
+### Hover Effects
+
+```tsx
+<Card className="transition-all duration-300 hover:scale-105 hover:shadow-xl">
+  Animated card
+</Card>
+```
+
+### Focus States
+
+From `packages/components/src/components/card/card.tsx:168`:
+
+```typescript
+"focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+```
+
+<Tip>
+Always include focus states for interactive components to maintain accessibility.
+</Tip>
+
+## Code Syntax Highlighting
+
+The library includes special styling for code blocks:
+
+From `packages/components/src/code.css`:
+
+```css
+/* Inline code */
+:not(pre) > code {
+  @apply wrap-break-word rounded-md px-2 py-0.5 
+         text-stone-600 dark:text-stone-200 
+         bg-stone-100/50 dark:bg-white/5;
+}
+
+/* Code blocks with line numbers */
+.has-line-numbers pre.shiki > code > .line::before {
+  content: counter(step);
+  counter-increment: step;
+  width: 0.6rem;
+  margin-right: 1.1rem;
+}
+```
+
+## Best Practices
+
+<Tabs>
+  <Tabs.Item title="Performance">
+    - Use the `cn` utility for class composition
+    - Avoid deeply nested responsive classes
+    - Leverage CSS variables for theme values
+    - Use `@apply` sparingly in custom CSS
+    - Prefer Tailwind utilities over custom CSS
+  </Tabs.Item>
+  <Tabs.Item title="Maintainability">
+    - Extract repeated class patterns into components
+    - Use consistent spacing scale (rem units)
+    - Document custom utility classes
+    - Follow the library's naming conventions
+    - Test responsive layouts at all breakpoints
+  </Tabs.Item>
+  <Tabs.Item title="Accessibility">
+    - Always include focus states
+    - Maintain color contrast ratios
+    - Use semantic HTML with Tailwind classes
+    - Test keyboard navigation
+    - Don't remove outline without replacement
+  </Tabs.Item>
+</Tabs>
+
+## PostCSS Configuration
+
+The library uses PostCSS with the Tailwind plugin:
+
+From `packages/components/postcss.config.js:1-6`:
+
+```javascript
+export default {
+  plugins: {
+    "@tailwindcss/postcss": {},
+  },
+};
+```
+
+<Note>
+Make sure your application has a similar PostCSS configuration to process Tailwind CSS correctly.
+</Note>
+
+## Next Steps
+
+<Info>
+Learn about accessibility features and ARIA attributes in the [Accessibility Guide](/concepts/accessibility).
+</Info>

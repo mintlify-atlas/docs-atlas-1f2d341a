@@ -1,0 +1,181 @@
+---
+title: Contributing Overview
+description: Learn how to contribute to Mintlify Components
+---
+
+Thank you for your interest in contributing to Mintlify Components! This document provides guidelines and information for contributors.
+
+## Getting Started
+
+<Steps>
+  <Step title="Fork the repository">
+    Create a fork of the [mintlify/components](https://github.com/mintlify/components) repository to your GitHub account.
+  </Step>
+  
+  <Step title="Clone your fork locally">
+    ```bash
+    git clone https://github.com/YOUR_USERNAME/components.git
+    cd components
+    ```
+  </Step>
+  
+  <Step title="Set up the development environment">
+    Follow the setup instructions in the [Development Guide](/contributing/development).
+  </Step>
+</Steps>
+
+## Issue Labels
+
+We use three labels to categorize issues:
+
+<CardGroup cols={3}>
+  <Card title="bug" icon="bug">
+    Something isn't working as expected
+  </Card>
+  <Card title="improvement" icon="arrow-up">
+    Enhancement to an existing component
+  </Card>
+  <Card title="feature request" icon="lightbulb">
+    Request for a new component or capability
+  </Card>
+</CardGroup>
+
+## How to Contribute
+
+### Reporting Bugs
+
+<Steps>
+  <Step title="Check for duplicates">
+    Search the [existing issues](https://github.com/mintlify/components/issues) to avoid creating duplicates.
+  </Step>
+  
+  <Step title="Open a bug report">
+    [Create a new issue](https://github.com/mintlify/components/issues/new?template=bug_report.md) using the bug report template.
+  </Step>
+  
+  <Step title="Provide details">
+    Include:
+    - Clear reproduction steps
+    - Expected behavior vs actual behavior
+    - Screenshots or code snippets if helpful
+    - Your environment (Node.js version, React version, etc.)
+  </Step>
+</Steps>
+
+### Requesting Features or Improvements
+
+<Steps>
+  <Step title="Search existing requests">
+    Check existing issues first to avoid duplicates and potentially upvote existing requests.
+  </Step>
+  
+  <Step title="Open a feature request">
+    [Create a new feature request](https://github.com/mintlify/components/issues/new?template=feature_request.md) using the template.
+  </Step>
+  
+  <Step title="Describe your use case">
+    - For new features, explain the use case and why it would be valuable
+    - For improvements to existing components, add the `improvement` label
+    - Include examples or mockups if applicable
+  </Step>
+</Steps>
+
+### Submitting Changes
+
+<Steps>
+  <Step title="Create a branch">
+    Create a new branch from `main` for your changes:
+    ```bash
+    git checkout -b feature/my-new-feature
+    ```
+  </Step>
+  
+  <Step title="Make your changes">
+    Follow our [code style guidelines](#code-style) and [component guidelines](#component-guidelines).
+  </Step>
+  
+  <Step title="Add tests and stories">
+    Add or update tests and Storybook stories as needed to document your changes.
+  </Step>
+  
+  <Step title="Run quality checks">
+    ```bash
+    pnpm lint:check
+    pnpm build
+    ```
+    Ensure all checks pass before submitting.
+  </Step>
+  
+  <Step title="Submit a pull request">
+    Open a PR with a clear description of your changes. Fill out the PR template with Summary and Test Plan sections.
+  </Step>
+</Steps>
+
+## Pull Request Guidelines
+
+When you open a PR, you'll see a template with sections for Summary and Test Plan. Please fill these out completely.
+
+<Note>
+  **Best Practices:**
+  - Keep PRs focused on a single change
+  - Write clear, descriptive commit messages
+  - Update documentation if needed
+  - Ensure all CI checks pass
+  - Respond to review feedback promptly
+</Note>
+
+## Code Style
+
+We use [Biome](https://biomejs.dev/) for linting and formatting. Our code style guidelines:
+
+- Use **TypeScript** for all code
+- Follow existing patterns in the codebase
+- Use **Tailwind CSS** for styling
+- Run `pnpm lint:fix` to auto-format code
+- Pre-commit hooks will automatically run linting
+
+<Warning>
+  Always run `pnpm lint:check` before submitting a PR to catch any style issues.
+</Warning>
+
+## Component Guidelines
+
+When adding or modifying components, ensure they meet these requirements:
+
+### Compatibility
+- Support React 18 and React 19
+- Work with both Tailwind CSS v3 and v4
+- Compatible with Node.js >= 20.0.0
+
+### Theming
+- Support both light and dark themes
+- Use CSS custom properties for theming
+- Allow theme overrides via Tailwind config
+
+### Accessibility
+- Include appropriate ARIA attributes
+- Support keyboard navigation
+- Provide focus indicators
+- Use semantic HTML elements
+
+### Documentation
+- Add Storybook stories documenting all component variants
+- Export TypeScript types for all props
+- Include JSDoc comments for complex props
+- Update the main documentation if needed
+
+<Tip>
+  Check out the [Component Development Guide](/contributing/components) for detailed guidelines on creating new components.
+</Tip>
+
+## Questions?
+
+If you have questions, feel free to:
+
+- Open a [GitHub Discussion](https://github.com/mintlify/components/discussions)
+- Check our [documentation](https://www.mintlify.com/docs/components)
+- Review the [FAQ](/faq) for common issues
+
+## License
+
+By contributing, you agree that your contributions will be licensed under the MIT License.

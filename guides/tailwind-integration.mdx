@@ -1,0 +1,221 @@
+---
+title: 'Tailwind CSS Integration'
+description: 'Learn how to integrate @mintlify/components with Tailwind CSS v3 and v4'
+icon: 'wind'
+---
+
+@mintlify/components is built with Tailwind CSS and requires either Tailwind v3 or v4 to function properly. This guide walks you through the setup process for both versions.
+
+## Requirements
+
+Before you begin, ensure you have:
+
+- Node.js >= 20.0.0
+- React ^18.0.0 or ^19.0.0
+- Tailwind CSS v3 or v4
+
+## Installation
+
+<Steps>
+  <Step title="Install the package">
+    First, install @mintlify/components using your preferred package manager:
+
+    <CodeGroup>
+      ```bash npm
+      npm install @mintlify/components
+      ```
+
+      ```bash pnpm
+      pnpm add @mintlify/components
+      ```
+
+      ```bash yarn
+      yarn add @mintlify/components
+      ```
+    </CodeGroup>
+  </Step>
+
+  <Step title="Choose your Tailwind version">
+    Follow the setup instructions below based on your Tailwind CSS version.
+  </Step>
+</Steps>
+
+## Tailwind CSS v4 Setup
+
+<Note>
+  Tailwind v4 uses a new CSS-first configuration approach with `@theme` directives.
+</Note>
+
+Import the component styles **at the top** of your main CSS file, **before** importing Tailwind:
+
+```css styles.css
+@import "@mintlify/components/styles.css";
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #166534;
+  --color-primary-light: #f0f9f4;
+  --color-primary-dark: #2d5a3d;
+}
+```
+
+<Warning>
+  The order is critical! Importing `@mintlify/components/styles.css` before `tailwindcss` ensures your custom theme values take precedence over component defaults.
+</Warning>
+
+### Available Theme Variables
+
+Customize the component appearance using these CSS variables:
+
+| Variable | Description | Default |
+|----------|-------------|----------|
+| `--color-primary` | Primary brand color | `rgb(22, 101, 52)` |
+| `--color-primary-light` | Light variant of primary color | `rgb(240, 249, 244)` |
+| `--color-primary-dark` | Dark variant of primary color | `rgb(45, 90, 61)` |
+| `--color-tooltip-foreground` | Tooltip text color | `rgb(255, 255, 255)` |
+| `--color-background-dark` | Dark mode background | `rgb(14, 14, 15)` |
+
+### Complete Example
+
+```css styles.css
+@import "@mintlify/components/styles.css";
+@import "tailwindcss";
+
+@plugin "@tailwindcss/typography";
+
+@theme {
+  /* Brand colors */
+  --color-primary: #3b82f6;
+  --color-primary-light: #dbeafe;
+  --color-primary-dark: #1e40af;
+  
+  /* UI colors */
+  --color-tooltip-foreground: #ffffff;
+  --color-background-dark: #0f172a;
+}
+
+@layer base {
+  html {
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+}
+```
+
+## Tailwind CSS v3 Setup
+
+For Tailwind v3, import the component styles at the top of your CSS file:
+
+```css styles.css
+@import "@mintlify/components/styles.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+### Configuration File
+
+Create or update your `tailwind.config.js` to customize the theme:
+
+```js tailwind.config.js
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    './src/**/*.{js,jsx,ts,tsx}',
+    './node_modules/@mintlify/components/**/*.{js,jsx,ts,tsx}'
+  ],
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          DEFAULT: '#166534',
+          light: '#f0f9f4',
+          dark: '#2d5a3d',
+        },
+        background: {
+          dark: '#0e0e0f',
+        },
+      },
+    },
+  },
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
+}
+```
+
+<Note>
+  Make sure to include the component files in your `content` array so Tailwind can detect which classes are being used.
+</Note>
+
+## Using the cn Utility
+
+The library exports a `cn` utility function for merging Tailwind classes:
+
+```tsx
+import { cn } from '@mintlify/components';
+
+function MyComponent() {
+  return (
+    <div className={cn(
+      'base-class',
+      'text-blue-500',
+      condition && 'conditional-class'
+    )}>
+      Content
+    </div>
+  );
+}
+```
+
+This utility combines `clsx` and `tailwind-merge` to intelligently merge class names and resolve conflicts.
+
+## Custom Plugins
+
+The library includes custom Tailwind plugins:
+
+### Border Standard Utility
+
+A utility class for consistent borders across light and dark modes:
+
+```tsx
+<div className="border-standard">
+  Consistent border in light and dark mode
+</div>
+```
+
+### Overflow Wrap Utility
+
+Handles text wrapping and word breaks:
+
+```tsx
+<div className="overflow-wrap-anywhere">
+  Long text that wraps properly
+</div>
+```
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Components are unstyled">
+    Ensure you've imported `@mintlify/components/styles.css` at the top of your CSS file, before Tailwind imports.
+  </Accordion>
+
+  <Accordion title="Custom colors not applying">
+    In Tailwind v4, verify that your `@theme` block comes after the component imports. In v3, check that you're extending the theme correctly in `tailwind.config.js`.
+  </Accordion>
+
+  <Accordion title="Missing styles in production">
+    Make sure the component files are included in your Tailwind `content` configuration (v3) or `@source` directive (v4).
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Dark Mode" icon="moon" href="/guides/dark-mode">
+    Set up dark mode and customize theme colors
+  </Card>
+  <Card title="TypeScript" icon="code" href="/guides/typescript">
+    Learn about TypeScript types and exports
+  </Card>
+</CardGroup>

@@ -1,0 +1,314 @@
+---
+title: Color
+description: Display color palettes in compact or table layouts with click-to-copy functionality
+---
+
+The `Color` component displays color palettes with automatic theme switching and click-to-copy functionality. It supports two layout variants: compact grid and table view.
+
+## Usage
+
+```jsx
+import { Color } from '@mintlify/components';
+
+<Color variant="compact">
+  <Color.Item name="blue-500" value="#3B82F6" />
+  <Color.Item name="green-500" value="#22C55E" />
+  <Color.Item name="red-500" value="#EF4444" />
+</Color>
+```
+
+## Color Props
+
+<ParamField path="variant" type="'compact' | 'table'" required>
+  The display variant:
+  - `"compact"`: Grid layout with color swatches and labels below
+  - `"table"`: Row-based table layout with titles
+</ParamField>
+
+<ParamField path="children" type="ReactNode" required>
+  The color content. For `compact` variant, use `Color.Item` components directly. For `table` variant, use `Color.Row` components containing `Color.Item` components.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply to the container.
+</ParamField>
+
+## Color.Row Props
+
+Used within `table` variant to group related colors.
+
+<ParamField path="title" type="string">
+  Optional title label for the row (e.g., "Primary", "Gray", "Blue").
+</ParamField>
+
+<ParamField path="children" type="ReactNode" required>
+  The `Color.Item` components for this row.
+</ParamField>
+
+## Color.Item Props
+
+<ParamField path="value" type="string | { light: string; dark: string }" required>
+  The color value. Can be:
+  - A single color string (any CSS color format: hex, rgb, rgba, hsl, oklch)
+  - An object with `light` and `dark` properties for theme-aware colors (deprecated but still supported)
+</ParamField>
+
+<ParamField path="name" type="string">
+  Optional name/label for the color. Displayed in `compact` variant and used as tooltip in `table` variant.
+</ParamField>
+
+## Click-to-Copy
+
+All color swatches are clickable. Clicking a color copies its value to the clipboard and shows a checkmark confirmation for 2 seconds.
+
+## Variants
+
+### Compact Variant
+
+Displays colors in a flexible grid layout with color swatches above their names and values:
+
+```jsx
+<Color variant="compact">
+  <Color.Item name="blue-500" value="#3B82F6" />
+  <Color.Item name="purple-500" value="#8B5CF6" />
+  <Color.Item name="green-500" value="#22C55E" />
+</Color>
+```
+
+**Features:**
+- Color swatch (104×104px max)
+- Name displayed below swatch
+- Value displayed in monospace font
+- Both name and value truncate if too long
+
+### Table Variant
+
+Displays colors in rows with optional row titles:
+
+```jsx
+<Color variant="table">
+  <Color.Row title="Gray">
+    <Color.Item name="gray-900" value="#18181B" />
+    <Color.Item name="gray-700" value="#3F3F46" />
+    <Color.Item name="gray-500" value="#71717A" />
+    <Color.Item name="gray-300" value="#D4D4D8" />
+    <Color.Item name="gray-100" value="#F4F4F5" />
+  </Color.Row>
+  <Color.Row title="Blue">
+    <Color.Item name="blue-900" value="#1E3A8A" />
+    <Color.Item name="blue-700" value="#1D4ED8" />
+    <Color.Item name="blue-500" value="#3B82F6" />
+    <Color.Item name="blue-300" value="#93C5FD" />
+    <Color.Item name="blue-100" value="#DBEAFE" />
+  </Color.Row>
+</Color>
+```
+
+**Features:**
+- Row titles (optional, 120px wide on desktop)
+- Smaller color swatches
+- Values shown on hover (tooltip)
+- Responsive: stacks on mobile
+
+## Examples
+
+### Compact Grid Layout
+
+```jsx
+<Color variant="compact">
+  <Color.Item name="blue-500" value="#3B82F6" />
+  <Color.Item name="purple-500" value="#8B5CF6" />
+  <Color.Item name="green-500" value="#22C55E" />
+  <Color.Item name="orange-500" value="#F97316" />
+  <Color.Item name="red-500" value="#EF4444" />
+  <Color.Item name="yellow-500" value="#EAB308" />
+</Color>
+```
+
+### Table Layout with Grayscale
+
+```jsx
+<Color variant="table">
+  <Color.Row title="Gray">
+    <Color.Item name="gray-900" value="#18181B" />
+    <Color.Item name="gray-700" value="#3F3F46" />
+    <Color.Item name="gray-500" value="#71717A" />
+    <Color.Item name="gray-300" value="#D4D4D8" />
+    <Color.Item name="gray-100" value="#F4F4F5" />
+  </Color.Row>
+  <Color.Row title="Blue">
+    <Color.Item name="blue-900" value="#1E3A8A" />
+    <Color.Item name="blue-700" value="#1D4ED8" />
+    <Color.Item name="blue-500" value="#3B82F6" />
+    <Color.Item name="blue-300" value="#93C5FD" />
+    <Color.Item name="blue-100" value="#DBEAFE" />
+  </Color.Row>
+  <Color.Row title="Green">
+    <Color.Item name="green-900" value="#14532D" />
+    <Color.Item name="green-700" value="#15803D" />
+    <Color.Item name="green-500" value="#22C55E" />
+    <Color.Item name="green-300" value="#86EFAC" />
+    <Color.Item name="green-100" value="#DCFCE7" />
+  </Color.Row>
+</Color>
+```
+
+### Different Color Formats
+
+The component supports all CSS color formats:
+
+```jsx
+<Color variant="compact">
+  <Color.Item name="hex" value="#3B82F6" />
+  <Color.Item name="rgb" value="rgb(59, 130, 246)" />
+  <Color.Item name="rgba" value="rgba(59, 130, 246, 0.5)" />
+  <Color.Item name="hsl" value="hsl(217, 91%, 60%)" />
+  <Color.Item name="oklch" value="oklch(62% 0.21 255)" />
+</Color>
+```
+
+### Theme-Aware Colors (Legacy)
+
+Colors can adapt to light/dark theme using the object syntax:
+
+```jsx
+<Color variant="compact">
+  <Color.Item
+    name="bg-primary"
+    value={{ light: "#FFFFFF", dark: "#000000" }}
+  />
+  <Color.Item
+    name="text-primary"
+    value={{ light: "#111827", dark: "#F9FAFB" }}
+  />
+  <Color.Item
+    name="border"
+    value={{ light: "#E5E7EB", dark: "#3F3F46" }}
+  />
+</Color>
+```
+
+### Theme Colors in Table Layout
+
+```jsx
+<Color variant="table">
+  <Color.Row title="Background">
+    <Color.Item
+      name="bg-default"
+      value={{ light: "#FFFFFF", dark: "#09090B" }}
+    />
+    <Color.Item
+      name="bg-subtle"
+      value={{ light: "#F4F4F5", dark: "#18181B" }}
+    />
+    <Color.Item
+      name="bg-muted"
+      value={{ light: "#E4E4E7", dark: "#27272A" }}
+    />
+  </Color.Row>
+  <Color.Row title="Text">
+    <Color.Item
+      name="text-default"
+      value={{ light: "#09090B", dark: "#FAFAFA" }}
+    />
+    <Color.Item
+      name="text-muted"
+      value={{ light: "#71717A", dark: "#A1A1AA" }}
+    />
+    <Color.Item
+      name="text-subtle"
+      value={{ light: "#A1A1AA", dark: "#71717A" }}
+    />
+  </Color.Row>
+</Color>
+```
+
+### Without Names
+
+Color items can be displayed without names:
+
+```jsx
+{/* Compact variant without names */}
+<Color variant="compact">
+  <Color.Item value="#EF4444" />
+  <Color.Item value="#F97316" />
+  <Color.Item value="#EAB308" />
+  <Color.Item value="#22C55E" />
+  <Color.Item value="#3B82F6" />
+  <Color.Item value="#8B5CF6" />
+</Color>
+
+{/* Table variant - names used for tooltips */}
+<Color variant="table">
+  <Color.Row>
+    <Color.Item value="#EF4444" />
+    <Color.Item value="#F97316" />
+    <Color.Item value="#EAB308" />
+    <Color.Item value="#22C55E" />
+    <Color.Item value="#3B82F6" />
+    <Color.Item value="#8B5CF6" />
+  </Color.Row>
+</Color>
+```
+
+### Complete Brand Color System
+
+```jsx
+<Color variant="table">
+  <Color.Row title="Primary">
+    <Color.Item name="primary-900" value="#1E3A8A" />
+    <Color.Item name="primary-700" value="#1D4ED8" />
+    <Color.Item name="primary-500" value="#3B82F6" />
+    <Color.Item name="primary-300" value="#93C5FD" />
+    <Color.Item name="primary-100" value="#DBEAFE" />
+  </Color.Row>
+  <Color.Row title="Secondary">
+    <Color.Item name="secondary-900" value="#581C87" />
+    <Color.Item name="secondary-700" value="#7E22CE" />
+    <Color.Item name="secondary-500" value="#A855F7" />
+    <Color.Item name="secondary-300" value="#D8B4FE" />
+    <Color.Item name="secondary-100" value="#F3E8FF" />
+  </Color.Row>
+  <Color.Row title="Success">
+    <Color.Item name="success-900" value="#14532D" />
+    <Color.Item name="success-700" value="#15803D" />
+    <Color.Item name="success-500" value="#22C55E" />
+    <Color.Item name="success-300" value="#86EFAC" />
+    <Color.Item name="success-100" value="#DCFCE7" />
+  </Color.Row>
+  <Color.Row title="Warning">
+    <Color.Item name="warning-900" value="#78350F" />
+    <Color.Item name="warning-700" value="#C2410C" />
+    <Color.Item name="warning-500" value="#F97316" />
+    <Color.Item name="warning-300" value="#FDBA74" />
+    <Color.Item name="warning-100" value="#FFEDD5" />
+  </Color.Row>
+  <Color.Row title="Error">
+    <Color.Item name="error-900" value="#7F1D1D" />
+    <Color.Item name="error-700" value="#B91C1C" />
+    <Color.Item name="error-500" value="#EF4444" />
+    <Color.Item name="error-300" value="#FCA5A5" />
+    <Color.Item name="error-100" value="#FEE2E2" />
+  </Color.Row>
+</Color>
+```
+
+## Behavior
+
+- **Click-to-Copy**: Clicking any color swatch copies the current color value to clipboard
+- **Copy Confirmation**: A checkmark appears for 2 seconds after successful copy
+- **Theme Switching**: When using the legacy object format, colors automatically switch based on the current theme
+- **Truncation**: Long color names and values are truncated with ellipsis and show full value on hover
+- **Responsive**: Table variant stacks vertically on mobile devices
+
+## Accessibility
+
+- Each color button has proper ARIA labels
+- `aria-pressed` indicates copy state
+- `aria-roledescription` provides context ("Copy" or "Copied")
+- Color values are accessible to screen readers
+- Proper button semantics with `type="button"`
+
+## Source
+
+View the source code: `packages/components/src/components/color/color.tsx:11`

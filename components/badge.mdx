@@ -1,0 +1,333 @@
+---
+title: 'Badge'
+description: 'Display small labels, tags, or status indicators with various colors and styles'
+---
+
+## Overview
+
+The Badge component displays compact labels with support for multiple colors, sizes, shapes, and icons. Perfect for tags, status indicators, counts, and labels.
+
+## Basic Usage
+
+```jsx
+<Badge>Default Badge</Badge>
+<Badge color="blue">Blue Badge</Badge>
+<Badge color="green">Success</Badge>
+```
+
+## Props
+
+<ParamField path="children" type="React.ReactNode" required>
+  The content to display inside the badge. Typically short text or labels.
+</ParamField>
+
+<ParamField path="color" type="'gray' | 'blue' | 'green' | 'orange' | 'yellow' | 'red' | 'purple' | 'white' | 'surface' | 'white-destructive' | 'surface-destructive'" default="gray">
+  The color scheme of the badge:
+  - `gray`: Neutral gray (default)
+  - `blue`: Blue informational
+  - `green`: Success or positive
+  - `orange`: Warning or attention
+  - `yellow`: Caution or highlight
+  - `red`: Error or danger
+  - `purple`: Special or feature
+  - `white`: White background (for use on colored surfaces)
+  - `surface`: Adapts to surface (white in light mode, gray in dark mode)
+  - `white-destructive`: White background with red text
+  - `surface-destructive`: Surface-adapted with red text
+</ParamField>
+
+<ParamField path="size" type="'xs' | 'sm' | 'md' | 'lg'" default="md">
+  The size of the badge:
+  - `xs`: Extra small (12px text, minimal padding)
+  - `sm`: Small (12px text, small padding)
+  - `md`: Medium (14px text, standard padding)
+  - `lg`: Large (14px text, large padding)
+</ParamField>
+
+<ParamField path="shape" type="'rounded' | 'pill'" default="rounded">
+  The shape of the badge:
+  - `rounded`: Rounded corners (default)
+  - `pill`: Fully rounded pill shape
+</ParamField>
+
+<ParamField path="variant" type="'solid' | 'outline'" default="solid">
+  The visual style variant:
+  - `solid`: Filled background (default)
+  - `outline`: Outlined with transparent background
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Whether the badge is disabled. Applies reduced opacity and disabled cursor.
+</ParamField>
+
+<ParamField path="leadIcon" type="React.ReactNode">
+  Icon to display before the badge content. Can be:
+  - A string icon name from FontAwesome or Lucide (use with `iconType` and `iconLibrary`)
+  - A React component or element
+</ParamField>
+
+<ParamField path="tailIcon" type="React.ReactNode">
+  Icon to display after the badge content. Can be:
+  - A string icon name from FontAwesome or Lucide (use with `iconType` and `iconLibrary`)
+  - A React component or element
+</ParamField>
+
+<ParamField path="iconType" type="'brands' | 'duotone' | 'light' | 'regular' | 'sharp-duotone-solid' | 'sharp-light' | 'sharp-regular' | 'sharp-solid' | 'sharp-thin' | 'solid' | 'thin'">
+  The FontAwesome icon style type when using string icons.
+</ParamField>
+
+<ParamField path="iconLibrary" type="'fontawesome' | 'lucide'" default="fontawesome">
+  The icon library to use for string icons.
+</ParamField>
+
+<ParamField path="onClick" type="() => void">
+  Click handler function. Makes the badge interactive and renders as a `<button>` element.
+</ParamField>
+
+<ParamField path="href" type="string">
+  URL for the badge. Makes the badge a link and renders as an `<a>` element.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply to the badge.
+</ParamField>
+
+<ParamField path="icon" type="React.ReactNode">
+  **Deprecated:** Use `leadIcon` or `tailIcon` instead. Legacy prop for backward compatibility.
+</ParamField>
+
+<ParamField path="stroke" type="boolean">
+  **Deprecated:** Use `variant="outline"` instead. Legacy prop for backward compatibility.
+</ParamField>
+
+## Examples
+
+### Colors
+
+```jsx
+<Badge color="gray">Gray</Badge>
+<Badge color="blue">Blue</Badge>
+<Badge color="green">Green</Badge>
+<Badge color="orange">Orange</Badge>
+<Badge color="yellow">Yellow</Badge>
+<Badge color="red">Red</Badge>
+<Badge color="purple">Purple</Badge>
+```
+
+### Sizes
+
+```jsx
+<Badge size="xs">Extra Small</Badge>
+<Badge size="sm">Small</Badge>
+<Badge size="md">Medium</Badge>
+<Badge size="lg">Large</Badge>
+```
+
+### Shapes
+
+<CodeGroup>
+```jsx Rounded
+<Badge shape="rounded">Rounded Badge</Badge>
+```
+
+```jsx Pill
+<Badge shape="pill">Pill Badge</Badge>
+```
+</CodeGroup>
+
+### Variants
+
+<CodeGroup>
+```jsx Solid (Default)
+<Badge>Default</Badge>
+<Badge color="blue">Blue</Badge>
+<Badge color="green">Green</Badge>
+```
+
+```jsx Outline
+<Badge variant="outline">Outline</Badge>
+<Badge color="blue" variant="outline">Blue Outline</Badge>
+<Badge color="green" variant="outline">Green Outline</Badge>
+```
+</CodeGroup>
+
+### With Icons
+
+<CodeGroup>
+```jsx Lead Icons
+<Badge leadIcon="star">With Lead Icon</Badge>
+<Badge color="red" leadIcon="heart">Heart Lead</Badge>
+<Badge color="green" leadIcon="check">Check Lead</Badge>
+```
+
+```jsx Tail Icons
+<Badge tailIcon="star">With Tail Icon</Badge>
+<Badge color="blue" tailIcon="arrow-right">Next</Badge>
+<Badge color="purple" tailIcon="external-link">External</Badge>
+```
+
+```jsx Both Icons
+<Badge leadIcon="star" tailIcon="star">Both Icons</Badge>
+<Badge color="green" leadIcon="check" tailIcon="arrow-right">
+  Complete
+</Badge>
+```
+</CodeGroup>
+
+### Icon Libraries
+
+<CodeGroup>
+```jsx FontAwesome (Default)
+<Badge leadIcon="star" iconType="solid">Solid Star</Badge>
+<Badge leadIcon="star" iconType="regular">Regular Star</Badge>
+<Badge leadIcon="star" iconType="light">Light Star</Badge>
+```
+
+```jsx Lucide
+<Badge iconLibrary="lucide" leadIcon="star">Lucide Star</Badge>
+<Badge color="red" iconLibrary="lucide" leadIcon="heart">
+  Lucide Heart
+</Badge>
+<Badge color="green" iconLibrary="lucide" leadIcon="circle-check">
+  Lucide Check
+</Badge>
+```
+</CodeGroup>
+
+### Inline SVG Icons
+
+```jsx
+<Badge
+  leadIcon={
+    <svg
+      aria-hidden="true"
+      fill="currentColor"
+      viewBox="0 0 20 20"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        clipRule="evenodd"
+        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+        fillRule="evenodd"
+      />
+    </svg>
+  }
+>
+  Custom SVG
+</Badge>
+```
+
+### Interactive Badges
+
+<CodeGroup>
+```jsx Clickable (Button)
+<Badge onClick={() => console.log('Clicked!')}>Click me</Badge>
+<Badge color="yellow" leadIcon="star" onClick={() => alert('Star!')}>>
+  Click Star
+</Badge>
+```
+
+```jsx Link
+<Badge href="https://example.com" tailIcon="external-link">
+  External Link
+</Badge>
+<Badge color="blue" href="/docs" tailIcon="arrow-right">
+  Documentation
+</Badge>
+```
+</CodeGroup>
+
+### Disabled State
+
+```jsx
+<Badge disabled>Disabled</Badge>
+<Badge color="blue" disabled>Disabled Blue</Badge>
+<Badge disabled onClick={() => alert('Will not fire')}>Disabled Click</Badge>
+<Badge disabled href="https://example.com">Disabled Link</Badge>
+```
+
+### Surface Variants
+
+These variants are designed for use on colored backgrounds:
+
+```jsx
+<div className="rounded-lg bg-stone-100 p-4 dark:bg-stone-800">
+  <Badge color="white">White</Badge>
+  <Badge color="surface">Surface</Badge>
+  <Badge color="white-destructive">White Destructive</Badge>
+  <Badge color="surface-destructive">Surface Destructive</Badge>
+</div>
+```
+
+### Combined Styles
+
+```jsx
+<Badge
+  color="yellow"
+  leadIcon="star"
+  shape="pill"
+  size="lg"
+  variant="outline"
+>
+  All Options
+</Badge>
+
+<Badge
+  color="orange"
+  leadIcon="bolt"
+  shape="pill"
+  size="sm"
+  variant="outline"
+>
+  Small Combo
+</Badge>
+```
+
+### Custom Styling
+
+```jsx
+<Badge className="uppercase">Uppercase</Badge>
+<Badge className="font-bold" color="blue">Bold</Badge>
+<Badge className="italic" color="green">Italic</Badge>
+<Badge className="shadow-lg" color="purple">With Shadow</Badge>
+<Badge className="ring-2 ring-blue-500 ring-offset-2" color="blue">
+  With Ring
+</Badge>
+```
+
+## Features
+
+### Automatic Element Type
+
+The Badge component automatically renders as the appropriate HTML element:
+- `<span>`: Default for static badges
+- `<button>`: When `onClick` is provided (unless `disabled`)
+- `<a>`: When `href` is provided (unless `disabled`)
+
+### Icon Handling
+
+Icons are automatically styled to match the badge:
+- String icons are fetched from the specified library
+- Inline SVG icons use `fill="currentColor"` for color matching
+- Icons scale appropriately with badge size
+
+### Hover Effects
+
+Interactive badges (with `onClick` or `href`) automatically show:
+- Cursor change to pointer
+- Opacity transition on hover
+- Smooth transitions
+
+### Dark Mode
+
+All badge colors have carefully crafted dark mode variants with:
+- Appropriate background colors
+- Adjusted text colors for readability
+- Maintained contrast ratios
+
+### Accessibility
+
+- Proper semantic HTML based on usage (button/link/span)
+- Disabled state prevents interaction
+- Color contrast meets WCAG guidelines
+- Icon-only badges should include accessible text

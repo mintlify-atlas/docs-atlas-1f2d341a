@@ -1,0 +1,243 @@
+---
+title: 'Callout'
+description: 'Display attention-grabbing content with predefined or custom styling'
+---
+
+## Overview
+
+The Callout component is used to highlight important information in your documentation. It supports multiple predefined variants (info, warning, note, tip, check, danger) as well as fully customizable styling with custom icons and colors.
+
+## Basic Usage
+
+<CodeGroup>
+```jsx Info Callout
+<Callout variant="info">
+  This is an informational callout.
+</Callout>
+```
+
+```jsx Warning Callout
+<Callout variant="warning">
+  This is a warning callout.
+</Callout>
+```
+
+```jsx Note Callout
+<Callout variant="note">
+  This is a note callout.
+</Callout>
+```
+</CodeGroup>
+
+## All Variants
+
+### Predefined Variants
+
+The Callout component includes 6 predefined variants, each with its own icon and color scheme:
+
+<CodeGroup>
+```jsx Info
+<Callout variant="info">
+  <p><strong>Info:</strong> General information or helpful context.</p>
+</Callout>
+```
+
+```jsx Warning
+<Callout variant="warning">
+  <p><strong>Warning:</strong> Important warnings or cautions.</p>
+</Callout>
+```
+
+```jsx Note
+<Callout variant="note">
+  <p><strong>Note:</strong> Additional notes or side information.</p>
+</Callout>
+```
+
+```jsx Tip
+<Callout variant="tip">
+  <p><strong>Tip:</strong> Helpful tips or best practices.</p>
+</Callout>
+```
+
+```jsx Check
+<Callout variant="check">
+  <p><strong>Check:</strong> Success messages or confirmation.</p>
+</Callout>
+```
+
+```jsx Danger
+<Callout variant="danger">
+  <p><strong>Danger:</strong> Critical warnings or errors.</p>
+</Callout>
+```
+</CodeGroup>
+
+### Custom Variant
+
+For full control over appearance, use the `custom` variant with your own icon and color:
+
+<CodeGroup>
+```jsx Custom Color
+<Callout variant="custom" color="#9333ea">
+  <p>This callout uses a custom purple color.</p>
+</Callout>
+```
+
+```jsx Custom Icon and Color
+<Callout 
+  variant="custom" 
+  icon="star" 
+  iconType="solid"
+  iconLibrary="lucide"
+  color="#3b82f6"
+>
+  <p>This callout has a custom icon and blue color.</p>
+</Callout>
+```
+
+```jsx Custom No Styling
+<Callout variant="custom">
+  <p>Default custom styling with no icon or color specified.</p>
+</Callout>
+```
+</CodeGroup>
+
+## Props
+
+<ParamField path="children" type="ReactNode" required>
+  The content to display inside the callout. Supports any valid React content including text, paragraphs, lists, code blocks, and more.
+</ParamField>
+
+<ParamField path="variant" type="'info' | 'warning' | 'note' | 'tip' | 'check' | 'danger' | 'custom'" default="custom">
+  The predefined variant style to use. Each variant has its own icon and color scheme:
+  - `info`: Gray/neutral informational style with info icon
+  - `warning`: Yellow warning style with warning icon
+  - `note`: Blue note style with note icon
+  - `tip`: Green tip style with lightbulb icon
+  - `check`: Green success style with checkmark icon
+  - `danger`: Red danger style with danger icon
+  - `custom`: Allows full customization with `icon` and `color` props
+</ParamField>
+
+<ParamField path="icon" type="ReactNode | string">
+  Custom icon to display (only used with `variant="custom"`). Can be:
+  - A string icon name from FontAwesome or Lucide
+  - A React component or element
+  
+  When using a string, combine with `iconType` and `iconLibrary` props.
+</ParamField>
+
+<ParamField path="iconType" type="'brands' | 'duotone' | 'light' | 'regular' | 'sharp-duotone-solid' | 'sharp-light' | 'sharp-regular' | 'sharp-solid' | 'sharp-thin' | 'solid' | 'thin'">
+  The FontAwesome icon style type (only used with `variant="custom"` and string `icon`). Different styles change the weight and appearance of the icon.
+</ParamField>
+
+<ParamField path="iconLibrary" type="'fontawesome' | 'lucide'" default="fontawesome">
+  The icon library to use for string icons (only used with `variant="custom"` and string `icon`).
+</ParamField>
+
+<ParamField path="color" type="string">
+  Custom hex color for the callout (only used with `variant="custom"`). Automatically generates appropriate border, background, and text colors based on the provided color.
+  
+  Example: `"#9333ea"`, `"#3b82f6"`
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply to the callout container.
+</ParamField>
+
+<ParamField path="ariaLabel" type="string">
+  Custom aria-label for the icon for accessibility. Overrides the default aria-label for predefined variants.
+</ParamField>
+
+## Advanced Examples
+
+### Rich Content
+
+Callouts can contain complex nested content:
+
+```jsx
+<Callout variant="tip">
+  <p><strong>Pro tip:</strong> Follow these steps:</p>
+  <ol>
+    <li>First, read the documentation</li>
+    <li>Then, try the example</li>
+    <li>Finally, build your own implementation</li>
+  </ol>
+</Callout>
+```
+
+### With Links
+
+```jsx
+<Callout variant="note">
+  <p>
+    For more details, see the <a href="#documentation">documentation</a>.
+  </p>
+</Callout>
+```
+
+### Multiple Paragraphs
+
+```jsx
+<Callout variant="info">
+  <p><strong>Important information:</strong></p>
+  <p>This callout can contain multiple paragraphs and formatted text.</p>
+  <ul>
+    <li>It supports lists</li>
+    <li>And other HTML elements</li>
+    <li>With proper styling</li>
+  </ul>
+</Callout>
+```
+
+### Custom Icon from React
+
+```jsx
+<Callout variant="custom" color="#FF00FF" icon={<CustomIconComponent />}>
+  <p>Using a custom React component as the icon.</p>
+</Callout>
+```
+
+### Accessibility
+
+```jsx
+<Callout variant="info" ariaLabel="معلومات">
+  <p>This callout has a custom Arabic aria label for the icon.</p>
+</Callout>
+```
+
+## Backward Compatibility
+
+For backward compatibility, the component also exports named components:
+
+```jsx
+import { Info, Warning, Note, Tip, Check, Danger } from '@mintlify/components';
+
+<Info>
+  <p>Using the old Info component API</p>
+</Info>
+
+<Warning>
+  <p>Using the old Warning component API</p>
+</Warning>
+```
+
+<Note>
+  The new `variant` prop approach is recommended for new implementations.
+</Note>
+
+## Styling
+
+The Callout component automatically handles:
+- Dark mode support with appropriate color adjustments
+- Responsive spacing and layout
+- Proper contrast ratios for accessibility
+- Icon positioning and sizing
+- Content typography with prose styling
+
+For custom variants with `color` prop, the component automatically:
+- Generates lighter background colors
+- Creates appropriate border colors
+- Adjusts text colors for dark/light modes
+- Ensures proper contrast for readability

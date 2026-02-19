@@ -1,0 +1,291 @@
+---
+title: 'Icon'
+description: 'Display icons from FontAwesome, Lucide, or custom images'
+---
+
+## Overview
+
+The Icon component renders icons from various sources including FontAwesome, Lucide, language icons, and custom images. It supports multiple icon styles, custom colors, and sizes.
+
+## Basic Usage
+
+```jsx
+<Icon icon="star" />
+<Icon icon="heart" iconType="solid" />
+<Icon icon="rocket" iconLibrary="lucide" />
+```
+
+## Props
+
+<ParamField path="icon" type="string" required>
+  The icon identifier. Can be:
+  - FontAwesome icon name (e.g., "star", "heart", "user")
+  - Lucide icon name (e.g., "rocket", "settings", "home")
+  - Absolute URL to an image
+  - Relative path starting with `/`
+  - Language name for programming language icons (e.g., "javascript", "python")
+</ParamField>
+
+<ParamField path="iconLibrary" type="'fontawesome' | 'lucide'" default="fontawesome">
+  The icon library to use:
+  - `fontawesome`: FontAwesome icons (default)
+  - `lucide`: Lucide icons
+</ParamField>
+
+<ParamField path="iconType" type="'brands' | 'duotone' | 'light' | 'regular' | 'sharp-duotone-solid' | 'sharp-light' | 'sharp-regular' | 'sharp-solid' | 'sharp-thin' | 'solid' | 'thin'" default="regular">
+  The FontAwesome icon style type. Different styles provide varying visual weights:
+  - `regular`: Standard weight (default)
+  - `solid`: Filled solid icons
+  - `light`: Lighter weight icons
+  - `thin`: Thinnest weight icons
+  - `brands`: Brand logos (automatically detected for known brands)
+  - `duotone`: Two-tone colored icons
+  - `sharp-*`: Sharp-cornered variants
+</ParamField>
+
+<ParamField path="size" type="number" default="16">
+  Size of the icon in pixels. Sets both width and height.
+</ParamField>
+
+<ParamField path="overrideSize" type="boolean" default="false">
+  When true, doesn't apply the `size` prop, allowing external CSS to control dimensions.
+</ParamField>
+
+<ParamField path="color" type="string">
+  Custom color for the icon. Accepts any valid CSS color value (hex, rgb, named colors).
+  
+  Example: `"#FF0000"`, `"rgb(255, 0, 0)"`, `"red"`
+</ParamField>
+
+<ParamField path="colorLight" type="string">
+  Custom color for light mode. Must be used together with `colorDark`.
+</ParamField>
+
+<ParamField path="colorDark" type="string">
+  Custom color for dark mode. Must be used together with `colorLight`.
+</ParamField>
+
+<ParamField path="overrideColor" type="boolean" default="false">
+  When true, doesn't apply default color styling, allowing external CSS to control color.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply to the icon.
+</ParamField>
+
+<ParamField path="basePath" type="string">
+  Base path to prepend to relative icon URLs (those starting with `/`).
+</ParamField>
+
+<ParamField path="pageType" type="'default' | 'pdf' | 'minimal'">
+  The page type affects rendering:
+  - `pdf`: Renders as `<img>` tag for PDF compatibility
+  - `default` or `minimal`: Renders as `<svg>` with mask for CSS control
+</ParamField>
+
+## Examples
+
+### FontAwesome Icons
+
+<CodeGroup>
+```jsx Regular (Default)
+<Icon icon="star" />
+<Icon icon="heart" />
+<Icon icon="user" />
+```
+
+```jsx Solid
+<Icon icon="star" iconType="solid" />
+<Icon icon="heart" iconType="solid" />
+<Icon icon="check" iconType="solid" />
+```
+
+```jsx Light
+<Icon icon="star" iconType="light" />
+<Icon icon="user" iconType="light" />
+<Icon icon="settings" iconType="light" />
+```
+
+```jsx Brands
+<Icon icon="github" iconType="brands" />
+<Icon icon="twitter" iconType="brands" />
+<Icon icon="facebook" iconType="brands" />
+```
+</CodeGroup>
+
+### Lucide Icons
+
+```jsx
+<Icon icon="rocket" iconLibrary="lucide" />
+<Icon icon="settings" iconLibrary="lucide" />
+<Icon icon="home" iconLibrary="lucide" />
+<Icon icon="star" iconLibrary="lucide" />
+```
+
+### Custom Sizes
+
+```jsx
+<Icon icon="star" size={12} />
+<Icon icon="star" size={16} />
+<Icon icon="star" size={24} />
+<Icon icon="star" size={32} />
+<Icon icon="star" size={48} />
+```
+
+### Custom Colors
+
+<CodeGroup>
+```jsx Single Color
+<Icon icon="star" color="#FF0000" />
+<Icon icon="heart" color="rgb(255, 100, 100)" />
+<Icon icon="check" color="green" />
+```
+
+```jsx Light/Dark Mode Colors
+<Icon 
+  icon="star" 
+  colorLight="#000000" 
+  colorDark="#FFFFFF" 
+/>
+<Icon 
+  icon="heart" 
+  colorLight="#FF0000" 
+  colorDark="#FF6B6B" 
+/>
+```
+</CodeGroup>
+
+### Custom Image Icons
+
+<CodeGroup>
+```jsx Absolute URL
+<Icon icon="https://example.com/icon.svg" />
+<Icon icon="https://cdn.example.com/logo.png" />
+```
+
+```jsx Relative Path
+<Icon icon="/images/custom-icon.svg" />
+<Icon icon="/assets/logo.png" basePath="/docs" />
+```
+</CodeGroup>
+
+### Language Icons
+
+The component automatically detects programming language names and loads appropriate icons:
+
+```jsx
+<Icon icon="javascript" />
+<Icon icon="typescript" />
+<Icon icon="python" />
+<Icon icon="react" />
+<Icon icon="vue" />
+<Icon icon="rust" />
+```
+
+### Override Styling
+
+<CodeGroup>
+```jsx Override Size
+<Icon 
+  icon="star" 
+  overrideSize 
+  className="w-12 h-12" 
+/>
+```
+
+```jsx Override Color
+<Icon 
+  icon="star" 
+  overrideColor 
+  className="bg-gradient-to-r from-blue-500 to-purple-500" 
+/>
+```
+</CodeGroup>
+
+### In Context
+
+```jsx
+<div className="flex items-center gap-2">
+  <Icon icon="check" iconType="solid" color="green" size={20} />
+  <span>Task completed</span>
+</div>
+
+<button className="flex items-center gap-2">
+  <Icon icon="download" size={16} />
+  <span>Download</span>
+</button>
+
+<a href="#" className="flex items-center gap-2">
+  <span>View on GitHub</span>
+  <Icon icon="github" iconType="brands" size={18} />
+</a>
+```
+
+## Features
+
+### Automatic Brand Detection
+
+Known brand icons (like GitHub, Twitter, Facebook) are automatically detected and loaded from the brands library, even without explicitly setting `iconType="brands"`.
+
+### SVG Masking
+
+For library icons (FontAwesome and Lucide), the component uses CSS masking, which allows:
+- Dynamic color changes via CSS
+- Smooth color transitions
+- Dark mode color switching
+- Gradient backgrounds
+
+### Image Rendering
+
+For custom image URLs:
+- Absolute URLs are rendered as `<img>` tags
+- Relative paths are resolved using `basePath`
+- Mintlify CDN URLs use SVG masking for color control
+
+### Icon Libraries
+
+Supported icon sources:
+- **FontAwesome v7.1.0**: Comprehensive icon library with multiple styles
+- **Lucide v0.545.0**: Modern, consistent icon set
+- **Devicon**: Programming language and technology logos
+- **Custom images**: Any SVG or raster image
+
+### Dark Mode
+
+Automatic dark mode support:
+- Default icons adapt to theme (dark in light mode, light in dark mode)
+- Use `colorLight` and `colorDark` for custom theme colors
+- Maintains proper contrast ratios
+
+### PDF Support
+
+When `pageType="pdf"`, icons render as `<img>` tags for better PDF compatibility.
+
+## Styling
+
+The Icon component:
+- Renders inline by default (`display: inline-block`)
+- Aligns vertically to middle
+- Respects parent text color when no custom color is set
+- Can be styled with Tailwind or custom CSS classes
+
+## Default Behavior
+
+- **Default library**: FontAwesome
+- **Default type**: Regular
+- **Default size**: 16px
+- **Default color**: Inherits from theme (dark in light mode, light in dark mode)
+
+## Notes
+
+<Callout variant="tip">
+  For consistent sizing in flex layouts, use `overrideSize` and control dimensions with CSS classes like `size-4`, `w-6 h-6`, etc.
+</Callout>
+
+<Callout variant="warning">
+  When using `colorLight` and `colorDark`, both props must be provided together. Using only one will be ignored.
+</Callout>
+
+<Callout variant="note">
+  Invalid `iconType` values are logged to console and result in no icon being rendered. Valid types are: brands, duotone, light, regular, sharp-solid, solid, thin.
+</Callout>
