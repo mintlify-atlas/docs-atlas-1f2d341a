@@ -13,7 +13,7 @@ The library uses the `.dark` class selector pattern:
 - Light mode: No class on `<html>`
 - Dark mode: `<html class="dark">`
 
-Components detect theme changes automatically and update their styling accordingly.
+Components detect theme changes automatically and update their styling accordingly using Tailwind's `dark:` variant.
 
 ## Basic Setup
 
@@ -39,7 +39,7 @@ Components detect theme changes automatically and update their styling according
 
       return (
         <button onClick={toggleTheme}>
-          {isDark ? '☀️ Light' : '🌙 Dark'}
+          {isDark ? 'Light Mode' : 'Dark Mode'}
         </button>
       );
     }
@@ -59,6 +59,9 @@ Components detect theme changes automatically and update their styling according
           <Callout variant="info">
             This callout adapts to dark mode automatically
           </Callout>
+          <Card title="Dark Mode" icon="moon">
+            Cards also adjust their colors
+          </Card>
         </>
       );
     }
@@ -123,7 +126,7 @@ Components detect theme changes automatically and update their styling according
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
           className="px-4 py-2 rounded-lg border"
         >
-          {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
+          {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
         </button>
       );
     }
@@ -133,19 +136,19 @@ Components detect theme changes automatically and update their styling according
 
 ## Detecting Theme in Components
 
-The library provides a `useIsDarkTheme` hook (internal use) that monitors theme changes:
+The library provides a `useIsDarkTheme` hook that monitors theme changes by observing the `dark` class on the document element:
 
 ```tsx
-// Internal implementation reference
+// Internal implementation from source/packages/components/src/hooks/use-is-dark-theme.ts:3-27
 import { useEffect, useState } from 'react';
+
+const getIsDarkTheme = () =>
+  document.documentElement.classList.contains('dark');
 
 const useIsDarkTheme = () => {
   const [isDarkTheme, setIsDarkTheme] = useState(false);
 
   useEffect(() => {
-    const getIsDarkTheme = () =>
-      document.documentElement.classList.contains('dark');
-    
     setIsDarkTheme(getIsDarkTheme());
 
     const mutationObserver = new MutationObserver(() => {
@@ -157,7 +160,9 @@ const useIsDarkTheme = () => {
       attributeFilter: ['class'],
     });
 
-    return () => mutationObserver.disconnect();
+    return () => {
+      mutationObserver.disconnect();
+    };
   }, []);
 
   return { isDarkTheme };
@@ -217,21 +222,63 @@ module.exports = {
 
 ### Callout Component
 
-Callouts automatically adapt their colors in dark mode:
+Callouts automatically adapt their colors in dark mode using predefined color schemes:
 
 ```tsx
 import { Callout } from '@mintlify/components';
 
-// Light: blue background with dark text
-// Dark: dark blue background with light text
-<Callout variant="note">
+// Info variant - from source/packages/components/src/components/callout/callout.tsx:36-43
+// Light: border-stone-200 bg-stone-50
+// Dark: border-stone-700 bg-white/10
+<Callout variant="info">
   This note looks great in both themes
+</Callout>
+
+// Warning variant - from source/packages/components/src/components/callout/callout.tsx:44-50
+// Light: border-yellow-200 bg-yellow-50 text-yellow-800
+// Dark: border-yellow-900 bg-yellow-600/20 text-yellow-300
+<Callout variant="warning">
+  Warnings use yellow tones that adapt automatically
 </Callout>
 
 // Custom colors also work in dark mode
 <Callout variant="custom" color="#8b5cf6">
   Custom color with automatic dark mode adjustment
 </Callout>
+```
+
+### Accordion Component
+
+Accordions use adaptive borders and backgrounds:
+
+```tsx
+import { Accordion } from '@mintlify/components';
+
+// From source/packages/components/src/components/accordion/accordion.tsx:204-207
+// Light: border-stone-200/70 bg-white
+// Dark: border-white/10 bg-[#0b0c0e]
+<Accordion title="Getting Started">
+  Accordion content adapts to dark mode
+</Accordion>
+```
+
+### Badge Component
+
+Badges use CSS variables for dynamic color adaptation:
+
+```tsx
+import { Badge } from '@mintlify/components';
+
+// From source/packages/components/src/components/badge/badge.tsx:31-32
+// Blue badge uses:
+// Light: bg-[#E3EAFD] text-[#133A9A]
+// Dark: bg-[#07296A] text-[#7196F4]
+<Badge color="blue">TypeScript</Badge>
+
+// Green badge uses:
+// Light: bg-[#D1FAE4] text-[#166E3F]
+// Dark: bg-[#0F4C2C] text-[#6AE1A1]
+<Badge color="green">Success</Badge>
 ```
 
 ### Code Blocks
@@ -251,27 +298,19 @@ The code block automatically switches between light and dark syntax themes based
 
 ### Custom Dark Mode Styles
 
-For custom dark mode styling:
-
-```css
-/* Light mode */
-.my-component {
-  background-color: white;
-  color: black;
-}
-
-/* Dark mode */
-html.dark .my-component {
-  background-color: rgb(14, 14, 15);
-  color: white;
-}
-
-/* Or use Tailwind classes */
-```
+For your own components, use Tailwind's `dark:` variant:
 
 ```tsx
 <div className="bg-white dark:bg-stone-950 text-black dark:text-white">
   Responsive to theme
+</div>
+
+<div className="border border-stone-200 dark:border-stone-700">
+  Adaptive borders
+</div>
+
+<div className="shadow-lg dark:shadow-none">
+  Different shadows per theme
 </div>
 ```
 
@@ -297,55 +336,59 @@ These variables are automatically managed by the components.
 
 ## Persisting Theme Preference
 
-<CodeGroup>
-  ```tsx localStorage
-  import { useEffect, useState } from 'react';
+<Tabs>
+  <Tab title="localStorage">
+    ```tsx
+    import { useEffect, useState } from 'react';
 
-  function useTheme() {
-    const [theme, setTheme] = useState(() => {
-      if (typeof window !== 'undefined') {
-        return localStorage.getItem('theme') || 'light';
-      }
-      return 'light';
-    });
+    function useTheme() {
+      const [theme, setTheme] = useState(() => {
+        if (typeof window !== 'undefined') {
+          return localStorage.getItem('theme') || 'light';
+        }
+        return 'light';
+      });
 
-    useEffect(() => {
-      const root = document.documentElement;
-      if (theme === 'dark') {
-        root.classList.add('dark');
-      } else {
-        root.classList.remove('dark');
-      }
-      localStorage.setItem('theme', theme);
-    }, [theme]);
+      useEffect(() => {
+        const root = document.documentElement;
+        if (theme === 'dark') {
+          root.classList.add('dark');
+        } else {
+          root.classList.remove('dark');
+        }
+        localStorage.setItem('theme', theme);
+      }, [theme]);
 
-    return { theme, setTheme };
-  }
-  ```
+      return { theme, setTheme };
+    }
+    ```
+  </Tab>
 
-  ```tsx system-preference
-  import { useEffect, useState } from 'react';
+  <Tab title="System Preference">
+    ```tsx
+    import { useEffect, useState } from 'react';
 
-  function useSystemTheme() {
-    const [theme, setTheme] = useState('light');
+    function useSystemTheme() {
+      const [theme, setTheme] = useState('light');
 
-    useEffect(() => {
-      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      const handleChange = (e: MediaQueryListEvent) => {
-        setTheme(e.matches ? 'dark' : 'light');
-        document.documentElement.classList.toggle('dark', e.matches);
-      };
+      useEffect(() => {
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        const handleChange = (e) => {
+          setTheme(e.matches ? 'dark' : 'light');
+          document.documentElement.classList.toggle('dark', e.matches);
+        };
 
-      setTheme(mediaQuery.matches ? 'dark' : 'light');
-      mediaQuery.addEventListener('change', handleChange);
+        setTheme(mediaQuery.matches ? 'dark' : 'light');
+        mediaQuery.addEventListener('change', handleChange);
 
-      return () => mediaQuery.removeEventListener('change', handleChange);
-    }, []);
+        return () => mediaQuery.removeEventListener('change', handleChange);
+      }, []);
 
-    return theme;
-  }
-  ```
-</CodeGroup>
+      return theme;
+    }
+    ```
+  </Tab>
+</Tabs>
 
 ## Troubleshooting
 
@@ -359,6 +402,8 @@ These variables are automatically managed by the components.
 
   <Accordion title="Colors not updating on theme change">
     Check that you're using the correct CSS variable names in your theme configuration. The components look for specific variables like `--color-primary-dark`.
+
+    Also verify that the `dark` class is actually being applied to the HTML element using browser dev tools.
   </Accordion>
 
   <Accordion title="Flashing on page load">
@@ -366,11 +411,23 @@ These variables are automatically managed by the components.
 
     ```html
     <script>
-      if (localStorage.theme === 'dark') {
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
       }
     </script>
     ```
+  </Accordion>
+
+  <Accordion title="Some components not adapting">
+    Ensure you're importing the component styles at the top of your CSS file:
+
+    ```css
+    @import "@mintlify/components/styles.css";
+    ```
+
+    The component styles include all necessary dark mode variants.
   </Accordion>
 </AccordionGroup>
 

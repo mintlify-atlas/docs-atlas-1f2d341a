@@ -1,580 +1,172 @@
 ---
-title: Component Development Guidelines
-description: Best practices and requirements for creating components in Mintlify Components
+title: Creating Components
+description: Guide to creating new components for Mintlify Components
 ---
 
-This guide provides detailed guidelines for developing high-quality, accessible, and maintainable components for the Mintlify Components library.
+This guide walks you through creating a new component for the Mintlify Components library.
 
-## Component Requirements
+## Component Guidelines
 
-All components must meet these core requirements:
+When adding or modifying components, ensure they meet these requirements:
 
-### Compatibility
+- **React Compatibility**: Ensure compatibility with React 18 and 19
+- **Theming**: Support both light and dark themes
+- **Accessibility**: Include ARIA attributes and keyboard navigation
+- **Documentation**: Add Storybook stories documenting usage
+- **TypeScript**: Export types for TypeScript users
 
-<CardGroup cols={2}>
-  <Card title="React Version" icon="react">
-    Support both React 18 and React 19
-  </Card>
-  <Card title="Node.js" icon="node-js">
-    Compatible with Node.js >= 20.0.0
-  </Card>
-  <Card title="Tailwind CSS" icon="palette">
-    Work with both Tailwind v3 and v4
-  </Card>
-  <Card title="TypeScript" icon="code">
-    Fully typed with exported interfaces
-  </Card>
-</CardGroup>
+## Creating a New Component
 
-### Core Principles
-
-<AccordionGroup>
-  <Accordion title="Accessibility First" icon="universal-access">
-    Every component must be accessible:
-    - Include appropriate ARIA attributes
-    - Support keyboard navigation
-    - Provide clear focus indicators
-    - Use semantic HTML elements
-    - Test with screen readers when applicable
-  </Accordion>
+<Steps>
+  <Step title="Create component directory">
+    Create a new directory under `packages/components/src/components/`:
+    ```bash
+    mkdir packages/components/src/components/YourComponent
+    ```
+  </Step>
   
-  <Accordion title="Theme Support" icon="moon">
-    Components must work in both themes:
-    - Support light and dark modes
-    - Use CSS custom properties for theming
-    - Allow overrides via Tailwind config
-    - Test visual appearance in both themes
-  </Accordion>
-  
-  <Accordion title="Performance" icon="gauge-high">
-    Keep components performant:
-    - Minimize re-renders with React.memo when appropriate
-    - Use lazy loading for heavy dependencies
-    - Avoid unnecessary DOM operations
-    - Keep bundle size small
-  </Accordion>
-  
-  <Accordion title="Documentation" icon="book">
-    Comprehensive documentation is required:
-    - Create Storybook stories for all variants
-    - Export TypeScript types for all props
-    - Add JSDoc comments for complex props
-    - Include usage examples
-  </Accordion>
-</AccordionGroup>
-
-## Component Structure
-
-Organize your component files consistently:
-
-```
-src/components/MyComponent/
-├── MyComponent.tsx        # Main component implementation
-├── MyComponent.types.ts   # TypeScript interfaces (optional)
-├── MyComponent.stories.tsx # Storybook stories
-└── index.ts               # Re-exports
-```
-
-### File Templates
-
-<Tabs>
-  <Tab title="Component">
-    ```tsx
-    // MyComponent.tsx
-    import React from 'react';
-    import { cn } from '../../utils';
+  <Step title="Implement the component">
+    Create your component file with TypeScript:
     
-    export interface MyComponentProps {
-      /**
-       * The variant of the component
-       * @default 'default'
-       */
-      variant?: 'default' | 'primary' | 'secondary';
-      
-      /**
-       * Additional CSS classes
-       */
-      className?: string;
-      
-      /**
-       * Child elements
-       */
+    ```tsx packages/components/src/components/YourComponent/YourComponent.tsx
+    import React from 'react';
+    
+    export interface YourComponentProps {
+      // Define your props here
+      title: string;
       children?: React.ReactNode;
     }
     
-    export const MyComponent = React.forwardRef<
-      HTMLDivElement,
-      MyComponentProps
-    >(({ variant = 'default', className, children, ...props }, ref) => {
+    export const YourComponent: React.FC<YourComponentProps> = ({
+      title,
+      children,
+    }) => {
       return (
-        <div
-          ref={ref}
-          className={cn(
-            'my-component-base-classes',
-            variant === 'primary' && 'primary-classes',
-            variant === 'secondary' && 'secondary-classes',
-            className
-          )}
-          {...props}
-        >
+        <div className="your-component">
+          <h2>{title}</h2>
           {children}
         </div>
       );
-    });
-    
-    MyComponent.displayName = 'MyComponent';
+    };
     ```
-  </Tab>
+  </Step>
   
-  <Tab title="Story">
-    ```tsx
-    // MyComponent.stories.tsx
-    import type { Meta, StoryObj } from '@storybook/react';
-    import { MyComponent } from './MyComponent';
+  <Step title="Export the component">
+    Add your component to `packages/components/src/components/index.ts`:
     
-    const meta: Meta<typeof MyComponent> = {
-      title: 'Components/MyComponent',
-      component: MyComponent,
-      parameters: {
-        layout: 'centered',
-      },
+    ```ts
+    export { YourComponent } from './YourComponent/YourComponent';
+    export type { YourComponentProps } from './YourComponent/YourComponent';
+    ```
+  </Step>
+  
+  <Step title="Create a Storybook story">
+    Create a story file for documentation:
+    
+    ```tsx packages/components/src/components/YourComponent/YourComponent.stories.tsx
+    import type { Meta, StoryObj } from '@storybook/react';
+    import { YourComponent } from './YourComponent';
+    
+    const meta: Meta<typeof YourComponent> = {
+      title: 'Components/YourComponent',
+      component: YourComponent,
       tags: ['autodocs'],
-      argTypes: {
-        variant: {
-          control: 'select',
-          options: ['default', 'primary', 'secondary'],
-        },
-      },
     };
     
     export default meta;
-    type Story = StoryObj<typeof MyComponent>;
+    type Story = StoryObj<typeof YourComponent>;
     
     export const Default: Story = {
       args: {
-        children: 'My Component',
-      },
-    };
-    
-    export const Primary: Story = {
-      args: {
-        variant: 'primary',
-        children: 'Primary Component',
-      },
-    };
-    
-    export const Secondary: Story = {
-      args: {
-        variant: 'secondary',
-        children: 'Secondary Component',
+        title: 'Hello World',
       },
     };
     ```
-  </Tab>
+  </Step>
   
-  <Tab title="Export">
-    ```tsx
-    // packages/components/src/components/index.ts
-    export { MyComponent } from './MyComponent/MyComponent';
-    export type { MyComponentProps } from './MyComponent/MyComponent';
+  <Step title="Verify the build">
+    Run the build to ensure everything compiles:
+    ```bash
+    pnpm build
     ```
-  </Tab>
-</Tabs>
-
-## TypeScript Guidelines
-
-### Prop Types
-
-<Note>
-  Always export prop interfaces so consumers can use them for type checking and documentation.
-</Note>
-
-```tsx
-// Good: Exported interface with JSDoc comments
-export interface MyComponentProps {
-  /**
-   * The title to display
-   */
-  title: string;
-  
-  /**
-   * Optional description text
-   */
-  description?: string;
-  
-  /**
-   * Callback fired when clicked
-   */
-  onClick?: () => void;
-}
-
-// Bad: Anonymous type
-const MyComponent = (props: { title: string }) => { /* ... */ };
-```
-
-### Ref Forwarding
-
-Use `React.forwardRef` when components need to expose a ref:
-
-```tsx
-export const MyComponent = React.forwardRef<
-  HTMLDivElement,
-  MyComponentProps
->((props, ref) => {
-  return <div ref={ref}>{/* ... */}</div>;
-});
-
-MyComponent.displayName = 'MyComponent';
-```
-
-### Generic Components
-
-For components that work with different data types:
-
-```tsx
-export interface ListProps<T> {
-  items: T[];
-  renderItem: (item: T) => React.ReactNode;
-}
-
-export function List<T>({ items, renderItem }: ListProps<T>) {
-  return (
-    <ul>
-      {items.map((item, index) => (
-        <li key={index}>{renderItem(item)}</li>
-      ))}
-    </ul>
-  );
-}
-```
-
-## Styling with Tailwind CSS
-
-### Use the `cn` Utility
-
-Always use the `cn` utility for conditional classes:
-
-```tsx
-import { cn } from '../../utils';
-
-<div
-  className={cn(
-    'base-classes',
-    isActive && 'active-classes',
-    isDisabled && 'disabled-classes',
-    className // Allow prop overrides
-  )}
-/>
-```
-
-### Theme Variables
-
-Use CSS custom properties for themeable values:
-
-```tsx
-// Use theme colors
-<div className="bg-primary text-primary-foreground">
-
-// Use semantic colors
-<div className="bg-background text-foreground">
-  
-// Use component-specific variables
-<div className="border-border rounded-radius">
-```
-
-### Dark Mode
-
-Tailwind's dark mode is class-based. Test both themes:
-
-```tsx
-<div className="bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50">
-```
-
-<Warning>
-  Always test your component in both light and dark modes using Storybook's theme switcher.
-</Warning>
-
-## Accessibility Guidelines
-
-### Keyboard Navigation
-
-Ensure all interactive elements are keyboard accessible:
-
-```tsx
-<button
-  onClick={handleClick}
-  onKeyDown={(e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      handleClick();
-    }
-  }}
->
-  Click me
-</button>
-```
-
-### ARIA Attributes
-
-Add appropriate ARIA attributes:
-
-```tsx
-<button
-  aria-label="Close dialog"
-  aria-pressed={isPressed}
-  aria-expanded={isExpanded}
-  aria-controls="controlled-element-id"
->
-```
-
-### Focus Management
-
-Provide clear focus indicators:
-
-```tsx
-<button className="focus:outline-none focus:ring-2 focus:ring-primary">
-```
-
-### Semantic HTML
-
-Use appropriate HTML elements:
-
-```tsx
-// Good: Semantic elements
-<nav>
-  <ul>
-    <li><a href="/">Home</a></li>
-  </ul>
-</nav>
-
-// Bad: Divs for everything
-<div>
-  <div>
-    <div onClick={goToHome}>Home</div>
-  </div>
-</div>
-```
-
-## Testing Components
-
-### Manual Testing Checklist
-
-Before submitting a component, test:
-
-<Steps>
-  <Step title="Visual Testing">
-    - Light and dark themes
-    - Different viewport sizes
-    - All component variants
-    - With different content lengths
   </Step>
   
-  <Step title="Interaction Testing">
-    - Click interactions work
-    - Keyboard navigation works
-    - Hover states appear correctly
-    - Focus indicators are visible
-  </Step>
-  
-  <Step title="Accessibility Testing">
-    - Tab through all interactive elements
-    - Use with keyboard only (no mouse)
-    - Check with browser accessibility tools
-    - Verify ARIA attributes are present
-  </Step>
-  
-  <Step title="Integration Testing">
-    - Works in a real application context
-    - Props behave as expected
-    - TypeScript types work correctly
-    - No console errors or warnings
+  <Step title="Test in Storybook">
+    Start Storybook and verify your component:
+    ```bash
+    pnpm storybook
+    ```
+    Navigate to `http://localhost:6006` to see your component.
   </Step>
 </Steps>
 
-### Storybook Testing
+## Styling with Tailwind CSS
 
-Create comprehensive stories:
-
-```tsx
-// Test different states
-export const Default: Story = { /* ... */ };
-export const WithLongContent: Story = { /* ... */ };
-export const Disabled: Story = { /* ... */ };
-export const Loading: Story = { /* ... */ };
-
-// Test edge cases
-export const EmptyState: Story = { /* ... */ };
-export const WithError: Story = { /* ... */ };
-```
-
-## Common Patterns
-
-### Controlled vs Uncontrolled
-
-Support both patterns when applicable:
+Use Tailwind CSS utility classes for styling:
 
 ```tsx
-interface InputProps {
-  // Controlled
-  value?: string;
-  onChange?: (value: string) => void;
-  
-  // Uncontrolled
-  defaultValue?: string;
-}
-
-const Input = ({ value, onChange, defaultValue }: InputProps) => {
-  const [internalValue, setInternalValue] = useState(defaultValue ?? '');
-  
-  const isControlled = value !== undefined;
-  const currentValue = isControlled ? value : internalValue;
-  
-  const handleChange = (newValue: string) => {
-    if (!isControlled) {
-      setInternalValue(newValue);
-    }
-    onChange?.(newValue);
-  };
-  
-  // ...
+export const YourComponent: React.FC<YourComponentProps> = ({ title }) => {
+  return (
+    <div className="rounded-lg bg-white p-4 shadow-md dark:bg-gray-800">
+      <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+        {title}
+      </h2>
+    </div>
+  );
 };
 ```
 
-### Composition
+## Accessibility Best Practices
 
-Use composition for flexible components:
-
-```tsx
-// Parent component
-export const Card = ({ children, className }: CardProps) => (
-  <div className={cn('card-base', className)}>{children}</div>
-);
-
-// Subcomponents
-export const CardHeader = ({ children, className }: CardHeaderProps) => (
-  <div className={cn('card-header', className)}>{children}</div>
-);
-
-export const CardContent = ({ children, className }: CardContentProps) => (
-  <div className={cn('card-content', className)}>{children}</div>
-);
-
-// Usage
-<Card>
-  <CardHeader>Title</CardHeader>
-  <CardContent>Content</CardContent>
-</Card>
-```
-
-### Render Props
-
-For flexible rendering:
+Make your components accessible:
 
 ```tsx
-interface ListProps<T> {
-  items: T[];
-  renderItem: (item: T, index: number) => React.ReactNode;
-  renderEmpty?: () => React.ReactNode;
-}
-```
-
-## Performance Optimization
-
-### Memoization
-
-Use React.memo for expensive components:
-
-```tsx
-export const ExpensiveComponent = React.memo<ExpensiveComponentProps>(
-  ({ data }) => {
-    // Expensive rendering
-  },
-  (prevProps, nextProps) => {
-    // Custom comparison
-    return prevProps.data.id === nextProps.data.id;
-  }
-);
-```
-
-### Lazy Loading
-
-Lazy load heavy dependencies:
-
-```tsx
-import { lazy, Suspense } from 'react';
-
-const HeavyComponent = lazy(() => import('./HeavyComponent'));
-
-export const Parent = () => (
-  <Suspense fallback={<div>Loading...</div>}>
-    <HeavyComponent />
-  </Suspense>
-);
-```
-
-## Documentation
-
-### JSDoc Comments
-
-Add helpful JSDoc comments:
-
-```tsx
-/**
- * A button component that supports various styles and states.
- * 
- * @example
- * ```tsx
- * <Button variant="primary" onClick={() => alert('Clicked!')}>
- *   Click me
- * </Button>
- * ```
- */
-export const Button = (props: ButtonProps) => { /* ... */ };
-```
-
-### Storybook Documentation
-
-Use Storybook's autodocs:
-
-```tsx
-const meta: Meta<typeof MyComponent> = {
-  title: 'Components/MyComponent',
-  component: MyComponent,
-  tags: ['autodocs'],
-  parameters: {
-    docs: {
-      description: {
-        component: 'A detailed description of what this component does.',
-      },
-    },
-  },
+export const YourComponent: React.FC<YourComponentProps> = ({
+  title,
+  onClose,
+}) => {
+  return (
+    <div role="dialog" aria-labelledby="component-title">
+      <h2 id="component-title">{title}</h2>
+      <button
+        onClick={onClose}
+        aria-label="Close dialog"
+        className="close-button"
+      >
+        ×
+      </button>
+    </div>
+  );
 };
 ```
 
-## Review Checklist
+## TypeScript Types
 
-Before submitting your component:
+Always export TypeScript types for your components:
 
-- [ ] Component works in both React 18 and 19
-- [ ] Fully typed with exported TypeScript interfaces
-- [ ] Supports light and dark themes
-- [ ] Keyboard accessible
-- [ ] ARIA attributes are present and correct
-- [ ] Focus indicators are visible
-- [ ] Storybook stories document all variants
-- [ ] JSDoc comments explain complex props
-- [ ] No linting errors (`pnpm lint:check`)
-- [ ] Build succeeds (`pnpm build`)
-- [ ] Follows existing code patterns
-- [ ] Uses Tailwind CSS for styling
-- [ ] `cn` utility used for conditional classes
-- [ ] Component is exported from main index
+```tsx
+export interface YourComponentProps {
+  /** The title to display */
+  title: string;
+  /** Optional callback when closed */
+  onClose?: () => void;
+  /** Additional CSS classes */
+  className?: string;
+}
+```
 
-## Getting Help
+## Testing Your Component
 
-If you need help developing a component:
+Before submitting:
 
-- Review existing components for examples
-- Check the [Development Guide](/contributing/development)
-- Ask questions in [GitHub Discussions](https://github.com/mintlify/components/discussions)
-- Read the [FAQ](/faq) for common issues
+- Test in both light and dark themes
+- Verify keyboard navigation works
+- Check screen reader compatibility
+- Test with React 18 and 19
+- Ensure all props are documented in Storybook
+
+## Next Steps
+
+- Review the [development workflow](/contributing/development)
+- Read the [contributing guidelines](/contributing/overview)
+- Submit your changes via pull request

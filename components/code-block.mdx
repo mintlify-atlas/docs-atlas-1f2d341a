@@ -16,10 +16,10 @@ import { CodeBlock } from '@mintlify/components';
 </CodeBlock>
 ```
 
-## Props
+## CodeBlock Props
 
 <ParamField path="language" type="string">
-  The programming language for syntax highlighting (e.g., "javascript", "python", "java").
+  The programming language for syntax highlighting (e.g., "javascript", "python", "java"). Supports all languages that Shiki supports.
 </ParamField>
 
 <ParamField path="lang" type="string">
@@ -27,35 +27,35 @@ import { CodeBlock } from '@mintlify/components';
 </ParamField>
 
 <ParamField path="filename" type="string">
-  Display a filename in the code block header.
+  Display a filename in the code block header. When set, displays a header section with gray background.
 </ParamField>
 
 <ParamField path="icon" type="string">
-  Icon to display in the code block header (e.g., "js", "python", "java").
+  Icon to display in the code block header (e.g., "js", "python", "java"). Requires `filename` to be set to display the header.
 </ParamField>
 
 <ParamField path="lines" type="boolean">
-  Enable line numbers.
+  Enable line numbers on the left side of the code block.
 </ParamField>
 
 <ParamField path="wrap" type="boolean">
-  Enable code wrapping instead of horizontal scrolling.
+  Enable code wrapping instead of horizontal scrolling. Long lines will wrap to the next line.
 </ParamField>
 
 <ParamField path="expandable" type="boolean">
-  Make the code block expandable/collapsible when content exceeds a certain height.
+  Make the code block expandable/collapsible when content exceeds a certain height. Shows a "Show more/less" button at the bottom.
 </ParamField>
 
 <ParamField path="highlight" type="string">
-  Lines to highlight as a JSON stringified array (e.g., `"[1,3,4,5]"`).
+  Lines to highlight as a JSON stringified array (e.g., `"[1,3,4,5]"`). Highlighted lines have a colored background.
 </ParamField>
 
 <ParamField path="focus" type="string">
-  Lines to focus on (dims other lines) as a JSON stringified array (e.g., `"[2,4,6]"`).
+  Lines to focus on (dims other lines) as a JSON stringified array (e.g., `"[2,4,6]"`). Non-focused lines are faded.
 </ParamField>
 
 <ParamField path="codeBlockTheme" type="'system' | 'dark'" default="system">
-  The UI theme for the code block container:
+  The UI theme for the code block container (border, background, text color):
   - `"system"`: Adapts to light/dark mode
   - `"dark"`: Always uses dark theme
 </ParamField>
@@ -77,11 +77,33 @@ import { CodeBlock } from '@mintlify/components';
 </ParamField>
 
 <ParamField path="copyButtonProps" type="CopyToClipboardButtonProps">
-  Props to customize the copy button behavior and appearance.
+  Props to customize the copy button behavior and appearance. See Copy Button Props below.
 </ParamField>
 
 <ParamField path="children" type="ReactNode">
   The code content to display.
+</ParamField>
+
+## Copy Button Props
+
+<ParamField path="showTooltip" type="boolean" default="true">
+  Whether to show the tooltip on hover.
+</ParamField>
+
+<ParamField path="copyButtonAriaLabel" type="string" default="Copy the contents from the code block">
+  Aria label for the copy button for screen readers.
+</ParamField>
+
+<ParamField path="tooltipCopyText" type="string" default="Copy">
+  Text to display in the tooltip before copying.
+</ParamField>
+
+<ParamField path="tooltipCopiedText" type="string" default="Copied!">
+  Text to display in the tooltip after successful copy.
+</ParamField>
+
+<ParamField path="onCopied" type="(result: CopyToClipboardResult, textToCopy?: string) => void">
+  Callback function called after copy attempt. Receives the copy result ("success" or "error") and the copied text.
 </ParamField>
 
 ## Examples
@@ -250,6 +272,31 @@ const currentTheme: Theme = 'light';`}
 </CodeBlock>
 ```
 
+## Language Support
+
+CodeBlock supports syntax highlighting for hundreds of programming languages through Shiki, including:
+
+**Popular Languages:**
+- JavaScript, TypeScript, JSX, TSX
+- Python, Java, C++, C#, Go, Rust
+- Ruby, PHP, Swift, Kotlin, Scala
+- HTML, CSS, SCSS, LESS
+- SQL, GraphQL, JSON, YAML, TOML, XML
+
+**Shell & Config:**
+- Bash, Shell, PowerShell, Zsh
+- Dockerfile, Docker Compose
+- Nginx, Apache
+- .env files, INI files
+
+**Frameworks & Tools:**
+- React, Vue, Svelte, Angular
+- Markdown, MDX
+- Prisma, Protocol Buffers
+- Regular Expressions (regex)
+
+Shiki uses TextMate grammars, the same as VS Code, ensuring accurate highlighting for virtually any language. If a language isn't recognized, the code will display as plain text.
+
 ## Available Shiki Themes
 
 The component supports all standard Shiki themes including:
@@ -294,10 +341,74 @@ The CodeBlock automatically includes a copy-to-clipboard button that:
     tooltipCopiedText: "Copied successfully!",
     onCopied: (result, text) => {
       console.log('Copy result:', result);
+      if (result === 'success') {
+        // Track copy event
+        analytics.track('code_copied', { language: 'javascript' });
+      }
     }
   }}
 >
   {`const code = 'example';`}
+</CodeBlock>
+```
+
+## Advanced Examples
+
+### All Features Combined
+
+```tsx
+<CodeBlock 
+  filename="advanced-example.ts"
+  icon="typescript"
+  language="typescript"
+  lines={true}
+  highlight={JSON.stringify([5, 6, 7, 8, 9])}
+  focus={JSON.stringify([10, 11, 12, 13])}
+  expandable={true}
+  codeBlockTheme="dark"
+  codeBlockThemeObject={{ theme: "dracula" }}
+  copyButtonProps={{
+    onCopied: (result) => console.log('Copied:', result)
+  }}
+>
+  {`// TypeScript example with all features
+interface Config {
+  port: number;
+  host: string;
+}
+
+// This section is highlighted
+const config: Config = {
+  port: 3000,
+  host: 'localhost'
+};
+
+// This section is focused
+function startServer(config: Config) {
+  console.log(\`Server starting on \${config.host}:\${config.port}\`);
+  return true;
+}
+
+// More code to make it expandable
+const result = startServer(config);
+console.log('Server started:', result);`}
+</CodeBlock>
+```
+
+### Responsive Code Blocks
+
+Adjust text size for mobile devices:
+
+```tsx
+<CodeBlock 
+  language="javascript"
+  isSmallText={true}
+  wrap={true}
+  filename="mobile-friendly.js"
+>
+  {`// Smaller text and wrapping for mobile devices
+const responsive = true;
+console.log('Optimized for smaller screens');`}
 </CodeBlock>
 ```
 
@@ -308,6 +419,59 @@ The CodeBlock automatically includes a copy-to-clipboard button that:
 - Keyboard navigation is fully supported
 - Focus indicators are visible and clear
 
+## BaseCodeBlock
+
+The `BaseCodeBlock` component is a lower-level component that `CodeBlock` is built on. It provides the core syntax highlighting functionality without the header and copy button.
+
+### BaseCodeBlock Props
+
+All `CodeBlock` props plus:
+
+<ParamField path="isParentCodeGroup" type="boolean">
+  Internal prop used when rendered inside a CodeGroup. Adjusts height and overflow behavior.
+</ParamField>
+
+<ParamField path="shouldHighlight" type="boolean" default="true">
+  Whether to apply syntax highlighting. Set to `false` to skip highlighting for performance.
+</ParamField>
+
+<ParamField path="forceExtract" type="boolean" default="false">
+  Force extraction of code string from children in specific scenarios.
+</ParamField>
+
+### Usage
+
+```tsx
+import { BaseCodeBlock } from '@mintlify/components';
+
+<BaseCodeBlock 
+  language="javascript"
+  lines={true}
+>
+  {`console.log('Hello, World!');`}
+</BaseCodeBlock>
+```
+
+Most developers should use `CodeBlock` instead, which includes the copy button and header functionality.
+
+## Diff Syntax Support
+
+CodeBlocks support diff syntax for showing code changes:
+
+```tsx
+<CodeBlock language="javascript" lines={true}>
+  {`function example() {
+-  const oldValue = 123;
++  const newValue = 456;
+   
+-  return oldValue;
++  return newValue;
+}`}
+</CodeBlock>
+```
+
+Lines starting with `-` will be highlighted as removed (red), and lines starting with `+` will be highlighted as added (green).
+
 ## Notes
 
 - The component uses Shiki for syntax highlighting, providing accurate, language-aware highlighting
@@ -315,3 +479,6 @@ The CodeBlock automatically includes a copy-to-clipboard button that:
 - The expandable feature automatically calculates height based on content
 - When using `filename` or `icon`, the code block displays a header section
 - The fade overlay (gradient edge effect) is disabled when using `wrap`, `highlight`, `focus`, or `expandable`
+- Copy button automatically hides if the browser doesn't support the Clipboard API (non-HTTPS contexts)
+- Syntax highlighting is powered by Shiki, the same highlighter used by VS Code
+- The component supports both light and dark themes with automatic theme switching

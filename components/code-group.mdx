@@ -25,10 +25,10 @@ import { CodeGroup } from '@mintlify/components';
 </CodeGroup>
 ```
 
-## Props
+## CodeGroup Props
 
-<ParamField path="children" type="ReactElement<CodeBlockProps>[] | ReactElement<CodeBlockProps>">
-  One or more CodeBlock components to display in the group.
+<ParamField path="children" type="ReactElement<CodeBlockProps>[] | ReactElement<CodeBlockProps>" required>
+  One or more CodeBlock components to display in the group. Each child should have a unique `filename` prop.
 </ParamField>
 
 <ParamField path="dropdown" type="boolean" default="false">
@@ -36,7 +36,7 @@ import { CodeGroup } from '@mintlify/components';
 </ParamField>
 
 <ParamField path="codeBlockTheme" type="'system' | 'dark'" default="system">
-  The UI theme for the code group container:
+  The UI theme for the code group container (border, background, text color):
   - `"system"`: Adapts to light/dark mode
   - `"dark"`: Always uses dark theme
 </ParamField>
@@ -45,18 +45,20 @@ import { CodeGroup } from '@mintlify/components';
   Custom syntax highlighting theme applied to all child CodeBlocks. Can be:
   - A string: `"system"` or `"dark"` for default themes
   - An object with a `theme` property for Shiki themes
+  - Single theme: `{ theme: "dracula" }`
+  - Dual themes: `{ theme: { light: "everforest-light", dark: "dracula" } }`
 </ParamField>
 
 <ParamField path="isSmallText" type="boolean">
-  Use smaller text size for all child code blocks.
+  Use smaller text size (text-xs) for all child code blocks.
 </ParamField>
 
 <ParamField path="initialSelectedTab" type="number" default="0">
-  The index of the initially selected tab (0-based).
+  The index of the initially selected tab (0-based). Value is clamped to valid range.
 </ParamField>
 
 <ParamField path="onSelectedTabChange" type="(index: number) => void">
-  Callback function called when the selected tab changes.
+  Callback function called when the selected tab changes. Receives the new tab index.
 </ParamField>
 
 <ParamField path="noMargins" type="boolean">
@@ -68,7 +70,15 @@ import { CodeGroup } from '@mintlify/components';
 </ParamField>
 
 <ParamField path="copyButtonProps" type="CopyToClipboardButtonProps">
-  Props to customize the copy button for the active code block.
+  Props to customize the copy button for the active code block. See CodeBlock documentation for available options.
+</ParamField>
+
+<ParamField path="askAiButton" type="ReactNode">
+  Custom AI assistance button component to display in the header.
+</ParamField>
+
+<ParamField path="feedbackButton" type="ReactNode">
+  Custom feedback button component to display in the header.
 </ParamField>
 
 ## Examples
@@ -397,11 +407,100 @@ The CodeGroup component optimizes performance by:
 - Provides proper ARIA labels for screen readers
 - Copy button has descriptive `aria-label`
 
+## Best Practices
+
+### When to Use Tabs vs Dropdown
+
+**Use Tabs (default) when:**
+- You have 2-5 code blocks
+- Horizontal space is available
+- You want to show all options at a glance
+
+**Use Dropdown when:**
+- You have 6+ code blocks
+- Horizontal space is limited
+- You want a more compact interface
+
+### Naming Conventions
+
+For better user experience:
+- Use clear, descriptive filenames: "install.sh" instead of "bash"
+- Include file extensions when showing file examples
+- Use language names when showing syntax comparisons: "JavaScript", "Python", "Java"
+
+### Performance Tips
+
+- Only the active tab's code is syntax-highlighted, improving performance with many tabs
+- Use `isSmallText` for code snippets in constrained spaces
+- Consider `expandable` for very long code blocks
+
+## Common Patterns
+
+### API Request Examples
+
+Show the same API request in different languages:
+
+```tsx
+<CodeGroup>
+  <CodeBlock filename="cURL" icon="terminal" language="bash">
+    {`curl -X POST https://api.example.com/users \\
+  -H "Content-Type: application/json" \\
+  -d '{"name": "John Doe", "email": "john@example.com"}'`}
+  </CodeBlock>
+  <CodeBlock filename="JavaScript" icon="js" language="javascript">
+    {`fetch('https://api.example.com/users', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    name: 'John Doe',
+    email: 'john@example.com'
+  })
+});`}
+  </CodeBlock>
+  <CodeBlock filename="Python" icon="python" language="python">
+    {`import requests
+
+response = requests.post(
+    'https://api.example.com/users',
+    json={'name': 'John Doe', 'email': 'john@example.com'}
+)`}
+  </CodeBlock>
+</CodeGroup>
+```
+
+### Configuration Files
+
+Show configuration in different formats:
+
+```tsx
+<CodeGroup>
+  <CodeBlock filename="JSON" icon="json" language="json">
+    {`{
+  "port": 3000,
+  "host": "localhost",
+  "debug": true
+}`}
+  </CodeBlock>
+  <CodeBlock filename="YAML" icon="yaml" language="yaml">
+    {`port: 3000
+host: localhost
+debug: true`}
+  </CodeBlock>
+  <CodeBlock filename="TOML" icon="toml" language="toml">
+    {`port = 3000
+host = "localhost"
+debug = true`}
+  </CodeBlock>
+</CodeGroup>
+```
+
 ## Notes
 
 - Each CodeBlock child should have a unique `filename` prop for identification
 - The `language` prop on each CodeBlock determines syntax highlighting
-- All CodeBlock props (lines, highlight, focus, wrap, etc.) work within CodeGroup
+- All CodeBlock props (lines, highlight, focus, wrap, expandable, etc.) work within CodeGroup
 - The selected tab is preserved during re-renders unless controlled via props
 - Hash URLs are cleared when switching tabs to avoid navigation conflicts
 - The first child is selected by default unless `initialSelectedTab` is specified
+- Only the currently visible tab is syntax-highlighted for performance optimization
+- Keyboard navigation is fully supported (Tab, Arrow keys, Enter/Space)

@@ -260,7 +260,7 @@ Importing styles **after** Tailwind will prevent your custom theme values from o
 
 ## Start Using Components
 
-Now you're ready to use Mintlify Components in your application:
+Now you're ready to use Mintlify Components in your application. Here's a comprehensive example:
 
 ```tsx
 import { 
@@ -268,13 +268,15 @@ import {
   Callout, 
   CodeBlock, 
   Tabs,
-  Steps 
+  Steps,
+  Card,
+  Columns 
 } from '@mintlify/components';
 
 export default function Documentation() {
   return (
     <div>
-      <Callout type="info" title="Welcome">
+      <Callout variant="info">
         Start building beautiful documentation with Mintlify Components.
       </Callout>
 
@@ -290,15 +292,36 @@ export default function Documentation() {
         </Step>
       </Steps>
 
+      <Columns cols={2}>
+        <Card title="Quick Start" icon="zap">
+          Get started in minutes with our installation guide
+        </Card>
+        <Card title="Components" icon="grid">
+          Explore 22 production-ready components
+        </Card>
+      </Columns>
+
       <Tabs>
         <Tab title="JavaScript">
           <CodeBlock language="javascript">
-            {`console.log('Hello, Mintlify!');`}
+            {`import { Callout } from '@mintlify/components';
+
+function App() {
+  return (
+    <Callout variant="tip">
+      This is a tip callout!
+    </Callout>
+  );
+}`}
           </CodeBlock>
         </Tab>
         <Tab title="TypeScript">
           <CodeBlock language="typescript">
-            {`const greeting: string = 'Hello, Mintlify!';`}
+            {`import { Callout, type CalloutProps } from '@mintlify/components';
+
+const MyCallout: React.FC<CalloutProps> = (props) => {
+  return <Callout variant="info" {...props} />;
+};`}
           </CodeBlock>
         </Tab>
       </Tabs>
@@ -306,6 +329,60 @@ export default function Documentation() {
   );
 }
 ```
+
+## Component Exports
+
+All components are exported from the main entry point with their TypeScript types:
+
+```tsx
+// Import components
+import { 
+  Accordion,
+  AccordionGroup,
+  Badge,
+  Callout,
+  Card,
+  CodeBlock,
+  CodeGroup,
+  Color,
+  Columns,
+  Expandable,
+  Frame,
+  Icon,
+  Mermaid,
+  Panel,
+  Property,
+  Search,
+  SearchProvider,
+  SearchButton,
+  Steps,
+  Tabs,
+  Tile,
+  Tooltip,
+  Tree,
+  TreeRoot,
+  TreeFolder,
+  TreeFile,
+  Update,
+  View
+} from '@mintlify/components';
+
+// Import TypeScript types
+import type {
+  CalloutProps,
+  CalloutVariant,
+  CardProps,
+  StepsProps,
+  StepsItemProps
+} from '@mintlify/components';
+
+// Import utility function
+import { cn } from '@mintlify/components';
+```
+
+<Info>
+The `cn` utility function is also exported for advanced Tailwind class merging using `tailwind-merge` and `clsx` under the hood.
+</Info>
 
 ## Next Steps
 

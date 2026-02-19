@@ -38,7 +38,7 @@ Mintlify Components is a comprehensive library of production-ready React compone
     icon="grid"
     href="/components/accordion"
   >
-    Explore 20+ components for layout, content, and code
+    Explore 22 production-ready components for layout, content, and code
   </Card>
   <Card
     title="GitHub"
@@ -53,35 +53,35 @@ Mintlify Components is a comprehensive library of production-ready React compone
 
 <CardGroup cols={3}>
   <Card title="Modern React" icon="react">
-    Built with React 18+ support, including React 19 compatibility
+    Built with React 18+ and React 19 support using latest patterns
   </Card>
   <Card title="Tailwind Native" icon="paintbrush">
-    Seamless integration with both Tailwind CSS v3 and v4
+    Native integration with Tailwind CSS v3 and v4 (including @tailwindcss/cli 4.1.18)
   </Card>
   <Card title="TypeScript First" icon="code">
-    Full TypeScript support with comprehensive type definitions
+    Full TypeScript support with comprehensive type definitions exported
   </Card>
   <Card title="Accessible" icon="universal-access">
-    Built with accessibility in mind using @base-ui/react and @headlessui/react
+    Built with @base-ui/react 1.1.0 and @headlessui/react 2.2.0 for WCAG compliance
   </Card>
-  <Card title="Themeable" icon="palette">
-    Easily customize colors and styles with Tailwind configuration
+  <Card title="Syntax Highlighting" icon="code">
+    Powered by Shiki 3.21.0 with 200+ themes and language support
   </Card>
   <Card title="Open Source" icon="code-branch">
-    MIT licensed and maintained by the community
+    MIT licensed and maintained by Mintlify on GitHub
   </Card>
 </CardGroup>
 
 ## Component Categories
 
-Mintlify Components includes over 20 carefully crafted components organized into focused categories:
+Mintlify Components includes 22 carefully crafted components organized into focused categories:
 
 ### Layout Components
 
 Structure your documentation with flexible layout primitives:
-- **Accordion** - Collapsible content sections
-- **Card** - Highlighted content containers
-- **Columns** - Multi-column layouts
+- **Accordion** - Collapsible content sections with AccordionGroup support
+- **Card** - Highlighted content containers with icons, images, and CTAs
+- **Columns** - Multi-column responsive layouts (1-4 columns)
 - **Expandable** - Show/hide content interactions
 - **Frame** - Embedded content wrappers
 - **Panel** - Sectioned content areas
@@ -91,35 +91,35 @@ Structure your documentation with flexible layout primitives:
 ### Content Components
 
 Enhance your documentation with rich content elements:
-- **Callout** - Highlighted notices and alerts
+- **Callout** - Six variants (info, warning, note, tip, check, danger) with custom colors
 - **Steps** - Sequential instruction flows
 - **Badge** - Status and label indicators
-- **Icon** - Lucide icon integration
-- **Tooltip** - Contextual information overlays
+- **Icon** - [Lucide React](https://lucide.dev) icon integration (450+ icons)
+- **Tooltip** - Contextual information overlays using @base-ui/react
 - **Update** - Version and changelog entries
 
 ### Code Components
 
 Showcase code with syntax highlighting and features:
-- **CodeBlock** - Syntax-highlighted code with Shiki
-- **CodeGroup** - Multiple code examples with tabs
+- **CodeBlock** - Syntax-highlighted code powered by [Shiki](https://shiki.style) with 200+ themes
+- **CodeGroup** - Multiple code examples with language tabs and selection
 
 ### Data Display Components
 
 Present structured information:
-- **Property** - API reference properties
-- **Tree** - Hierarchical data structures
+- **Property** - API reference properties with parameter documentation
+- **Tree** - Hierarchical file/folder structures with expandable nodes
 
 ### Visualization Components
 
 Create diagrams and visual elements:
-- **Mermaid** - Diagram and chart rendering
-- **Color** - Color palette displays
+- **Mermaid** - Interactive diagram rendering powered by [Mermaid](https://mermaid.js.org) (v11.12.2)
+- **Color** - Color palette displays with hex values
 
 ### Utility Components
 
 Special-purpose functionality:
-- **Search** - Documentation search interface
+- **Search** - Documentation search interface with provider support
 - **View** - Conditional rendering utilities
 
 ## Quick Start Example
@@ -130,17 +130,19 @@ import { Accordion, Callout, CodeBlock, Tabs } from '@mintlify/components';
 function Documentation() {
   return (
     <div>
-      <Callout type="info" title="Getting Started">
+      <Callout variant="info">
         Welcome to Mintlify Components! This library provides everything
         you need for beautiful documentation.
       </Callout>
 
       <Accordion title="What's included?">
-        <p>
-          Over 20 components for layout, content, code display, and more.
-          All components are built with Tailwind CSS and fully customizable.
-        </p>
+        Over 22 components for layout, content, code display, and more.
+        All components are built with Tailwind CSS and fully customizable.
       </Accordion>
+
+      <CodeBlock language="bash">
+        npm install @mintlify/components
+      </CodeBlock>
     </div>
   );
 }

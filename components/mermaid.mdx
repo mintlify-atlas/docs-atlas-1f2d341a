@@ -389,8 +389,198 @@ Failed to render diagram
 - Cancelled renders are properly cleaned up
 - Resize observers automatically manage control visibility
 
+## usePanZoom Hook
+
+For advanced use cases, you can use the `usePanZoom` hook directly to build custom zoom and pan interfaces.
+
+### Import
+
+```jsx
+import { usePanZoom } from '@mintlify/components';
+```
+
+### Hook API
+
+The `usePanZoom` hook returns an object with the following properties:
+
+<ParamField path="style" type="CSSProperties">
+  CSS style object containing the transform properties for zoom and pan. Apply this to the element you want to transform.
+</ParamField>
+
+<ParamField path="zoomIn" type="() => void">
+  Function to increase zoom level by the zoom step (0.15). Maximum zoom is 4x.
+</ParamField>
+
+<ParamField path="zoomOut" type="() => void">
+  Function to decrease zoom level by the zoom step (0.15). Minimum zoom is 0.25x.
+</ParamField>
+
+<ParamField path="reset" type="() => void">
+  Function to reset zoom to 1x and pan to origin (0, 0).
+</ParamField>
+
+<ParamField path="pan" type="(dx: number, dy: number) => void">
+  Function to pan the view by the specified pixel amounts. Positive values move right/down, negative values move left/up.
+</ParamField>
+
+<ParamField path="panStep" type="number">
+  The default pan step size in pixels (50px). Use this value for consistent pan distances.
+</ParamField>
+
+### Hook Constants
+
+The hook uses the following internal constants:
+
+- **MIN_SCALE**: `0.25` - Minimum zoom level (25%)
+- **MAX_SCALE**: `4` - Maximum zoom level (400%)
+- **ZOOM_STEP**: `0.15` - Amount to zoom in/out per step
+- **PAN_STEP**: `50` - Default pan distance in pixels
+
+### Custom Implementation Example
+
+```jsx
+import { usePanZoom } from '@mintlify/components';
+
+function CustomDiagram() {
+  const { style, zoomIn, zoomOut, reset, pan, panStep } = usePanZoom();
+
+  return (
+    <div className="relative h-96 overflow-hidden">
+      {/* Custom controls */}
+      <div className="absolute top-2 right-2 flex gap-2">
+        <button onClick={zoomIn}>+</button>
+        <button onClick={zoomOut}>-</button>
+        <button onClick={reset}>Reset</button>
+        <button onClick={() => pan(0, panStep)}>↑</button>
+        <button onClick={() => pan(0, -panStep)}>↓</button>
+        <button onClick={() => pan(panStep, 0)}>←</button>
+        <button onClick={() => pan(-panStep, 0)}>→</button>
+      </div>
+
+      {/* Your content with zoom/pan applied */}
+      <div style={style}>
+        <img src="/diagram.png" alt="Diagram" />
+      </div>
+    </div>
+  );
+}
+```
+
+### Advanced Usage with Keyboard Controls
+
+```jsx
+import { usePanZoom } from '@mintlify/components';
+import { useEffect } from 'react';
+
+function KeyboardControlledDiagram() {
+  const { style, zoomIn, zoomOut, reset, pan, panStep } = usePanZoom();
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      switch (e.key) {
+        case '+':
+        case '=':
+          zoomIn();
+          break;
+        case '-':
+        case '_':
+          zoomOut();
+          break;
+        case '0':
+          reset();
+          break;
+        case 'ArrowUp':
+          pan(0, panStep);
+          break;
+        case 'ArrowDown':
+          pan(0, -panStep);
+          break;
+        case 'ArrowLeft':
+          pan(panStep, 0);
+          break;
+        case 'ArrowRight':
+          pan(-panStep, 0);
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [zoomIn, zoomOut, reset, pan, panStep]);
+
+  return (
+    <div style={style}>
+      <YourContent />
+    </div>
+  );
+}
+```
+
+## ZoomControls Component
+
+The `ZoomControls` component provides the interactive control panel used by the Mermaid component. You can use it independently for other zoomable content.
+
+### Import
+
+```jsx
+import { ZoomControls } from '@mintlify/components';
+```
+
+### Props
+
+<ParamField path="onZoomIn" type="() => void" required>
+  Callback function when zoom in button is clicked.
+</ParamField>
+
+<ParamField path="onZoomOut" type="() => void" required>
+  Callback function when zoom out button is clicked.
+</ParamField>
+
+<ParamField path="onReset" type="() => void" required>
+  Callback function when reset button is clicked.
+</ParamField>
+
+<ParamField path="onPan" type="(dx: number, dy: number) => void" required>
+  Callback function when pan buttons are clicked. Receives x and y delta values.
+</ParamField>
+
+<ParamField path="panStep" type="number" required>
+  The distance in pixels to pan for each button click.
+</ParamField>
+
+<ParamField path="placement" type="'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'">
+  Position of the controls within the parent container. Defaults to `"bottom-right"`.
+</ParamField>
+
+### Usage with usePanZoom
+
+```jsx
+import { usePanZoom, ZoomControls } from '@mintlify/components';
+
+function CustomZoomableContent() {
+  const { style, zoomIn, zoomOut, reset, pan, panStep } = usePanZoom();
+
+  return (
+    <div className="relative h-96 overflow-hidden">
+      <ZoomControls
+        onZoomIn={zoomIn}
+        onZoomOut={zoomOut}
+        onReset={reset}
+        onPan={pan}
+        panStep={panStep}
+        placement="top-right"
+      />
+      <div style={style}>
+        <YourContent />
+      </div>
+    </div>
+  );
+}
+```
+
 ## Source
 
 View the source code:
-- Mermaid: `packages/components/src/components/mermaid/mermaid.tsx:19`
-- Zoom Controls: `packages/components/src/components/mermaid/zoom-controls.tsx:34`
+- Mermaid: `packages/components/src/components/mermaid/mermaid.tsx:27`
+- usePanZoom Hook: `packages/components/src/components/mermaid/use-pan-zoom.ts:25`
+- Zoom Controls: `packages/components/src/components/mermaid/zoom-controls.tsx:43`

@@ -1,185 +1,89 @@
 ---
 title: Changelog
-description: All notable changes to Mintlify Components
+description: Version history and release notes for the components library
 ---
 
-All notable changes to this project will be documented in this file.
+# Changelog
+
+All notable changes to this project are documented below.
 
 ## [1.0.5] - 2026-02-12
 
 ### Fixed
 
-- Fixed mask-size for brand icons ([#197](https://github.com/mintlify/components/pull/197))
-- Fixed callout bold styles ([#196](https://github.com/mintlify/components/pull/196))
+- Fixed mask-size for brand icons (#197)
+- Fixed callout bold styles (#196)
 
 ### Changed
 
-- Refined search bar and made more customizable ([#198](https://github.com/mintlify/components/pull/198))
-
----
+- Refined search bar and made more customizable (#198)
 
 ## [1.0.4] - 2026-02-09
 
 ### Added
 
-- Added Search component with search modal, recent searches, and keyboard navigation ([#194](https://github.com/mintlify/components/pull/194) by [@lindsayzhng](https://github.com/lindsayzhng))
-
-<Note>
-  The new Search component includes:
-  - Full keyboard navigation support
-  - Recent searches tracking
-  - Customizable search modal
-  - Accessibility features
-</Note>
-
----
+- Added Search component with search modal, recent searches, and keyboard navigation (#194 by @lindsayzhng)
 
 ## [1.0.3] - 2026-02-05
 
 ### Fixed
 
-- Fixed bundling Shiki worker ([#190](https://github.com/mintlify/components/pull/190) by [@lindsayzhng](https://github.com/lindsayzhng))
-
----
+- Fixed bundling Shiki worker (#190 by @lindsayzhng)
 
 ## [1.0.2] - 2026-01-30
 
 ### Added
 
-- Added anchor link support to Steps component with `id` and `noAnchor` props ([#187](https://github.com/mintlify/components/pull/187))
-- Added `side` and `align` props to Tooltip component for positioning control ([#181](https://github.com/mintlify/components/pull/181) by [@shadabiiitnr20](https://github.com/shadabiiitnr20))
+- Added anchor link support to Steps component with `id` and `noAnchor` props (#187)
+- Added `side` and `align` props to Tooltip component for positioning control (#181 by @shadabiiitnr20)
 
 ### Fixed
 
-- Fixed `isMounted` check for View component ([#186](https://github.com/mintlify/components/pull/186))
-- Fixed Mermaid duplicated IDs and gantt chart default sizing ([#183](https://github.com/mintlify/components/pull/183))
+- Fixed `isMounted` check for View component (#186)
+- Fixed Mermaid duplicated IDs and gantt chart default sizing (#183)
 
 ### Changed
 
-- Updated internal props for Accordion and Card components ([#185](https://github.com/mintlify/components/pull/185))
-- Prefer canonical Tailwind classes ([#178](https://github.com/mintlify/components/pull/178) by [@0xa3k5](https://github.com/0xa3k5))
-
-<Tip>
-  The Steps component now supports anchor links, making it easier to link directly to specific steps in your documentation.
-</Tip>
-
----
+- Updated internal props for Accordion and Card components (#185)
+- Prefer canonical Tailwind classes (#178 by @0xa3k5)
 
 ## [1.0.1] - 2025-01-26
 
 ### Fixed
 
-- Fixed CSS bundling by adding `@tailwindcss/cli` dependency ([#174](https://github.com/mintlify/components/pull/174))
-- Fixed code block header truncation ([#173](https://github.com/mintlify/components/pull/173))
-- Fixed type exports and disabled default `rollupTypes` ([#176](https://github.com/mintlify/components/pull/176))
+- Fixed CSS bundling by adding `@tailwindcss/cli` dependency (#174)
+- Fixed code block header truncation (#173)
+- Fixed type exports and disabled default `rollupTypes` (#176)
 
 ### Changed
 
-- Updated README with style override instructions ([#175](https://github.com/mintlify/components/pull/175))
-- Updated `lodash` from 4.17.21 to 4.17.23 ([#171](https://github.com/mintlify/components/pull/171))
-
-<Warning>
-  This release fixes critical CSS bundling issues. If you experienced styling problems with v1.0.0, please upgrade to this version.
-</Warning>
-
----
+- Updated README with style override instructions (#175)
+- Updated `lodash` from 4.17.21 to 4.17.23 (#171)
 
 ## [1.0.0] - 2025-01-23
 
 ### Initialized components library
 
-The initial release of Mintlify Components includes the following components:
+The first stable release includes the following components:
 
-<CardGroup cols={2}>
-  <Card title="Accordion" icon="chevron-down">
-    Expandable content sections
-  </Card>
-  <Card title="Badge" icon="tag">
-    Status and label badges
-  </Card>
-  <Card title="Callout" icon="info-circle">
-    Highlighted information boxes
-  </Card>
-  <Card title="Card" icon="square">
-    Content cards
-  </Card>
-  <Card title="CodeBlock" icon="code">
-    Syntax-highlighted code with copy button
-  </Card>
-  <Card title="CodeGroup" icon="layer-group">
-    Code blocks container with tabs or dropdown selection
-  </Card>
-  <Card title="Columns" icon="columns">
-    Multi-column layouts
-  </Card>
-  <Card title="Expandable" icon="expand">
-    Collapsible sections
-  </Card>
-  <Card title="Frame" icon="frame">
-    Image and content frames
-  </Card>
-  <Card title="Icon" icon="icons">
-    Icon rendering
-  </Card>
-  <Card title="Mermaid" icon="diagram-project">
-    Diagram rendering
-  </Card>
-  <Card title="Panel" icon="window">
-    Panel layouts
-  </Card>
-  <Card title="Property" icon="list">
-    API property display
-  </Card>
-  <Card title="Steps" icon="list-ol">
-    Step-by-step instructions
-  </Card>
-  <Card title="Tabs" icon="folder-open">
-    Tabbed interfaces
-  </Card>
-  <Card title="Tile" icon="grid">
-    Tile grids
-  </Card>
-  <Card title="Tooltip" icon="comment">
-    Hover tooltips
-  </Card>
-  <Card title="Tree" icon="sitemap">
-    Hierarchical tree views
-  </Card>
-  <Card title="Update" icon="clock">
-    Changelog entries
-  </Card>
-</CardGroup>
-
-### Key Features
-
-<AccordionGroup>
-  <Accordion title="React 18 & 19 Support">
-    Full compatibility with both React 18 and React 19, allowing you to use these components in any modern React application.
-  </Accordion>
-  
-  <Accordion title="Tailwind CSS v3 & v4">
-    Works seamlessly with both major versions of Tailwind CSS, with proper theme customization support.
-  </Accordion>
-  
-  <Accordion title="TypeScript First">
-    Built with TypeScript from the ground up, with full type definitions exported for all components.
-  </Accordion>
-  
-  <Accordion title="Dark Mode">
-    All components support light and dark themes out of the box.
-  </Accordion>
-  
-  <Accordion title="Accessible">
-    Components follow accessibility best practices with proper ARIA attributes and keyboard navigation.
-  </Accordion>
-</AccordionGroup>
-
----
-
-## Contributing
-
-We welcome contributions! See our [Contributing Guide](/contributing/overview) for details on how to get involved.
-
-## Reporting Issues
-
-Found a bug or have a feature request? [Open an issue](https://github.com/mintlify/components/issues) on GitHub.
+| Component | Description |
+|-----------|-------------|
+| `Accordion` | Expandable content sections |
+| `Badge` | Status and label badges |
+| `Callout` | Highlighted information boxes |
+| `Card` | Content cards |
+| `CodeBlock` | Syntax-highlighted code with copy button |
+| `CodeGroup` | Code blocks container with tabs or dropdown selection |
+| `Columns` | Multi-column layouts |
+| `Expandable` | Collapsible sections |
+| `Frame` | Image and content frames |
+| `Icon` | Icon rendering |
+| `Mermaid` | Diagram rendering |
+| `Panel` | Panel layouts |
+| `Property` | API property display |
+| `Steps` | Step-by-step instructions |
+| `Tabs` | Tabbed interfaces |
+| `Tile` | Tile grids |
+| `Tooltip` | Hover tooltips |
+| `Tree` | Hierarchical tree views |
+| `Update` | Changelog entries |

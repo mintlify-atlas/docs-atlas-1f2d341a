@@ -8,7 +8,7 @@ icon: 'code'
 
 ## Type Definitions
 
-All types are automatically included when you install the package:
+All types are automatically included when you install the package. The package exports types at `./dist/index.d.ts` which are automatically resolved by TypeScript.
 
 ```json package.json
 {
@@ -18,19 +18,35 @@ All types are automatically included when you install the package:
 }
 ```
 
-The package exports types at `./dist/index.d.ts` which are automatically resolved by TypeScript.
+From `source/packages/components/package.json:8`:
+```json
+"types": "./dist/index.d.ts"
+```
 
 ## Component Prop Types
 
-Every component exports its prop types for type-safe usage:
+Every component exports its prop types for type-safe usage. All types are exported from the main package entry point.
 
 ### Accordion
 
 ```tsx
 import type { AccordionProps, AccordionGroupProps } from '@mintlify/components';
 
+// From source/packages/components/src/components/accordion/accordion.tsx:20-48
+type AccordionProps = {
+  title: ReactNode;              // Prefer string for URL state sync
+  description?: string;
+  defaultOpen: boolean;
+  icon?: ReactNode | string;
+  iconType?: IconType;
+  children: ReactNode;
+  className?: string;
+  trackOpen?: (event: { title: string }) => void;
+  trackClose?: (event: { title: string }) => void;
+  topOffset?: string;
+};
+
 const MyAccordion: React.FC<AccordionProps> = (props) => {
-  // props are fully typed
   return <Accordion {...props} />;
 };
 ```
@@ -42,14 +58,23 @@ import type {
   BadgeProps, 
   BadgeColor, 
   BadgeShape, 
-  BadgeSize 
+  BadgeSize,
+  BadgeVariant 
 } from '@mintlify/components';
+
+// From source/packages/components/src/components/badge/badge.tsx:6-20
+type BadgeSize = "xs" | "sm" | "md" | "lg";
+type BadgeShape = "rounded" | "pill";
+type BadgeVariant = "solid" | "outline";
+type BadgeColor =
+  | "gray" | "blue" | "green" | "orange" | "yellow" | "red" | "purple"
+  | "white" | "surface" | "white-destructive" | "surface-destructive";
 
 const color: BadgeColor = 'blue';
 const shape: BadgeShape = 'rounded';
 const size: BadgeSize = 'md';
 
-<Badge color={color} shape={shape} size={size}>
+<Badge color={color} shape={shape} size={size} variant="solid">
   TypeScript
 </Badge>
 ```
@@ -59,9 +84,28 @@ const size: BadgeSize = 'md';
 ```tsx
 import type { CalloutProps, CalloutVariant } from '@mintlify/components';
 
-const variant: CalloutVariant = 'info'; // 'info' | 'warning' | 'note' | 'tip' | 'check' | 'danger' | 'custom'
+// From source/packages/components/src/components/callout/callout.tsx:16-34
+type CalloutVariant =
+  | "info"
+  | "warning"
+  | "note"
+  | "tip"
+  | "check"
+  | "danger"
+  | "custom";
 
-<Callout variant={variant} icon="info" color="#3b82f6">
+type CalloutProps = {
+  children: ReactNode;
+  variant?: CalloutVariant;
+  icon?: ReactNode | string;
+  iconType?: IconType;
+  iconLibrary?: IconLibrary;
+  color?: string;
+  className?: string;
+  ariaLabel?: string;
+};
+
+<Callout variant="info" icon="info-circle" color="#3b82f6">
   Type-safe callout configuration
 </Callout>
 ```
@@ -118,11 +162,24 @@ const groupProps: CodeGroupProps = {
 
 ```tsx
 import type { IconProps } from '@mintlify/components';
+import type { IconType, IconLibrary } from '@mintlify/components';
+
+// From source/packages/components/src/utils/icon-utils.ts:44-62
+const ICON_TYPES = [
+  "brands", "duotone", "light", "regular",
+  "sharp-duotone-solid", "sharp-light", "sharp-regular",
+  "sharp-solid", "sharp-thin", "solid", "thin"
+] as const;
+
+type IconType = (typeof ICON_TYPES)[number];
+
+const ICON_LIBRARIES = ["fontawesome", "lucide"] as const;
+type IconLibrary = (typeof ICON_LIBRARIES)[number];
 
 const iconProps: IconProps = {
   icon: 'github',
   iconType: 'regular',
-  iconLibrary: 'lucide',
+  iconLibrary: 'fontawesome',
 };
 
 <Icon {...iconProps} />
@@ -134,7 +191,8 @@ const iconProps: IconProps = {
 import type { StepsProps, StepsItemProps, StepTitleSize } from '@mintlify/components';
 import { STEP_TITLE_SIZES } from '@mintlify/components';
 
-const titleSize: StepTitleSize = 'h3'; // From STEP_TITLE_SIZES
+// STEP_TITLE_SIZES contains all valid title sizes
+const titleSize: StepTitleSize = 'h3';
 
 const stepProps: StepsItemProps = {
   title: 'Install Package',
@@ -170,53 +228,72 @@ const tooltipProps: TooltipProps = {
 
 ## Complete Type Exports
 
-Here's a comprehensive list of all exported types:
+Here's a comprehensive list of all exported types from the package:
 
-<CodeGroup>
-  ```tsx component-types
-  // Component prop types
-  import type {
-    AccordionProps,
-    AccordionGroupProps,
-    BadgeProps,
-    BadgeColor,
-    BadgeShape,
-    BadgeSize,
-    CalloutProps,
-    CalloutVariant,
-    CardProps,
-    CardPropsBase,
-    CardComponentProps,
-    CardIconProps,
-    CodeBlockProps,
-    BaseCodeBlockProps,
-    CodeGroupProps,
-    IconProps,
-    StepsProps,
-    StepsItemProps,
-    StepTitleSize,
-    TabsProps,
-    TabsItemProps,
-    TooltipProps,
-  } from '@mintlify/components';
-  ```
+<Tabs>
+  <Tab title="Component Types">
+    ```tsx
+    // All component prop types
+    import type {
+      AccordionProps,
+      AccordionGroupProps,
+      BadgeProps,
+      BadgeColor,
+      BadgeShape,
+      BadgeSize,
+      BadgeVariant,
+      CalloutProps,
+      CalloutVariant,
+      CardProps,
+      CardPropsBase,
+      CardComponentProps,
+      CardIconProps,
+      CodeBlockProps,
+      BaseCodeBlockProps,
+      CodeGroupProps,
+      ColumnsProps,
+      ColorProps,
+      ExpandableProps,
+      FrameProps,
+      IconProps,
+      MermaidProps,
+      PanelProps,
+      PropertyProps,
+      StepsProps,
+      StepsItemProps,
+      StepTitleSize,
+      TabsProps,
+      TabsItemProps,
+      TileProps,
+      TooltipProps,
+      TreeProps,
+      UpdateProps,
+      ViewProps,
+    } from '@mintlify/components';
+    ```
+  </Tab>
 
-  ```tsx utility-types
-  // Utility function types
-  import type { ClassValue } from 'clsx';
-  
-  // The cn function accepts ClassValue types
-  import { cn } from '@mintlify/components';
-  
-  // Usage
-  const className = cn(
-    'base-class',
-    condition && 'conditional-class',
-    ['array', 'of', 'classes'],
-    { 'class-name': true }
-  );
-  ```
-</CodeGroup>
+  <Tab title="Utility Types">
+    ```tsx
+    // Icon and utility types
+    import type { 
+      IconType,
+      IconLibrary 
+    } from '@mintlify/components';
+    
+    // The cn function (from clsx + tailwind-merge)
+    import { cn } from '@mintlify/components';
+    
+    // Usage with ClassValue types
+    const className = cn(
+      'base-class',
+      condition && 'conditional-class',
+      ['array', 'of', 'classes'],
+      { 'class-name': true }
+    );
+    ```
+  </Tab>
+</Tabs>
 
 ## Type-Safe Variants
 
@@ -248,39 +325,15 @@ function getCalloutConfig(variant: CalloutVariant) {
 </Callout>
 ```
 
-## Generic Component Props
-
-For components that accept generic React props:
-
-```tsx
-import type { ComponentPropsWithoutRef } from 'react';
-import { Badge } from '@mintlify/components';
-import type { BadgeProps } from '@mintlify/components';
-
-// Extend component props with additional HTML attributes
-type ExtendedBadgeProps = BadgeProps & ComponentPropsWithoutRef<'div'>;
-
-const MyBadge = (props: ExtendedBadgeProps) => {
-  return <Badge {...props} />;
-};
-
-// Now you can use additional div props
-<MyBadge 
-  color="blue" 
-  onClick={() => console.log('clicked')}
-  data-testid="my-badge"
->
-  Clickable
-</MyBadge>
-```
-
 ## Using the cn Utility
 
-The `cn` utility function is fully typed using `clsx`:
+The `cn` utility function combines `clsx` and `tailwind-merge` for intelligent class name merging:
 
 ```tsx
 import { cn } from '@mintlify/components';
-import type { ClassValue } from 'clsx';
+
+// From source/packages/components/src/utils/cn.ts
+// Combines clsx and tailwind-merge
 
 // All these are valid:
 const classes = cn(
@@ -320,6 +373,32 @@ function renderStep(titleSize: StepTitleSize) {
   // titleSize is constrained to valid values
   return <Steps titleSize={titleSize}>...</Steps>;
 }
+```
+
+## Generic Component Props
+
+For components that accept generic React props:
+
+```tsx
+import type { ComponentPropsWithoutRef } from 'react';
+import { Badge } from '@mintlify/components';
+import type { BadgeProps } from '@mintlify/components';
+
+// Extend component props with additional HTML attributes
+type ExtendedBadgeProps = BadgeProps & ComponentPropsWithoutRef<'div'>;
+
+const MyBadge = (props: ExtendedBadgeProps) => {
+  return <Badge {...props} />;
+};
+
+// Now you can use additional div props
+<MyBadge 
+  color="blue" 
+  onClick={() => console.log('clicked')}
+  data-testid="my-badge"
+>
+  Clickable
+</MyBadge>
 ```
 
 ## Type Inference
@@ -376,41 +455,15 @@ interface WrapperProps {
 }
 
 const AccordionWrapper = ({ children, title }: WrapperProps) => (
-  <Accordion title={title || 'Default Title'}>
+  <Accordion title={title || 'Default Title'} defaultOpen={false}>
     {children}
   </Accordion>
 );
 ```
 
-## Advanced: Custom Icon Types
-
-For components that accept icons:
-
-```tsx
-import type { IconProps } from '@mintlify/components';
-import type { IconType, IconLibrary } from '@mintlify/components';
-
-// These types are used internally but can be referenced
-type CustomIconConfig = {
-  icon: string;
-  iconType?: IconType;
-  iconLibrary?: IconLibrary;
-};
-
-const config: CustomIconConfig = {
-  icon: 'github',
-  iconType: 'regular',
-  iconLibrary: 'lucide',
-};
-```
-
-<Note>
-  Some internal types like `IconType` and `IconLibrary` may not be directly exported. Refer to the component's prop types for available options.
-</Note>
-
 ## tsconfig.json Configuration
 
-Recommended TypeScript configuration:
+Recommended TypeScript configuration for working with the library:
 
 ```json tsconfig.json
 {
@@ -462,25 +515,61 @@ function FeatureCard({ status, ...props }: FeatureCardProps) {
 />
 ```
 
+## Advanced Pattern: Typed Component Factories
+
+```tsx
+import type { BadgeProps, BadgeColor } from '@mintlify/components';
+import { Badge } from '@mintlify/components';
+
+// Create a type-safe badge factory
+function createBadge(color: BadgeColor) {
+  return (props: Omit<BadgeProps, 'color'>) => (
+    <Badge {...props} color={color} />
+  );
+}
+
+const BlueBadge = createBadge('blue');
+const GreenBadge = createBadge('green');
+
+// Usage
+<BlueBadge size="md">TypeScript</BlueBadge>
+<GreenBadge size="sm">Success</GreenBadge>
+```
+
 ## Troubleshooting
 
 <AccordionGroup>
   <Accordion title="Type errors after installation">
     1. Ensure TypeScript version is 5.0 or higher
     2. Run `npm install` to ensure types are properly installed
-    3. Restart your TypeScript language server
+    3. Restart your TypeScript language server (in VS Code: Cmd+Shift+P → "Restart TS Server")
+    4. Check that `node_modules/@mintlify/components/dist/index.d.ts` exists
   </Accordion>
 
   <Accordion title="Cannot find module or type declarations">
-    Check that `@mintlify/components` is in your `dependencies` (not `devDependencies`) and that your `moduleResolution` is set to `bundler` or `node16` in `tsconfig.json`.
+    Check that:
+    - `@mintlify/components` is in your `dependencies` (not `devDependencies`)
+    - Your `moduleResolution` is set to `bundler`, `node16`, or `nodenext` in `tsconfig.json`
+    - You're importing from `@mintlify/components` (not from a subdirectory)
   </Accordion>
 
   <Accordion title="Prop types not autocompleting">
-    Make sure you're importing both the component and its types:
+    Make sure you're importing types correctly:
     ```tsx
     import { Component } from '@mintlify/components';
     import type { ComponentProps } from '@mintlify/components';
     ```
+
+    The `type` keyword is recommended for type-only imports for better tree-shaking.
+  </Accordion>
+
+  <Accordion title="IconType or IconLibrary not found">
+    These types are exported from the main package:
+    ```tsx
+    import type { IconType, IconLibrary } from '@mintlify/components';
+    ```
+
+    They're defined in `source/packages/components/src/utils/icon-utils.ts`.
   </Accordion>
 </AccordionGroup>
 

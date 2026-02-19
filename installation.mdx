@@ -9,22 +9,26 @@ Before installing Mintlify Components, make sure your environment meets these re
 
 <CardGroup cols={2}>
   <Card title="Node.js" icon="node">
-    Version **20.0.0** or higher
+    Version **20.0.0** or higher (required by package engines)
   </Card>
   <Card title="React" icon="react">
-    Version **^18.0.0** or **^19.0.0**
+    Version **^18.0.0** or **^19.0.0** (peer dependency)
   </Card>
   <Card title="React DOM" icon="react">
-    Version **^18.0.0** or **^19.0.0**
+    Version **^18.0.0** or **^19.0.0** (peer dependency)
   </Card>
   <Card title="Tailwind CSS" icon="paintbrush">
-    Version **3.x** or **4.x**
+    Version **3.x** or **4.x** (for styling)
   </Card>
 </CardGroup>
 
 <Warning>
-Node.js 20.0.0 or higher is required. The package will not work with older versions.
+Node.js 20.0.0 or higher is required as specified in package.json engines. The package will not work with older versions.
 </Warning>
+
+<Info>
+The package automatically includes all necessary dependencies like Shiki for syntax highlighting, Mermaid for diagrams, and Lucide React for icons. You don't need to install these separately.
+</Info>
 
 ## Install the Package
 
@@ -47,10 +51,13 @@ yarn add @mintlify/components
 </CodeGroup>
 
 The package includes:
-- All React components with TypeScript definitions
-- Pre-built CSS styles
-- ESM and CommonJS module formats
-- Source maps for debugging
+- All 22 React components with TypeScript definitions
+- Pre-built CSS styles (styles.css)
+- ESM (dist/index.js) and CommonJS (dist/index.cjs) module formats
+- TypeScript declarations (dist/index.d.ts)
+- Syntax highlighting powered by Shiki 3.21.0
+- Mermaid diagram support (v11.12.2)
+- 450+ Lucide React icons
 
 ## Verify Installation
 
@@ -120,25 +127,80 @@ The package exports these module formats:
 
 ## Component Inventory
 
-After installation, you have access to these components:
+After installation, you have access to 22 components organized by category:
 
-### Layout
-`Accordion`, `Card`, `Columns`, `Expandable`, `Frame`, `Panel`, `Tabs`, `Tile`
+<Accordion title="Layout Components (8)">
+**Accordion** - Collapsible sections with AccordionGroup and AccordionCover  
+**Card** - Content cards with GenericCard support  
+**Columns** - Responsive grids (1-4 columns)  
+**Expandable** - Toggle content visibility  
+**Frame** - Embedded content containers  
+**Panel** - Sectioned content areas  
+**Tabs** - Tab navigation interfaces  
+**Tile** - Grid-based content blocks  
+</Accordion>
 
-### Content
-`Callout`, `Steps`, `Badge`, `Icon`, `Tooltip`, `Update`
+<Accordion title="Content Components (6)">
+**Callout** - Info, Warning, Note, Tip, Check, Danger variants  
+**Steps** - Sequential instruction flows  
+**Badge** - Status and label indicators  
+**Icon** - Lucide React icon integration  
+**Tooltip** - Contextual overlays  
+**Update** - Version and changelog entries  
+</Accordion>
 
-### Code
-`CodeBlock`, `CodeGroup`
+<Accordion title="Code Components (2)">
+**CodeBlock** - Syntax highlighting with Shiki  
+**CodeGroup** - Multi-language code examples  
+</Accordion>
 
-### Data Display
-`Property`, `Tree`
+<Accordion title="Data Display Components (2)">
+**Property** - API parameter documentation  
+**Tree** - File/folder hierarchies with TreeRoot, TreeFolder, TreeFile  
+</Accordion>
 
-### Visualization
-`Mermaid`, `Color`
+<Accordion title="Visualization Components (2)">
+**Mermaid** - Diagrams with zoom controls  
+**Color** - Color palette displays  
+</Accordion>
 
-### Utility
-`Search`, `View`
+<Accordion title="Utility Components (2)">
+**Search** - Search interface with SearchProvider and SearchButton  
+**View** - Conditional rendering  
+</Accordion>
+
+## Bundled Dependencies
+
+The package includes these powerful libraries out of the box:
+
+<Accordion title="Syntax Highlighting">
+**Shiki 3.21.0** - Industry-leading syntax highlighting  
+**@shikijs/transformers 3.21.0** - Code transformation utilities  
+
+Provides 200+ syntax themes and language support for virtually any programming language.
+</Accordion>
+
+<Accordion title="Accessibility">
+**@base-ui/react 1.1.0** - Unstyled, accessible component primitives  
+**@headlessui/react 2.2.0** - Accessible UI components from Tailwind Labs  
+
+Ensures all components meet WCAG accessibility standards.
+</Accordion>
+
+<Accordion title="Icons & Visualization">
+**lucide-react 0.453.0** - 450+ beautiful, consistent icons  
+**mermaid 11.12.2** - Powerful diagram and flowchart rendering  
+
+Create stunning visuals without external dependencies.
+</Accordion>
+
+<Accordion title="Styling Utilities">
+**tailwind-merge 2.6.0** - Intelligent Tailwind class merging  
+**clsx 2.1.1** - Conditional className construction  
+**color 4.2.3** - Color manipulation and conversion  
+
+Advanced styling capabilities built-in.
+</Accordion>
 
 <Note>
 Installation complete! Next, proceed to the [Setup](/setup) guide to configure Tailwind CSS and start using components.

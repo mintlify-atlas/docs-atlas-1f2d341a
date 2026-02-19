@@ -68,7 +68,7 @@ Import the component styles **at the top** of your main CSS file, **before** imp
 Customize the component appearance using these CSS variables:
 
 | Variable | Description | Default |
-|----------|-------------|----------|
+|----------|-------------|---------|
 | `--color-primary` | Primary brand color | `rgb(22, 101, 52)` |
 | `--color-primary-light` | Light variant of primary color | `rgb(240, 249, 244)` |
 | `--color-primary-dark` | Dark variant of primary color | `rgb(45, 90, 61)` |
@@ -149,17 +149,18 @@ module.exports = {
 
 ## Using the cn Utility
 
-The library exports a `cn` utility function for merging Tailwind classes:
+The library exports a `cn` utility function for merging Tailwind classes. This utility combines `clsx` and `tailwind-merge` to intelligently merge class names and resolve conflicts:
 
 ```tsx
 import { cn } from '@mintlify/components';
 
-function MyComponent() {
+function MyComponent({ className, isActive }) {
   return (
     <div className={cn(
-      'base-class',
-      'text-blue-500',
-      condition && 'conditional-class'
+      'base-class rounded-lg p-4',
+      'text-blue-500 hover:text-blue-700',
+      isActive && 'bg-blue-50 dark:bg-blue-900',
+      className
     )}>
       Content
     </div>
@@ -167,30 +168,66 @@ function MyComponent() {
 }
 ```
 
-This utility combines `clsx` and `tailwind-merge` to intelligently merge class names and resolve conflicts.
+The `cn` utility is especially useful when:
+- Combining conditional classes
+- Merging user-provided className props
+- Resolving conflicting Tailwind classes (e.g., `text-blue-500` and `text-red-500` won't both apply)
 
-## Custom Plugins
+## Working with Component Styles
 
-The library includes custom Tailwind plugins:
+### Understanding Dark Mode Classes
 
-### Border Standard Utility
-
-A utility class for consistent borders across light and dark modes:
+Components use Tailwind's `dark:` variant for dark mode styling. For example, the Callout component uses classes like:
 
 ```tsx
-<div className="border-standard">
-  Consistent border in light and dark mode
-</div>
+// From source/packages/components/src/components/callout/callout.tsx:41-42
+border border-stone-200 bg-stone-50 
+dark:border-stone-700 dark:bg-white/10
 ```
 
-### Overflow Wrap Utility
+### Custom Styling Components
 
-Handles text wrapping and word breaks:
+You can override component styles using the `className` prop:
 
 ```tsx
-<div className="overflow-wrap-anywhere">
-  Long text that wraps properly
-</div>
+import { Callout } from '@mintlify/components';
+
+<Callout 
+  variant="info"
+  className="border-2 border-blue-500 shadow-lg"
+>
+  Custom styled callout
+</Callout>
+```
+
+## Advanced Tailwind Features
+
+### Using Arbitrary Values
+
+The library supports Tailwind's arbitrary value syntax:
+
+```tsx
+import { Card } from '@mintlify/components';
+
+<Card 
+  title="Custom Card"
+  className="bg-[#f0f9f4] hover:bg-[#dcf4e3]"
+/>
+```
+
+### Responsive Design
+
+All components work seamlessly with Tailwind's responsive modifiers:
+
+```tsx
+import { Badge } from '@mintlify/components';
+
+<Badge 
+  className="text-xs md:text-sm lg:text-base"
+  size="sm"
+>
+  Responsive Badge
+</Badge>
 ```
 
 ## Troubleshooting
@@ -198,14 +235,41 @@ Handles text wrapping and word breaks:
 <AccordionGroup>
   <Accordion title="Components are unstyled">
     Ensure you've imported `@mintlify/components/styles.css` at the top of your CSS file, before Tailwind imports.
+
+    For Tailwind v3:
+    ```css
+    @import "@mintlify/components/styles.css";
+    @tailwind base;
+    ```
+
+    For Tailwind v4:
+    ```css
+    @import "@mintlify/components/styles.css";
+    @import "tailwindcss";
+    ```
   </Accordion>
 
   <Accordion title="Custom colors not applying">
     In Tailwind v4, verify that your `@theme` block comes after the component imports. In v3, check that you're extending the theme correctly in `tailwind.config.js`.
+
+    Also ensure you're using the correct CSS variable names like `--color-primary` and `--color-primary-dark`.
   </Accordion>
 
   <Accordion title="Missing styles in production">
-    Make sure the component files are included in your Tailwind `content` configuration (v3) or `@source` directive (v4).
+    Make sure the component files are included in your Tailwind `content` configuration:
+
+    ```js tailwind.config.js
+    module.exports = {
+      content: [
+        './src/**/*.{js,jsx,ts,tsx}',
+        './node_modules/@mintlify/components/**/*.{js,jsx,ts,tsx}'
+      ],
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Classes not being purged correctly">
+    If you're seeing unused styles or missing styles in production, verify your PurgeCSS/content configuration includes both your source files and the component library.
   </Accordion>
 </AccordionGroup>
 
