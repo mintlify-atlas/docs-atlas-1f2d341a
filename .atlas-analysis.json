@@ -1,11 +1,11 @@
 {
-  "projectType": "frontend",
+  "projectType": "sdk-library",
   "projectName": "Mintlify Components",
-  "projectDescription": "Open-source React UI components library built with Tailwind CSS for beautiful documentation sites",
+  "projectDescription": "Open source React UI components for documentation sites, built with Tailwind CSS",
   "theme": "mint",
-  "primaryColor": "#0ea5e9",
-  "lightColor": "#38bdf8",
-  "darkColor": "#0284c7",
+  "primaryColor": "#10b981",
+  "lightColor": "#059669",
+  "darkColor": "#34d399",
   "navigation": {
     "tabs": [
       {
