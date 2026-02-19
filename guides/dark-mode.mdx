@@ -136,40 +136,48 @@ Components detect theme changes automatically and update their styling according
 
 ## Detecting Theme in Components
 
-The library provides a `useIsDarkTheme` hook that monitors theme changes by observing the `dark` class on the document element:
+You can create a custom hook to detect theme changes by observing the `dark` class on the document element:
 
 ```tsx
-// Internal implementation from source/packages/components/src/hooks/use-is-dark-theme.ts:3-27
 import { useEffect, useState } from 'react';
-
-const getIsDarkTheme = () =>
-  document.documentElement.classList.contains('dark');
 
 const useIsDarkTheme = () => {
   const [isDarkTheme, setIsDarkTheme] = useState(false);
 
   useEffect(() => {
-    setIsDarkTheme(getIsDarkTheme());
+    const checkTheme = () => {
+      setIsDarkTheme(document.documentElement.classList.contains('dark'));
+    };
 
-    const mutationObserver = new MutationObserver(() => {
-      setIsDarkTheme(getIsDarkTheme());
-    });
+    // Check initial state
+    checkTheme();
 
-    mutationObserver.observe(document.documentElement, {
+    // Watch for theme changes
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ['class'],
     });
 
-    return () => {
-      mutationObserver.disconnect();
-    };
+    return () => observer.disconnect();
   }, []);
 
   return { isDarkTheme };
 };
+
+// Use in your components
+function ThemeAwareComponent() {
+  const { isDarkTheme } = useIsDarkTheme();
+  
+  return (
+    <div>
+      Current theme: {isDarkTheme ? 'dark' : 'light'}
+    </div>
+  );
+}
 ```
 
-You can implement a similar pattern in your own components to react to theme changes.
+This hook uses a `MutationObserver` to watch for class changes on the HTML element, allowing your components to react to theme changes in real-time.
 
 ## Customizing Dark Mode Colors
 

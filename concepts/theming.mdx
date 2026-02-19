@@ -86,10 +86,34 @@ This creates a custom variant that applies styles when an element is within a `.
 
 ### Detecting Dark Mode
 
-The library provides a `useIsDarkTheme` hook to detect the current theme:
+You can detect the current theme by checking for the `dark` class on the document element:
 
 ```tsx
-import { useIsDarkTheme } from '@mintlify/components';
+import { useEffect, useState } from 'react';
+
+function useIsDarkTheme() {
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
+
+  useEffect(() => {
+    const checkTheme = () => {
+      setIsDarkTheme(document.documentElement.classList.contains('dark'));
+    };
+
+    // Check initial state
+    checkTheme();
+
+    // Watch for theme changes
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  return { isDarkTheme };
+}
 
 function MyComponent() {
   const { isDarkTheme } = useIsDarkTheme();
@@ -103,7 +127,7 @@ function MyComponent() {
 ```
 
 <Info>
-The `useIsDarkTheme` hook uses a `MutationObserver` to watch for changes to the `html` element's class list, ensuring your components stay in sync with the theme.
+This hook uses a `MutationObserver` to watch for changes to the `html` element's class list, ensuring your components stay in sync with theme changes.
 </Info>
 
 ## Custom Utilities
